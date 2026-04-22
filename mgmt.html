@@ -1,0 +1,2805 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>資訊安全模擬測驗系統 — 管理概論（非官方練習用）</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft JhengHei", "微軟正黑體", "新細明體", PMingLiU, sans-serif;
+  background: #b8c4d4;
+  background-image: linear-gradient(135deg, #d8e0ec 0%, #b0bccc 100%);
+  min-height: 100vh;
+  color: #000;
+  font-size: 14px;
+  user-select: none;
+}
+
+.app-window {
+  max-width: 1080px;
+  margin: 20px auto;
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  min-height: 680px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-titlebar {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-titlebar .controls { display: flex; gap: 2px; }
+
+.app-titlebar .ctrl-btn {
+  width: 22px; height: 18px;
+  background: #5b7fb5;
+  border: 1px solid #2d4870;
+  color: #fff;
+  font-size: 11px;
+  text-align: center;
+  line-height: 16px;
+}
+
+.app-header {
+  background: #f0f0f0;
+  padding: 8px 14px;
+  border-bottom: 1px solid #c0c0c0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ipas-logo {
+  font-weight: 700;
+  color: #8c1d2c;
+  font-size: 20px;
+  letter-spacing: 1px;
+  font-family: Arial, sans-serif;
+}
+
+.ipas-logo .check { color: #2d8a6e; font-size: 22px; }
+
+.ipas-subtitle {
+  color: #333;
+  font-size: 13px;
+  border-left: 2px solid #c0c0c0;
+  padding-left: 12px;
+  line-height: 1.3;
+}
+
+.ipas-subtitle .en { color: #666; font-size: 10px; }
+
+.stage { flex: 1; padding: 24px; background: #fff; position: relative; }
+
+/* 登入畫面 */
+.disclaimer-box {
+  max-width: 540px;
+  margin: 0 auto 20px;
+  padding: 14px 18px;
+  background: #fff9e6;
+  border: 1px solid #d9b85c;
+  border-left: 4px solid #d4a024;
+  border-radius: 2px;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: #5c4a10;
+}
+
+.disclaimer-box .dc-title {
+  font-weight: 700;
+  color: #8a6410;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.disclaimer-box .dc-title::before {
+  content: "⚠";
+  font-size: 16px;
+}
+
+.disclaimer-box ul {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+
+.disclaimer-box li {
+  margin-bottom: 2px;
+}
+
+.disclaimer-box .dc-ack {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #d9b85c;
+  font-size: 12px;
+  color: #6a5420;
+}
+
+.login-box {
+  max-width: 440px;
+  margin: 0 auto;
+  border: 1px solid #4a6fa5;
+  background: #f8f9fc;
+}
+
+.login-title {
+  background: linear-gradient(to bottom, #e8eef7 0%, #d0dae8 100%);
+  border-bottom: 1px solid #4a6fa5;
+  padding: 16px;
+  text-align: center;
+}
+
+.login-title h2 {
+  font-size: 22px;
+  color: #2c4870;
+  letter-spacing: 3px;
+  font-weight: 500;
+}
+
+.login-title .ver {
+  display: block;
+  text-align: right;
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+  font-family: "Courier New", monospace;
+}
+
+.login-body { padding: 40px 32px; }
+
+.login-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.login-field label { font-size: 14px; color: #333; min-width: 72px; }
+
+.login-field input {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  font-size: 14px;
+  font-family: "Courier New", monospace;
+}
+
+.login-field input:focus {
+  outline: none;
+  border-color: #4a6fa5;
+  box-shadow: inset 0 0 2px rgba(74,111,165,0.3);
+}
+
+.login-buttons { text-align: center; display: flex; justify-content: center; gap: 16px; }
+
+.win-btn {
+  background: linear-gradient(to bottom, #fafafa 0%, #d8dde3 100%);
+  border: 1px solid #7b8a9c;
+  border-radius: 2px;
+  padding: 5px 22px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #000;
+  cursor: pointer;
+  min-width: 72px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.win-btn:hover {
+  background: linear-gradient(to bottom, #fff 0%, #e8ecf2 100%);
+  border-color: #4a6fa5;
+}
+
+.win-btn:active {
+  background: linear-gradient(to bottom, #c8ced6 0%, #dde2e8 100%);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.win-btn:disabled { color: #888; background: #e8e8e8; cursor: not-allowed; }
+
+.win-btn.primary {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  border-color: #2c4870;
+  font-weight: 500;
+}
+
+.win-btn.primary:hover {
+  background: linear-gradient(to bottom, #6a99cf 0%, #4a77ac 100%);
+}
+
+.info-panel {
+  border: 1px solid #7b8a9c;
+  background: #fff;
+}
+
+.info-panel-header {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 0;
+  font-size: 13px;
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid #2c4870;
+}
+
+.info-panel-header .tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  background: linear-gradient(to bottom, #3d5d8f 0%, #2c4870 100%);
+  color: #fff;
+  border-right: 1px solid #2c4870;
+  font-weight: 500;
+}
+
+.info-panel-header .tab-inactive {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  color: #c4d0e0;
+  font-size: 12px;
+}
+
+.info-identity {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  padding: 5px 14px;
+  font-size: 13px;
+  display: flex;
+  gap: 40px;
+  letter-spacing: 0.5px;
+}
+
+.info-content {
+  padding: 24px;
+  min-height: 320px;
+  line-height: 2;
+  font-size: 14px;
+  color: #000;
+}
+
+.info-content ol { padding-left: 0; list-style: none; }
+
+.info-content li { margin-bottom: 12px; padding-left: 0; }
+
+.info-footer {
+  padding: 12px;
+  text-align: center;
+  background: #f5f5f5;
+  border-top: 1px solid #c0c0c0;
+}
+
+.info-statusbar {
+  background: #e8e8e8;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #555;
+  border-top: 1px solid #c0c0c0;
+}
+
+/* 考試畫面 */
+.exam-frame {
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 560px;
+}
+
+.exam-topbar {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 0;
+  display: flex;
+  font-size: 13px;
+  border-bottom: 1px solid #2c4870;
+}
+
+.exam-topbar .tab-active {
+  padding: 8px 20px;
+  background: linear-gradient(to bottom, #3d5d8f 0%, #2c4870 100%);
+  color: #fff;
+  border-right: 1px solid #2c4870;
+  font-weight: 500;
+}
+
+.exam-identity-bar {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  padding: 5px 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  letter-spacing: 0.5px;
+}
+
+.exam-identity-bar .progress {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+}
+
+.exam-identity-bar .timer {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  color: #ffe89a;
+}
+
+.exam-identity-bar .timer.warning {
+  color: #ff9090;
+  animation: flash 1s infinite;
+}
+
+@keyframes flash {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.5; }
+}
+
+.exam-identity-bar .end-btn {
+  margin-left: auto;
+  background: linear-gradient(to bottom, #fafafa 0%, #d8dde3 100%);
+  color: #000;
+  border: 1px solid #2c4870;
+  padding: 2px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.exam-identity-bar .end-btn::before {
+  content: "⏻";
+  color: #2d8a6e;
+  font-weight: 700;
+}
+
+.exam-toolbar {
+  background: #f0f0f0;
+  padding: 6px 10px;
+  border-bottom: 1px solid #c0c0c0;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.exam-toolbar .win-btn {
+  min-width: 88px;
+  padding: 4px 14px;
+  font-size: 13px;
+}
+
+.exam-toolbar .win-btn.marked {
+  background: linear-gradient(to bottom, #fff4a0 0%, #f5d560 100%);
+  border-color: #c09020;
+}
+
+.exam-toolbar .zoom-btn {
+  min-width: 32px;
+  padding: 2px 6px;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.question-area {
+  padding: 22px 28px;
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.9;
+  min-height: 360px;
+}
+
+.question-area.zoom-1 { font-size: 15px; }
+.question-area.zoom-2 { font-size: 17px; }
+.question-area.zoom-3 { font-size: 19px; }
+.question-area.zoom-0 { font-size: 13px; }
+
+.question-stem {
+  font-weight: 700;
+  margin-bottom: 14px;
+  line-height: 1.7;
+}
+
+.question-stem .qnum { color: #000; margin-right: 6px; }
+
+.options { margin-left: 0; }
+
+.option-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 5px 4px;
+  cursor: pointer;
+  line-height: 1.7;
+  border: 1px solid transparent;
+}
+
+.option-row:hover { background: #f0f5fc; }
+
+.option-row input[type="radio"] {
+  margin-right: 8px;
+  margin-top: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.option-label { margin-right: 4px; font-weight: 500; }
+
+.end-screen {
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.end-screen h1 {
+  font-size: 26px;
+  color: #2c4870;
+  font-weight: 500;
+  letter-spacing: 4px;
+  margin-bottom: 14px;
+}
+
+.end-screen p {
+  color: #444;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-box {
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  min-width: 340px;
+  max-width: 500px;
+}
+
+.modal-title {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 20px 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #fff;
+}
+
+.modal-icon {
+  width: 32px; height: 32px;
+  background: #fbbf24;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 32px;
+  flex-shrink: 0;
+}
+
+.modal-text { flex: 1; line-height: 1.8; font-size: 13px; }
+
+.modal-text .stats {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed #c0c0c0;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+
+.modal-buttons {
+  padding: 10px;
+  text-align: center;
+  background: #f0f0f0;
+  border-top: 1px solid #c0c0c0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modal-buttons .win-btn { min-width: 72px; }
+
+.overview-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+}
+
+.overview-modal.show { display: flex; }
+
+.overview-box {
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-title {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.overview-title .close {
+  cursor: pointer;
+  width: 20px;
+  text-align: center;
+  background: #c94848;
+  color: #fff;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.overview-body {
+  background: #fff;
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.overview-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #c0c0c0;
+  color: #555;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.legend-dot.g { background: #6abf4b; }
+.legend-dot.y { background: #f5c518; }
+.legend-dot.r { background: #d94040; }
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+}
+
+.qnum-cell {
+  aspect-ratio: 1.6;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  border: 1px solid rgba(0,0,0,0.2);
+  background: #d94040;
+  transition: transform 0.1s;
+}
+
+.qnum-cell:hover { transform: scale(1.08); box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+
+.qnum-cell.answered { background: #6abf4b; }
+.qnum-cell.marked { background: #f5c518; color: #000; }
+
+.overview-footer {
+  background: #f0f0f0;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #666;
+  border-top: 1px solid #c0c0c0;
+  text-align: center;
+}
+
+/* 成績畫面 */
+.result-screen { padding: 0; background: #fff; }
+
+.result-header {
+  background: linear-gradient(135deg, #2c4870 0%, #4a6fa5 100%);
+  color: #fff;
+  padding: 36px 40px;
+  text-align: center;
+  border-bottom: 3px solid #f0b429;
+}
+
+.result-header .result-subtitle {
+  font-size: 13px;
+  letter-spacing: 3px;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+
+.result-header .result-title {
+  font-size: 22px;
+  letter-spacing: 2px;
+  font-weight: 500;
+}
+
+.score-card {
+  display: flex;
+  padding: 32px 40px;
+  gap: 32px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafbfd;
+}
+
+.score-main { text-align: center; min-width: 200px; }
+
+.score-number {
+  font-size: 72px;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  line-height: 1;
+}
+
+.score-number.pass { color: #2d8a6e; }
+.score-number.fail { color: #c94848; }
+
+.score-label { font-size: 13px; color: #666; margin-top: 6px; letter-spacing: 2px; }
+
+.score-verdict {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 2px;
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.score-verdict.pass { background: #e5f4eb; color: #2d8a6e; border: 1px solid #a6d8bd; }
+.score-verdict.fail { background: #fbe9e9; color: #c94848; border: 1px solid #e6b0b0; }
+
+.score-breakdown { flex: 1; }
+
+.score-breakdown h3 {
+  font-size: 14px;
+  color: #2c4870;
+  margin-bottom: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.category-row .cat-name { min-width: 200px; color: #333; }
+
+.category-row .cat-bar-wrap {
+  flex: 1;
+  height: 14px;
+  background: #e8ecf2;
+  border-radius: 7px;
+  margin: 0 12px;
+  overflow: hidden;
+}
+
+.category-row .cat-bar {
+  height: 100%;
+  background: linear-gradient(to right, #4a6fa5 0%, #5b8ac0 100%);
+  border-radius: 7px;
+  transition: width 0.6s ease-out;
+}
+
+.category-row .cat-bar.low { background: linear-gradient(to right, #c94848 0%, #e66060 100%); }
+.category-row .cat-bar.mid { background: linear-gradient(to right, #d4a024 0%, #f0b429 100%); }
+
+.category-row .cat-score {
+  min-width: 60px;
+  text-align: right;
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  color: #2c4870;
+}
+
+.stats-summary {
+  padding: 24px 40px;
+  display: flex;
+  gap: 40px;
+  background: #f5f7fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px;
+}
+
+.stats-item { display: flex; flex-direction: column; gap: 2px; }
+
+.stats-item .num {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  color: #2c4870;
+}
+
+.stats-item.correct .num { color: #2d8a6e; }
+.stats-item.wrong .num { color: #c94848; }
+.stats-item.blank .num { color: #999; }
+
+.stats-item .lab { font-size: 12px; color: #666; letter-spacing: 1px; }
+
+.review-section { padding: 28px 40px; }
+
+.review-section h2 {
+  font-size: 16px;
+  color: #2c4870;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #4a6fa5;
+  font-weight: 500;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.review-section .filter-buttons { display: flex; gap: 6px; }
+
+.filter-btn {
+  padding: 4px 12px;
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  font-family: inherit;
+}
+
+.filter-btn.active { background: #4a6fa5; color: #fff; border-color: #2c4870; }
+
+.review-item {
+  margin-bottom: 18px;
+  padding: 16px 18px;
+  border: 1px solid #dde2ea;
+  border-left: 4px solid #6abf4b;
+  background: #fafbfd;
+  border-radius: 2px;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.review-item.wrong { border-left-color: #c94848; background: #fcf5f5; }
+.review-item.blank { border-left-color: #888; background: #f7f7f7; }
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.review-header .rq-num { font-weight: 700; color: #2c4870; font-family: "Courier New", monospace; }
+
+.review-header .rq-cat {
+  font-size: 11px;
+  padding: 1px 8px;
+  background: #e8ecf2;
+  color: #2c4870;
+  border-radius: 10px;
+}
+
+.review-header .rq-badge { font-size: 11px; padding: 1px 8px; border-radius: 10px; font-weight: 700; }
+
+.review-header .rq-badge.correct { background: #d7edde; color: #2d8a6e; }
+.review-header .rq-badge.wrong { background: #f7d8d8; color: #c94848; }
+.review-header .rq-badge.blank { background: #e0e0e0; color: #555; }
+
+.review-stem { font-weight: 500; color: #000; margin-bottom: 10px; }
+
+.review-opts { margin: 10px 0; padding-left: 4px; }
+
+.review-opt {
+  padding: 4px 10px;
+  margin-bottom: 3px;
+  border-radius: 2px;
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  line-height: 1.6;
+}
+
+.review-opt.user-wrong { background: #fbe5e5; color: #8a2020; text-decoration: line-through; }
+.review-opt.correct-ans { background: #d7edde; color: #1b5f45; font-weight: 500; }
+.review-opt.user-correct { background: #d7edde; color: #1b5f45; font-weight: 500; }
+
+.review-opt .opt-marker { font-family: "Courier New", monospace; font-weight: 700; flex-shrink: 0; width: 20px; }
+
+.review-opt .opt-tag { margin-left: auto; font-size: 11px; color: #666; flex-shrink: 0; }
+
+.review-expl {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border-left: 3px solid #4a6fa5;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.8;
+}
+
+.review-expl .expl-label { font-weight: 700; color: #2c4870; margin-right: 6px; }
+
+.result-actions {
+  padding: 24px 40px;
+  background: #f5f7fa;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 720px) {
+  .app-window { margin: 0; border: none; }
+  .score-card { flex-direction: column; }
+  .stats-summary { flex-wrap: wrap; gap: 20px; }
+  .overview-grid { grid-template-columns: repeat(5, 1fr); }
+  .overview-box { width: 95vw; }
+  .category-row { flex-wrap: wrap; }
+  .category-row .cat-name { min-width: 160px; }
+  .review-section, .score-card, .stats-summary, .result-header, .result-actions { padding-left: 16px; padding-right: 16px; }
+  .question-area { padding: 16px; }
+  .exam-toolbar { gap: 3px; padding: 5px; }
+  .exam-toolbar .win-btn { min-width: 64px; padding: 3px 8px; font-size: 12px; }
+}
+
+    /* ============== API 版排行榜 ============== */
+    .login-hint {
+      margin: -16px 0 24px 0;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #555;
+      background: #f0f4f8;
+      border-left: 3px solid #4a90e2;
+      border-radius: 3px;
+      line-height: 1.7;
+    }
+    .login-champion {
+      margin-top: 18px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #fff8e7 0%, #ffecb3 100%);
+      border: 1px solid #e0b95e;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 13px;
+      color: #5d4409;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-champion .champion-loading,
+    .login-champion .champion-empty {
+      color: #888;
+      font-size: 12px;
+    }
+    .login-champion .champion-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .login-champion .champion-title { font-weight: 600; color: #8b6914; }
+    .login-champion .champion-name { font-weight: 700; color: #c0392b; }
+    .login-champion .champion-score { font-weight: 700; color: #27ae60; }
+    .login-champion .champion-count {
+      font-size: 11px; color: #888; margin-top: 4px; width: 100%;
+    }
+    .login-preview-link { margin-top: 14px; text-align: center; font-size: 13px; }
+    .login-preview-link a {
+      color: #8b6914;
+      text-decoration: none;
+      padding: 4px 10px;
+      border-bottom: 1px dashed #c09a3a;
+    }
+    .login-preview-link a:hover { background: #fff3c4; color: #5d4409; }
+
+    .leaderboard-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #fff8e7 0%, #fef3d7 100%);
+      border: 1px solid #f0d27f;
+      border-radius: 8px;
+    }
+    .leaderboard-section h3 {
+      margin: 0 0 14px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0b95e;
+      color: #8b6914;
+      font-size: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .leaderboard-refresh {
+      margin-left: auto;
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #555;
+    }
+    .leaderboard-refresh:hover { background: #f5f5f5; }
+    .leaderboard-mode-notice {
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px dashed #bbb;
+      border-radius: 6px;
+      color: #666;
+      text-align: center;
+      font-size: 13px;
+    }
+    .leaderboard-mode-notice .big {
+      font-size: 14px; color: #333; margin-bottom: 4px; font-weight: 600;
+    }
+    .leaderboard-loading {
+      padding: 20px; text-align: center; color: #888; font-size: 13px;
+    }
+    .leaderboard-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .leaderboard-table th {
+      padding: 8px 12px; background: #e0b95e; color: #fff;
+      text-align: left; font-weight: 600;
+    }
+    .leaderboard-table th.num,
+    .leaderboard-table td.num { text-align: center; width: 50px; }
+    .leaderboard-table th.score,
+    .leaderboard-table td.score { text-align: center; width: 70px; }
+    .leaderboard-table th.time,
+    .leaderboard-table td.time { text-align: center; width: 80px; }
+    .leaderboard-table td {
+      padding: 8px 12px; border-bottom: 1px solid #f0d27f;
+    }
+    .leaderboard-table tr.me {
+      background: #fff3c4; font-weight: 600;
+    }
+    .leaderboard-table tr.me td { color: #8b6914; }
+    .leaderboard-table td.medal { font-size: 16px; }
+    .leaderboard-my-rank {
+      margin-top: 10px; padding: 10px 14px;
+      background: #fff3c4; border: 1px solid #e0b95e;
+      border-radius: 6px; font-size: 13px; color: #8b6914;
+      text-align: center;
+    }
+    .leaderboard-stats {
+      margin-top: 10px; padding: 8px 14px;
+      font-size: 12px; color: #888; text-align: right;
+    }
+    @media (max-width: 600px) {
+      .leaderboard-table th.time,
+      .leaderboard-table td.time { display: none; }
+    }
+
+    /* 排行榜預覽 Modal */
+    .lb-preview-mask {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .lb-preview-mask.show { display: flex; }
+    .lb-preview-box {
+      background: linear-gradient(135deg, #fff8e7 0%, #fef3d7 100%);
+      border: 2px solid #e0b95e;
+      border-radius: 10px;
+      padding: 20px 24px;
+      max-width: 520px; width: 92%;
+      max-height: 85vh; overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+    .lb-preview-box h3 {
+      margin: 0 0 14px 0; padding-bottom: 10px;
+      border-bottom: 2px solid #e0b95e;
+      color: #8b6914; font-size: 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+    }
+    .lb-preview-close {
+      background: transparent; border: 1px solid #8b6914;
+      color: #8b6914; font-size: 16px; cursor: pointer;
+      padding: 2px 10px; border-radius: 4px; line-height: 1;
+    }
+    .lb-preview-close:hover { background: #8b6914; color: #fff; }
+    .lb-preview-subtitle {
+      font-size: 12px; color: #666; margin-bottom: 10px;
+      text-align: center; font-style: italic;
+    }
+
+    /* 題目社群統計 */
+    .review-qstat {
+      margin: 6px 0 10px 0; padding: 6px 12px;
+      background: #f0f7ff; border-left: 3px solid #4a90e2;
+      border-radius: 3px; font-size: 12px; color: #2c5282;
+    }
+    .opt-stat {
+      margin-left: auto; padding: 2px 8px;
+      font-size: 11px; border-radius: 3px;
+      font-family: "Consolas", monospace; white-space: nowrap;
+    }
+    .opt-stat.stat-correct { background: #d4edda; color: #155724; font-weight: 600; }
+    .opt-stat.stat-top-wrong { background: #f8d7da; color: #721c24; font-weight: 600; }
+    .opt-stat.stat-normal { background: #e9ecef; color: #495057; }
+    .review-opt { display: flex; align-items: center; gap: 6px; }
+    .opt-text { flex: 1; }
+
+    /* 老師後台 */
+    .teacher-admin-panel {
+      margin: 20px 0; padding: 16px;
+      background: #2c3e50; color: #ecf0f1;
+      border-radius: 8px;
+      font-family: "Consolas", monospace; font-size: 12px;
+    }
+    .teacher-admin-panel h4 { margin: 0 0 10px 0; color: #f39c12; }
+    .teacher-admin-panel button {
+      padding: 4px 10px; margin: 2px;
+      background: #e74c3c; color: #fff;
+      border: none; border-radius: 4px; cursor: pointer;
+      font-size: 11px;
+    }
+    .teacher-admin-panel .admin-row {
+      padding: 4px 0; border-bottom: 1px solid #34495e;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+  </style>
+</head>
+<body>
+<div class="app-window">
+  <div class="app-titlebar">
+    <span>資訊安全模擬測驗系統（ISMP）- 個人練習版</span>
+    <div class="controls">
+      <span class="ctrl-btn">_</span>
+      <span class="ctrl-btn">□</span>
+      <span class="ctrl-btn">×</span>
+    </div>
+  </div>
+  <div class="app-header">
+    <div class="ipas-logo">IS<span class="check">✓</span>MP</div>
+    <div class="ipas-subtitle">
+      <div>資訊安全模擬測驗系統</div>
+      <div class="en">Information Security Mock Practice — For Self-Study Only</div>
+    </div>
+  </div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="modal-overlay" id="endConfirmModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span>模擬測驗系統</span>
+      <span>×</span>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">!</div>
+      <div class="modal-text">
+        以下是您學科測驗作答情況，<br>
+        正確請按'是'結束學科測驗，<br>
+        錯誤請按'否'回到學科測驗。
+        <div class="stats" id="endStats"></div>
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button class="win-btn primary" onclick="finalizeExam()">是(Y)</button>
+      <button class="win-btn" onclick="closeEndModal()">否(N)</button>
+    </div>
+  </div>
+</div>
+
+<div class="overview-modal" id="overviewModal">
+  <div class="overview-box">
+    <div class="overview-title">
+      <span>試題總覽</span>
+      <span class="close" onclick="closeOverview()">×</span>
+    </div>
+    <div class="overview-body">
+      <div class="overview-legend">
+        <span><span class="legend-dot g"></span>綠：有作答</span>
+        <span><span class="legend-dot y"></span>黃：有註記</span>
+        <span><span class="legend-dot r"></span>紅：未作答</span>
+      </div>
+      <div class="overview-grid" id="overviewGrid"></div>
+    </div>
+    <div class="overview-footer">選擇任意一題作答或瀏覽</div>
+  </div>
+</div>
+
+<script>
+// 題目資料接續注入
+
+</script>
+<script>
+window.QUESTIONS = [
+  {
+    id: 1, cat: "A",
+    stem: "資訊安全 CIA 三元素所指下列何者？",
+    opts: [
+      "機密性、完整性、鑑別性",
+      "機密性、責任性、可用性",
+      "機密性、完整性、可用性",
+      "機密性、不可否認性、可用性"
+    ],
+    ans: 2,
+    expl: "正解 C：ISO/IEC 27000 明定資訊安全三大核心特性為機密性（Confidentiality）、完整性（Integrity）、可用性（Availability），合稱 CIA。責任性、鑑別性、不可否認性雖為資安重要特性，但非 CIA 三元素本身。"
+  },
+  {
+    id: 2, cat: "A",
+    stem: "提供「無法否認所為行為」的資訊安全特性稱為下列何者？",
+    opts: [
+      "責任性（Accountability）",
+      "不可否認性（Non-repudiation）",
+      "鑑別性（Authenticity）",
+      "可靠性（Reliability）"
+    ],
+    ans: 1,
+    expl: "正解 B：不可否認性（Non-repudiation）確保行為人日後無法否認其所為之行為或所傳送之訊息，常以數位簽章技術實現。"
+  },
+  {
+    id: 3, cat: "A",
+    stem: "關於資安政策、標準、程序、指引（Policy / Standard / Procedure / Guideline）之四層文件架構，下列敘述何者「不」正確？",
+    opts: [
+      "政策為最高階文件，由高階主管簽署發布",
+      "標準為強制性文件，規範具體技術或組織要求",
+      "程序為詳細操作步驟，說明如何執行特定任務",
+      "指引為強制遵循文件，員工違反將直接受懲處"
+    ],
+    ans: 3,
+    expl: "正解 D：指引（Guideline）為建議性、非強制文件，提供實施參考。強制性者為政策與標準，員工違反有懲處者通常為違反政策或標準；指引本身非強制。"
+  },
+  {
+    id: 4, cat: "A",
+    stem: "關於縱深防禦（Defense in Depth）概念，下列敘述何者最符合其原意？",
+    opts: [
+      "採多層次、互補之安全控制措施，任一層級被突破後仍有其他層次可防禦",
+      "僅於網路邊界部署單一強大防火牆",
+      "縱深防禦僅適用於實體安全，不適用於資訊系統",
+      "每一層皆使用完全相同之控制措施即為縱深防禦"
+    ],
+    ans: 0,
+    expl: "正解 A：縱深防禦源自軍事概念，主張以多層次、互補之防護（實體、網路、主機、應用、資料、人員）堆疊保護重要資產，單一層被突破時仍有其他層可延緩或阻擋攻擊。"
+  },
+  {
+    id: 5, cat: "A",
+    stem: "某公司系統管理員日常需管理 100 台伺服器，依「最小權限原則」，下列授權方式何者最恰當？",
+    opts: [
+      "授予該管理員網域管理員（Domain Admin）全網權限，以便所有維運工作",
+      "依實際職務，僅授予必要之特定伺服器與操作權限，並於任務結束後立即回收",
+      "授予全公司唯讀權限，但允許寫入任何伺服器",
+      "僅授予主控台登入權限，不論是否符合職務需要"
+    ],
+    ans: 1,
+    expl: "正解 B：最小權限原則（Principle of Least Privilege）要求僅授予完成職務所「必要且足夠」之權限，並於不再需要時及時回收，以限縮帳號被濫用或遭竊後之衝擊範圍。"
+  },
+  {
+    id: 6, cat: "A",
+    stem: "下列何者為「職務區隔（Segregation of Duties, SoD）」之正確定義？",
+    opts: [
+      "將關鍵業務流程分拆由多人各自負責，任一人無法獨力完成該流程，以防舞弊與錯誤",
+      "由同一人負責流程全部步驟，確保責任歸屬單一",
+      "將不同部門員工之辦公區域分別設於不同樓層",
+      "規定員工不得跨部門調動，以維持業務穩定"
+    ],
+    ans: 0,
+    expl: "正解 A：職務區隔要求「申請、審核、執行、稽核」等關鍵角色由不同人員擔任，相互牽制，避免單一人員獨力完成整個流程而產生舞弊、錯誤或濫用之機會。"
+  },
+  {
+    id: 7, cat: "A",
+    stem: "關於資訊分類（Information Classification），下列敘述何者「不」正確？",
+    opts: [
+      "分類應依資訊之機密性、重要性等屬性訂定不同層級",
+      "常見分類層級如「公開／內部使用／機密／極機密」",
+      "分類後應對不同層級資訊採差異化之保護與存取控制",
+      "資訊分類完成後即為永久屬性，無須定期檢視或重新分類"
+    ],
+    ans: 3,
+    expl: "正解 D：資訊分類屬性會隨業務情境、法規變動、時效性（如已發布之財報）等因素改變，須定期重新檢視與再分類；完成分類並非一勞永逸。"
+  },
+  {
+    id: 8, cat: "A",
+    stem: "關於組織內資訊安全角色之職責分工，下列敘述何者最正確？",
+    opts: [
+      "資訊長（CIO）與資安長（CISO）職責完全相同，可互為替代",
+      "資安長（CISO）負責擬定資安策略與風險管理；資料保護長（DPO）依個資法或 GDPR 負責個資保護諮詢與法遵",
+      "資料保護長（DPO）僅負責實體機房門禁管理",
+      "稽核主管應隸屬於資安長之下，以確保審查獨立性"
+    ],
+    ans: 1,
+    expl: "正解 B：CISO 與 CIO 職責不同（CIO 側重資訊服務提供、CISO 側重資安風險管控）；DPO 為個資／隱私之專責角色；稽核應獨立於被稽核單位之外，不可隸屬 CISO 之下。"
+  },
+  {
+    id: 9, cat: "A",
+    stem: "ISO/IEC 27001 為下列何種標準之規範？",
+    opts: [
+      "個人資料隱私管理系統之具體指引",
+      "雲端服務提供者之技術控制措施指引",
+      "資訊安全管理系統（ISMS）之要求事項，屬可驗證（certifiable）標準",
+      "業務持續管理（BCM）之要求事項"
+    ],
+    ans: 2,
+    expl: "正解 C：ISO/IEC 27001 為 ISMS 要求事項標準，組織可申請第三方驗證取得證書；ISO/IEC 27701 才是隱私管理系統延伸；ISO/IEC 27017 為雲端安全；ISO/IEC 22301 才是 BCM。"
+  },
+  {
+    id: 10, cat: "A",
+    stem: "ISO/IEC 27001:2022 附錄 A 將資訊安全控制措施重新整併為四大主題，下列何者「不」屬於這四大主題之一？",
+    opts: [
+      "組織控制（Organizational controls）",
+      "流程控制（Process controls）",
+      "人員控制（People controls）",
+      "實體控制（Physical controls）"
+    ],
+    ans: 1,
+    expl: "正解 B：ISO/IEC 27001:2022 附錄 A 四大主題為「組織（37）／人員（8）／實體（14）／技術（34）」共 93 項控制。並無「流程控制」此項。"
+  },
+  {
+    id: 11, cat: "A",
+    stem: "ISO/IEC 27002:2022 於四大控制主題下共包含多少項控制措施？",
+    opts: [
+      "93 項",
+      "114 項",
+      "11 項",
+      "27 項"
+    ],
+    ans: 0,
+    expl: "正解 A：2022 版共 93 項控制（由 2013 版之 114 項整併優化而來），並新增 11 項全新控制（如威脅情資、雲端服務資安、ICT 韌性、資料外洩防護等）。"
+  },
+  {
+    id: 12, cat: "A",
+    stem: "我國 CNS 27001 國家標準主要對應國際標準下列何者？",
+    opts: [
+      "COBIT 5",
+      "NIST SP 800-53",
+      "ITIL v4",
+      "ISO/IEC 27001"
+    ],
+    ans: 3,
+    expl: "正解 D：CNS 27001 為 ISO/IEC 27001 之中華民國國家標準化版本，由經濟部標準檢驗局公告，內容與 ISO/IEC 27001 一致。"
+  },
+  {
+    id: 13, cat: "A",
+    stem: "關於 ISO/IEC 27000 系列之雲端與隱私相關標準，下列敘述何者「不」正確？",
+    opts: [
+      "ISO/IEC 27017 提供雲端服務之資訊安全控制實務指引",
+      "ISO/IEC 27018 聚焦於公有雲中個人可識別資訊（PII）之保護",
+      "ISO/IEC 27701 為可取代 ISO 27001 之獨立認證標準",
+      "ISO/IEC 27701 以 ISO 27001 為基礎，擴展建立隱私資訊管理系統（PIMS）"
+    ],
+    ans: 2,
+    expl: "正解 C：ISO/IEC 27701 為 ISO/IEC 27001 / 27002 之延伸標準，組織須先具備 ISMS 驗證基礎，再疊加 PIMS；其不「取代」27001，而係在其之上擴展隱私管理要求。"
+  },
+  {
+    id: 14, cat: "A",
+    stem: "NIST Cybersecurity Framework（CSF）2.0（2024 發布）之核心功能為下列何者？",
+    opts: [
+      "Govern（治理）、Identify（識別）、Protect（保護）、Detect（偵測）、Respond（回應）、Recover（復原）",
+      "Plan、Do、Check、Act",
+      "Identify、Authenticate、Authorize、Audit",
+      "Prevent、Detect、Correct、Recover"
+    ],
+    ans: 0,
+    expl: "正解 A：NIST CSF 2.0 於原 1.1 版的 Identify／Protect／Detect／Respond／Recover 五項功能之上新增「Govern（治理）」為最頂層，共 6 項核心功能。"
+  },
+  {
+    id: 15, cat: "A",
+    stem: "關於我國「資通安全責任等級分級辦法」所規範之責任等級（A~E 級），下列敘述何者最正確？",
+    opts: [
+      "五級分級僅依機關規模大小，不考量業務性質或國家安全影響",
+      "所有公務機關一律歸類為 A 級",
+      "A 級為責任等級最高之機關，須設資通安全專責單位、訂定資通安全維護計畫，並適用最嚴格之控制要求；E 級雖等級最低，仍有基本資安義務",
+      "E 級機關因等級最低，可完全免除任何資安防護義務"
+    ],
+    ans: 2,
+    expl: "正解 C：依「資通安全責任等級分級辦法」，機關依其業務性質、服務對象、資通系統重要性等分為 A、B、C、D、E 五級，A 級最高、E 級最低。A 級須設專責單位並適用最嚴格要求；E 級仍須盤點資通系統與實施基本防護。"
+  },
+  {
+    id: 16, cat: "A",
+    stem: "關於資訊安全治理（Governance）與資訊安全管理（Management）之區別，下列敘述何者最正確？",
+    opts: [
+      "治理由董事會／高階主管負責設定方向、監督與課責；管理由執行層負責規劃、執行與營運資安工作",
+      "治理與管理係同一概念，僅用詞不同",
+      "治理僅為資安稽核之代稱",
+      "管理層級高於治理層級"
+    ],
+    ans: 0,
+    expl: "正解 A：資安治理（Govern）由董事會／高階主管層負責，聚焦於策略方向、風險胃納、合規要求與績效監督；資安管理（Manage）由執行層負責，涵蓋規劃、執行、監測與改進。ISO 27014 對二者有明確區分。"
+  },
+  {
+    id: 17, cat: "B",
+    stem: "依 ISO/IEC 27001 條款 4.3，組織導入 ISMS 時首先應界定下列何者？",
+    opts: [
+      "ISMS 之適用範圍（Scope）與邊界",
+      "全面部署的入侵防禦系統",
+      "年度資安預算金額",
+      "資安教育訓練時數"
+    ],
+    ans: 0,
+    expl: "正解 A：ISO/IEC 27001 條款 4.3 明訂組織應界定 ISMS 之適用範圍與邊界，作為後續風險評鑑、控制措施選用、稽核驗證之基礎。教育訓練、技術防護、預算皆為後續步驟。"
+  },
+  {
+    id: 18, cat: "B",
+    stem: "資訊安全管理系統採 PDCA 管理循環，其中 P 與 D 分別代表下列何者？",
+    opts: [
+      "Plan / Deliver",
+      "Plan / Do",
+      "Process / Deploy",
+      "Predict / Detect"
+    ],
+    ans: 1,
+    expl: "正解 B：PDCA 循環為 Plan（規劃）→ Do（執行）→ Check（查核）→ Act（改進）。ISMS 依此循環持續改善。"
+  },
+  {
+    id: 19, cat: "B",
+    stem: "關於資訊資產盤點（Asset Inventory）之目的，下列敘述何者「不」正確？",
+    opts: [
+      "識別組織擁有之資訊資產，作為風險評鑑基礎",
+      "釐清各資產之擁有者、保管者與使用者",
+      "盤點僅為裝飾性紙本作業，對實質資安無助益",
+      "協助規劃控制措施與優先投入資源"
+    ],
+    ans: 2,
+    expl: "正解 C：資產盤點為 ISMS 建立之基礎工作，無盤點則無法識別威脅對象、評估風險、規劃控制措施、事件應變時難以掌握衝擊範圍。盤點有實質且必要之資安效益。"
+  },
+  {
+    id: 20, cat: "B",
+    stem: "關於「資產擁有者（Asset Owner）」與「資產保管者（Custodian）」之角色定義，下列敘述何者最正確？",
+    opts: [
+      "擁有者僅負責購置、保管者僅負責報廢",
+      "兩者職責完全相同",
+      "保管者決定資產分類，擁有者執行備份與權限設定",
+      "擁有者決定資產分類、存取原則與風險處理方向；保管者依擁有者指示執行實際保護作業（備份、權限、監控、修補）"
+    ],
+    ans: 3,
+    expl: "正解 D：擁有者通常為業務單位主管，對資產分類、存取原則、風險處理有決策權；保管者通常為資訊單位，依擁有者要求實際執行技術防護。兩者職責分工明確。"
+  },
+  {
+    id: 21, cat: "B",
+    stem: "某公司依資料機密性將資訊分為「公開、內部使用、機密、極機密」四級，下列做法何者最符合資產分類目的？",
+    opts: [
+      "所有資料一律以極機密處理，以達最高安全",
+      "依分類層級採差異化之存取、傳輸、儲存與銷毀控制措施",
+      "分類僅用於文件封面標示，不影響實際處理方式",
+      "分類由資訊單位單方決定，業務部門無須參與"
+    ],
+    ans: 1,
+    expl: "正解 B：資產分類之目的在於將有限資安資源集中於機敏資產；對不同層級資料採差異化保護（如極機密加密傳輸、機密限特定人員存取、公開可自由散發），才能平衡安全與成本。"
+  },
+  {
+    id: 22, cat: "B",
+    stem: "資訊安全「風險（Risk）」之主要構成要素為下列何者？",
+    opts: [
+      "威脅（Threat）、脆弱點（Vulnerability）、衝擊（Impact）",
+      "成本、效益、時程",
+      "法規、合約、倫理",
+      "政策、標準、程序"
+    ],
+    ans: 0,
+    expl: "正解 A：資訊安全風險 = 威脅 × 脆弱點 × 衝擊。威脅為可能發生之事件、脆弱點為系統弱點、衝擊為事件發生後對業務之影響。三者缺一即無風險。"
+  },
+  {
+    id: 23, cat: "B",
+    stem: "關於定量（Quantitative）與定性（Qualitative）風險評鑑方法之比較，下列敘述何者「不」正確？",
+    opts: [
+      "定量評鑑以數值量化（如 ALE、SLE），結果易於與財務指標連結",
+      "定性評鑑以高／中／低等級表示，執行快速且易於溝通",
+      "定性評鑑需大量精確統計資料支撐，通常較定量評鑑更耗時與昂貴",
+      "實務上常採定量與定性混合（半定量）評鑑"
+    ],
+    ans: 2,
+    expl: "正解 C：定量評鑑才需要大量精確歷史資料支撐，計算複雜、成本較高；定性評鑑以主觀判斷與等級對照進行，執行快速、成本低。選項 C 之敘述顛倒了兩種方法之特性。"
+  },
+  {
+    id: 24, cat: "B",
+    stem: "某公司一台資料庫伺服器價值新台幣 200 萬元，勒索軟體攻擊發生時預估造成 50% 損失，依歷史統計平均 2 年發生 1 次，下列年度預期損失（ALE）計算何者最正確？",
+    opts: [
+      "200 萬元",
+      "50 萬元",
+      "100 萬元",
+      "25 萬元"
+    ],
+    ans: 1,
+    expl: "正解 B：SLE（單次損失期望值）= 資產價值 × 曝險係數 = 200 萬 × 50% = 100 萬；ARO（年化發生率）= 2 年 1 次 = 0.5；ALE = SLE × ARO = 100 萬 × 0.5 = 50 萬。"
+  },
+  {
+    id: 25, cat: "B",
+    stem: "依 ISO 31000 / 27005 所定義之風險處理策略，下列何者「不」屬於其中？",
+    opts: [
+      "接受（Accept）",
+      "降低（Mitigate / Modify）",
+      "轉移（Transfer / Share）",
+      "消弭（Eliminate）"
+    ],
+    ans: 3,
+    expl: "正解 D：ISO 31000 / 27005 四種風險處理策略為「接受／降低／轉移／避免（Avoid）」。並無「消弭（Eliminate）」策略；「避免」僅係不從事該項可能導致風險之活動，而非消滅風險本身。"
+  },
+  {
+    id: 26, cat: "B",
+    stem: "關於殘餘風險（Residual Risk），下列敘述何者最正確？",
+    opts: [
+      "採行風險處理後仍存在之風險，應由管理階層決定是否接受、再處理或轉移",
+      "採行控制措施後即可完全消除，不存在殘餘風險",
+      "殘餘風險僅存在於小型組織",
+      "殘餘風險與原始風險大小相同，控制措施無效"
+    ],
+    ans: 0,
+    expl: "正解 A：殘餘風險為施行控制措施後仍未降低至零的剩餘風險。組織須由管理階層（通常經風險委員會）決定其是否在可接受範圍（風險胃納）內；若仍過高則需再處理、轉移或避免。"
+  },
+  {
+    id: 27, cat: "B",
+    stem: "關於「內部稽核（Internal Audit）」與「外部查核（External Audit）」之區別，下列敘述何者最正確？",
+    opts: [
+      "兩者職責完全相同",
+      "內部稽核由組織內部獨立單位執行，重在持續改善與管理；外部查核由獨立第三方執行，重在獨立驗證與公信力",
+      "內部稽核僅為外部查核之準備工作",
+      "兩者皆須由組織外部人員執行，方確保獨立性"
+    ],
+    ans: 1,
+    expl: "正解 B：內部稽核由組織內部稽核單位執行，目的在於發現問題、改進流程、協助管理；外部查核由獨立第三方（如驗證機構、會計師）執行，目的在於提供獨立意見與公信力。兩者角色互補。"
+  },
+  {
+    id: 28, cat: "B",
+    stem: "關於組織對供應商與委外廠商之資安管理，下列做法何者最適當？",
+    opts: [
+      "供應商簽約後即不需任何持續管理",
+      "僅依合約約定條款驗證，無須實地稽核",
+      "於合約中明訂資安要求、事件通報義務與稽核權，並定期進行風險評估與實地查核",
+      "所有廠商應完全共享組織內部系統權限以增強合作"
+    ],
+    ans: 2,
+    expl: "正解 C：供應鏈為現代攻擊常見入侵點。應於合約中明訂資安條款（保密、事件通報、存取控制、稽核權、損害賠償），並依廠商風險等級定期評估與實地查核，形成持續性之供應商風險管理。"
+  },
+  {
+    id: 29, cat: "C",
+    stem: "身分驗證之三大因素分類為「你所知道的」、「你所擁有的」及下列何者？",
+    opts: [
+      "你所熟悉的（What you familiar with）",
+      "你所相信的（What you believe）",
+      "你所決定的（What you decide）",
+      "你本身（What you are）"
+    ],
+    ans: 3,
+    expl: "正解 D：身分驗證三大因素為：(1) 你所知道的（知識，如密碼／PIN）、(2) 你所擁有的（持有物，如硬體 Token、手機）、(3) 你本身（生物特徵，如指紋、臉部、虹膜）。"
+  },
+  {
+    id: 30, cat: "C",
+    stem: "下列何者最符合真正的「多因子驗證（MFA）」？",
+    opts: [
+      "輸入兩次不同的密碼",
+      "密碼登入後再輸入 PIN 碼",
+      "密碼登入後，再以手機動態碼（OTP）或實體 Token 驗證",
+      "指紋登入後再以虹膜掃描驗證"
+    ],
+    ans: 2,
+    expl: "正解 C：真正的 MFA 須結合「不同類別」的驗證因素。選項 C 為「你所知道的（密碼）」+「你所擁有的（手機／Token）」；A、B 皆屬同類（知識）；D 皆屬同類（生物特徵），故均不構成真正 MFA。"
+  },
+  {
+    id: 31, cat: "C",
+    stem: "資訊安全 AAA 架構之三個 A 分別代表下列何者？",
+    opts: [
+      "Audit、Access、Accountability",
+      "Authentication、Authorization、Accounting",
+      "Authentication、Access、Audit",
+      "Authorization、Audit、Accounting"
+    ],
+    ans: 1,
+    expl: "正解 B：AAA = Authentication（鑑別「你是誰」）＋ Authorization（授權「你能做什麼」）＋ Accounting（計量記錄「你做了什麼」）。常見於 RADIUS、TACACS+ 等存取控制協定。"
+  },
+  {
+    id: 32, cat: "C",
+    stem: "下列何者最符合「自主存取控制（DAC, Discretionary Access Control）」之特性？",
+    opts: [
+      "資源擁有者（如檔案所有者）可自行決定授予他人存取權限",
+      "由系統管理員依安全標籤強制指派，使用者無權變更",
+      "依使用者所屬角色授予權限，不論擁有者意願",
+      "依使用者屬性與環境條件動態判斷"
+    ],
+    ans: 0,
+    expl: "正解 A：DAC 由資源擁有者自主決定存取權授予對象（如 Windows NTFS、Unix chmod）。B 為 MAC、C 為 RBAC、D 為 ABAC。"
+  },
+  {
+    id: 33, cat: "C",
+    stem: "下列何者最符合「強制存取控制（MAC, Mandatory Access Control）」之特性？",
+    opts: [
+      "資源擁有者可自行授予他人存取權",
+      "依使用者職稱自動繼承權限",
+      "依安全標籤（Security Label）與安全許可（Clearance）強制指派，使用者與擁有者皆無權變更",
+      "依時段、地點等屬性動態授予權限"
+    ],
+    ans: 2,
+    expl: "正解 C：MAC 常見於軍事、政府高機密環境（如 SELinux、TrustedBSD），由系統依安全分級（Top Secret／Secret／Confidential／Unclassified）與使用者 Clearance 強制決定存取，使用者無法自行調整。"
+  },
+  {
+    id: 34, cat: "C",
+    stem: "關於角色基礎存取控制（RBAC, Role-Based Access Control），下列敘述何者「不」正確？",
+    opts: [
+      "透過定義角色並指派權限給角色，再將使用者歸屬至角色",
+      "便於大規模組織管理，降低個別授權之複雜度",
+      "人員異動時僅需調整角色歸屬，不需逐項修改個人權限",
+      "RBAC 之權限由資源擁有者完全自主決定，無須集中規劃"
+    ],
+    ans: 3,
+    expl: "正解 D：RBAC 為集中式之角色與權限管理，由管理者（非資源擁有者）集中規劃角色與權限對應；選項 D 之敘述為 DAC 特性，非 RBAC。"
+  },
+  {
+    id: 35, cat: "C",
+    stem: "關於屬性基礎存取控制（ABAC, Attribute-Based Access Control），下列敘述何者「不」正確？",
+    opts: [
+      "依使用者屬性、資源屬性、環境屬性（時段、位置）與動作屬性動態決策",
+      "ABAC 決策因子僅限使用者身分屬性，不考慮環境或資源屬性",
+      "較 RBAC 更具細緻度與彈性，適合複雜場景",
+      "可以政策語言（如 XACML）表達存取規則"
+    ],
+    ans: 1,
+    expl: "正解 B：ABAC 之決策因子為多面向屬性（主體／客體／環境／動作），非僅限使用者身分。其彈性遠高於 RBAC，是實現零信任與細緻授權之重要基礎。"
+  },
+  {
+    id: 36, cat: "C",
+    stem: "下列何者屬於對稱式加密演算法？",
+    opts: [
+      "AES、DES、3DES",
+      "RSA、ECC、DSA",
+      "SHA-256、MD5、HMAC",
+      "Diffie-Hellman、ECDH、X25519"
+    ],
+    ans: 0,
+    expl: "正解 A：對稱式加密以同一把金鑰進行加解密，代表演算法為 AES、DES、3DES、ChaCha20 等。選項 B 為非對稱加密／簽章；C 為雜湊／訊息鑑別碼；D 為金鑰交換。"
+  },
+  {
+    id: 37, cat: "C",
+    stem: "關於非對稱式加密（公開金鑰密碼學），下列敘述何者「不」正確？",
+    opts: [
+      "使用一對金鑰：公鑰可公開、私鑰須妥善保管",
+      "RSA、ECC、ElGamal 皆屬非對稱加密演算法",
+      "可應用於金鑰交換、數位簽章與小量資料加密",
+      "非對稱加密運算速度遠快於對稱加密，適合用於大量資料加密"
+    ],
+    ans: 3,
+    expl: "正解 D：非對稱加密運算成本遠高於對稱加密（通常慢數百至數千倍），實務上「不」用於大量資料加密；多以非對稱加密協商出對稱金鑰後，再以對稱加密處理大量資料（混合加密）。"
+  },
+  {
+    id: 38, cat: "C",
+    stem: "關於雜湊函數（Hash Function）之特性，下列敘述何者「不」正確？",
+    opts: [
+      "無論輸入長度多少，輸出為固定長度之雜湊值",
+      "應具抗原像性、抗第二原像性與抗碰撞性",
+      "雜湊運算為可逆運算，可由雜湊值還原原始輸入",
+      "MD5 已不再安全；SHA-256、SHA-3 為目前建議使用之演算法"
+    ],
+    ans: 2,
+    expl: "正解 C：雜湊函數為單向函數（One-way Function），設計上即「不可逆」──無法由雜湊值反推原始輸入。若可逆即失去雜湊函數之核心價值。"
+  },
+  {
+    id: 39, cat: "C",
+    stem: "關於數位簽章（Digital Signature）可提供之安全效益，下列敘述何者最正確？",
+    opts: [
+      "僅能提供資料之加密機密性",
+      "可同時提供「來源鑑別」、「訊息完整性」與「不可否認性」",
+      "僅適用於紙本文件之電子化",
+      "與電子簽名為完全相同概念，無須區分"
+    ],
+    ans: 1,
+    expl: "正解 B：數位簽章同時提供三項效益：來源鑑別（證明簽章者身分）、完整性（訊息未被竄改）、不可否認性（簽章者事後無法否認）。電子簽名為更廣義概念，數位簽章為其中技術嚴謹之一種實作。"
+  },
+  {
+    id: 40, cat: "C",
+    stem: "關於公開金鑰基礎建設（PKI）與數位憑證，下列敘述何者最正確？",
+    opts: [
+      "憑證授權中心（CA）負責簽發並管理 X.509 憑證，以公信方式綁定公鑰與身分",
+      "CA 會保管使用者之私鑰以供備份",
+      "憑證註銷清單（CRL）僅於憑證過期後建立",
+      "X.509 憑證中不含簽發者（Issuer）資訊"
+    ],
+    ans: 0,
+    expl: "正解 A：CA 簽發之 X.509 憑證係以 CA 之私鑰對憑證內容簽章，公鑰與身分由第三方公信力保證。CA 絕「不」保管使用者私鑰；CRL 於憑證效期內因遭盜用、離職等原因註銷時即需建立；X.509 必含 Issuer 欄位。"
+  },
+  {
+    id: 41, cat: "C",
+    stem: "某組織欲於電子郵件中同時確保「內容機密性」、「寄件人身分鑑別」與「內容未被竄改」，下列技術組合何者最合適？",
+    opts: [
+      "僅對郵件內容以雜湊函數處理",
+      "僅對郵件以對稱加密",
+      "僅以數位簽章處理",
+      "以對稱加密郵件內容（保密），以收件人公鑰加密對稱金鑰（金鑰傳遞），再以寄件人私鑰對訊息摘要簽章（鑑別與完整性）"
+    ],
+    ans: 3,
+    expl: "正解 D：此為典型 S/MIME、PGP 之混合加密架構。對稱加密負責大量資料保密（效能佳）、非對稱加密負責對稱金鑰傳遞、數位簽章負責身分鑑別與完整性。三者結合方能同時達成三項安全目標。"
+  },
+  {
+    id: 42, cat: "D",
+    stem: "依 NIST SP 800-61 Rev. 2 之資安事件處理生命週期四階段，其正確順序為下列何者？",
+    opts: [
+      "偵測與分析 → 準備 → 遏制／根除／復原 → 事件後活動",
+      "準備 → 遏制／根除／復原 → 偵測與分析 → 事件後活動",
+      "遏制／根除／復原 → 準備 → 偵測與分析 → 事件後活動",
+      "準備（Preparation）→ 偵測與分析（Detection & Analysis）→ 遏制、根除與復原（Containment, Eradication & Recovery）→ 事件後活動（Post-Incident Activity）"
+    ],
+    ans: 3,
+    expl: "正解 D：NIST SP 800-61 Rev. 2 之事件處理四階段依序為：(1) Preparation（準備）、(2) Detection & Analysis（偵測與分析）、(3) Containment, Eradication & Recovery（遏制、根除與復原）、(4) Post-Incident Activity（事件後活動）。為持續循環之程序，與 SANS PICERL 六階段分類不同。"
+  },
+  {
+    id: 43, cat: "D",
+    stem: "依我國「資通安全事件通報應變及演練辦法」之事件分級原則，下列何者屬最嚴重等級、需立即全面應變？",
+    opts: [
+      "4 級事件",
+      "3 級事件",
+      "2 級事件",
+      "1 級事件"
+    ],
+    ans: 0,
+    expl: "正解 A：我國資通安全事件依影響程度分為 1~4 級，「4 級」為最嚴重（如國家機密外洩、核心業務長時間中斷）、「1 級」為最輕微。各級事件有不同通報時限與應變要求。"
+  },
+  {
+    id: 44, cat: "D",
+    stem: "關於我國「資通安全管理法」（114 年 9 月 24 日修正公布）之主管機關與適用對象，下列敘述何者最正確？",
+    opts: [
+      "主管機關為國家安全局",
+      "主管機關為數位發展部；適用對象為公務機關及特定非公務機關（包含關鍵基礎設施提供者、公營事業、政府捐助之財團法人）",
+      "適用對象僅限公務機關，私人企業一律不適用",
+      "本法僅為行政指導，無任何罰則規定"
+    ],
+    ans: 1,
+    expl: "正解 B：資通安全管理法主管機關為數位發展部（原為行政院）；適用對象包含公務機關與特定非公務機關。對未履行資安義務者設有罰鍰規定。"
+  },
+  {
+    id: 45, cat: "D",
+    stem: "關於我國「資通安全事件通報應變及演練辦法」（115 年 1 月 5 日發布施行），下列敘述何者「不」正確？",
+    opts: [
+      "115/1/5 發布施行，取代原「資通安全事件通報及應變辦法」",
+      "機關知悉資安事件後應於規定時限內向主管機關通報（通報時限依事件等級不同）",
+      "機關應依責任等級定期辦理社交工程、網路攻防等資通安全演練",
+      "機關發生資安事件後僅需內部處理即可，無須對外通報"
+    ],
+    ans: 3,
+    expl: "正解 D：依 115/1/5 新版辦法，機關應於規定時限內向主管機關通報資安事件，不得隱匿；內部處理與外部通報並行。選項 D 違反辦法核心要求，故為錯誤敘述。"
+  },
+  {
+    id: 46, cat: "D",
+    stem: "關於業務持續管理中之 RTO、RPO、MTD 定義與關係，下列敘述何者「不」正確？",
+    opts: [
+      "RTO（Recovery Time Objective）為可接受之系統停擺最長時間",
+      "RPO（Recovery Point Objective）為可接受之資料損失最大容忍時段",
+      "MTD（Maximum Tolerable Downtime）應設定小於 RTO，否則無意義",
+      "實務上應使 RTO ≤ MTD，確保系統於業務不可承受門檻前完成復原"
+    ],
+    ans: 2,
+    expl: "正解 C：MTD 為業務面所能承受之「最長」停擺上限，RTO 須設定「≤ MTD」方為合理。選項 C 敘述將 MTD 與 RTO 大小關係顛倒，故為錯誤。"
+  },
+  {
+    id: 47, cat: "D",
+    stem: "關於業務持續計畫（BCP）與災害復原計畫（DRP）之關係，下列敘述何者最正確？",
+    opts: [
+      "BCP 涵蓋整體業務持續運作（含人員、流程、場所、供應鏈）；DRP 聚焦於資訊系統與基礎設施之復原，DRP 為 BCP 之子集",
+      "DRP 涵蓋 BCP，BCP 僅為 DRP 之子計畫",
+      "BCP 與 DRP 內容完全相同，無須並存",
+      "BCP 僅適用於天然災害、DRP 僅適用於人為事故"
+    ],
+    ans: 0,
+    expl: "正解 A：BCP 為組織層級之持續營運計畫，涵蓋面廣（人員、流程、場所、供應鏈、通訊）；DRP 聚焦於 IT 系統與基礎設施之災後復原，屬 BCP 中「IT 持續性」之一部分。兩者為包含關係，非等同。"
+  },
+  {
+    id: 48, cat: "D",
+    stem: "關於我國個人資料保護法之規定，下列敘述何者「不」正確？",
+    opts: [
+      "特種個資（如病歷、醫療、基因、性生活、健康檢查、犯罪前科）原則禁止蒐集、處理或利用",
+      "蒐集個資時應明確告知蒐集目的、使用範圍、當事人權利等事項",
+      "個資外洩事件屬內部事務，無須通知當事人或主管機關",
+      "當事人享有查詢、閱覽、複製、補充、更正、停止利用、請求刪除等權利"
+    ],
+    ans: 2,
+    expl: "正解 C：依個資法第 12 條，發生個資被竊取、洩漏、竄改或其他侵害事件時，應查明後以適當方式通知當事人；依現行規定亦可能須向主管機關通報。選項 C 違反此條規定。"
+  },
+  {
+    id: 49, cat: "D",
+    stem: "關於歐盟《一般資料保護規則》（GDPR），下列敘述何者最正確？",
+    opts: [
+      "GDPR 僅適用於歐盟境內機構，境外蒐集歐盟居民個資之組織不受規範",
+      "GDPR 違規最高罰鍰可達 2,000 萬歐元或全球年營業額之 4%（取較高者）；知悉資料外洩後應於 72 小時內通報監管機關",
+      "GDPR 與我國個資法規範完全相同，無額外義務",
+      "GDPR 要求個資永久保存，不得刪除"
+    ],
+    ans: 1,
+    expl: "正解 B：GDPR 具域外效力，境外組織蒐集歐盟居民個資亦受規範；設有「資料可攜權」、「被遺忘權」等新興權利；違規罰則嚴格（最高 2,000 萬歐元或全球營業額 4%）；並要求 72 小時內通報監管機關。"
+  },
+  {
+    id: 50, cat: "D",
+    stem: "關於組織內員工使用他人著作之權利與義務，下列敘述何者最正確？",
+    opts: [
+      "僅需標示來源即可任意使用他人著作",
+      "組織購買的商業軟體可於組織內不限裝置數量使用",
+      "著作權僅保護書籍文字，不保護電腦程式",
+      "使用他人著作應取得合法授權（購買或授權條款同意），並遵守著作人格權與財產權；電腦程式亦受著作權法保護"
+    ],
+    ans: 3,
+    expl: "正解 D：依著作權法，他人著作（含電腦程式）之使用須取得合法授權；授權通常規範使用裝置數量、地點、期限；標示來源不等同取得授權；電腦程式明定於著作權法保護範圍內。"
+  }
+];
+</script>
+<script>
+// ============================================================
+// 資訊安全模擬測驗系統 - 狀態機與邏輯
+// ============================================================
+const TOTAL_TIME_SEC = 75 * 60;   // 75 分鐘
+const EXAM_TITLE = "[模擬測驗] 資訊安全管理概論";
+const SUBJECT_CODE = "ISM-01";
+const CAT_NAMES = {
+  A: "資訊安全管理概念",
+  B: "資產與風險管理",
+  C: "存取控制、加解密與金鑰管理",
+  D: "事故管理與營運持續"
+};
+
+const state = {
+  stage: "login",
+  userId: "",
+  currentIdx: 0,
+  answers: {},      // {qid: 0-3}
+  marked: {},       // {qid: true}
+  zoomLevel: 1,
+  startTime: null,
+  remaining: TOTAL_TIME_SEC,
+  timerId: null,
+  submitted: false,
+  filter: "all"     // all / wrong / blank / correct
+};
+
+const $stage = document.getElementById("stage");
+
+// ============================================================
+// 隨機洗牌（題目順序 + 每題選項順序）
+// ============================================================
+// 保留一份原始題庫深複製，每次洗牌都從原始版重新生成，避免累積污染
+const ORIGINAL_QUESTIONS = QUESTIONS.map(q => ({
+  id: q.id,
+  cat: q.cat,
+  stem: q.stem,
+  opts: [...q.opts],
+  ans: q.ans,
+  expl: q.expl
+}));
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function shuffleExam() {
+  // 從原始題庫深複製一份
+  const fresh = ORIGINAL_QUESTIONS.map(q => ({
+    id: q.id,
+    cat: q.cat,
+    stem: q.stem,
+    opts: [...q.opts],
+    ans: q.ans,
+    expl: q.expl
+  }));
+  // 1. 打散題目順序
+  const shuffled = shuffleArray(fresh);
+  // 2. 每題內部打散選項順序，並更新 ans 指標
+  shuffled.forEach(q => {
+    const correctText = q.opts[q.ans];
+    q.opts = shuffleArray(q.opts);
+    q.ans = q.opts.indexOf(correctText);
+  });
+  // 3. 替換執行時題庫
+  QUESTIONS.length = 0;
+  QUESTIONS.push(...shuffled);
+}
+
+// ============================================================
+// 畫面渲染函式
+// ============================================================
+function renderLogin() {
+  state.stage = "login";
+  $stage.innerHTML = `
+    <div style="padding-top: 20px;">
+      <div class="disclaimer-box">
+        <div class="dc-title">重要聲明 — 請於開始練習前詳讀</div>
+        <ul>
+          <li>本系統為<b>社群志工自製之個人學習練習工具</b>，與任何政府機關、能力鑑定推動辦公室、官方發證單位均<b>無任何關聯、合作或授權關係</b>。</li>
+          <li>系統介面僅為模仿一般電腦化測驗之操作風格，<b>並非任何官方考試系統之實際畫面</b>。</li>
+          <li>題目內容為社群成員參考公開學習資源自行撰寫，<b>非官方歷屆試題</b>，僅作為讀書會學員熟悉題型與觀念之用。</li>
+          <li>本系統<b>不得用於任何商業用途或對外發證</b>，亦不保證與任何正式鑑定測驗之內容一致。</li>
+        </ul>
+        <div class="dc-ack">點擊「登錄」即表示您已知悉上述聲明，並同意僅將本系統用於個人學習。</div>
+      </div>
+      <div class="login-box">
+        <div class="login-title">
+          <h2>資訊安全模擬測驗系統</h2>
+          <span class="ver">Practice Edition v1.0 / 非官方練習用</span>
+        </div>
+        <div class="login-body">
+          <div class="login-field">
+            <label>練習者名稱：</label>
+            <input type="text" id="userIdInput" maxlength="20" placeholder="可輸入暱稱，留空亦可" autocomplete="off">
+          </div>
+          <div class="login-hint">
+            💡 填寫姓名：成績將上傳至社群排行榜<br>
+            📝 留空：個人練習模式，不上傳
+          </div>
+          <div class="login-buttons">
+            <button class="win-btn primary" onclick="doLogin()">登 錄</button>
+            <button class="win-btn" onclick="doCancel()">取 消</button>
+          </div>
+          <div class="login-champion" id="loginChampion">
+            <div class="champion-loading">🏆 載入榜首中...</div>
+          </div>
+          <div class="login-preview-link">
+            <a href="javascript:void(0)" onclick="showLeaderboardPreview()">查看完整排行榜 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  setTimeout(() => {
+    const inp = document.getElementById("userIdInput");
+    if (inp) inp.focus();
+    loadChampionPreview();
+  }, 100);
+}
+
+function doCancel() {
+  const inp = document.getElementById("userIdInput");
+  if (inp) inp.value = "";
+}
+
+function doLogin() {
+  const inp = document.getElementById("userIdInput");
+  const val = (inp.value || "").trim();
+  if (!val) {
+    state.userId = "練習者";
+  } else {
+    state.userId = val;
+  }
+  renderInfo();
+}
+
+function renderInfo() {
+  state.stage = "info";
+  $stage.innerHTML = `
+    <div class="info-panel">
+      <div class="info-panel-header">
+        <div>
+          <span class="tab">${EXAM_TITLE}</span>
+          <span class="tab-inactive">測驗注意事項</span>
+        </div>
+      </div>
+      <div class="info-identity">
+        <span>練習者名稱：${state.userId}</span>
+        <span>模式：個人練習</span>
+      </div>
+      <div class="info-content">
+        <ol>
+          <li>一、本試卷為<b>模擬練習題</b>，全部為<b>單選題</b>，共 <b>50 題</b>，每題 2 分（答錯不倒扣），總分共計 100 分，測驗時間 <b>75 分鐘</b>。</li>
+          <li>二、<b>每次進入本測驗，題目順序與選項順序皆會重新隨機排列</b>，避免記憶題號而非觀念。</li>
+          <li>三、本試題 0 為阿拉伯數字，O 為英文字母，作答時請先確認。</li>
+          <li>四、作答完畢請點選右上方「結束測驗」結束本次練習，系統將顯示成績與逐題解析。</li>
+          <li>五、本測驗達 <b>70 分</b> 為合格參考線（僅供自我檢核）。</li>
+          <li>六、<b style="color:#a04040;">本系統為非官方個人練習工具，題目與結果僅供學習參考，不代表任何正式鑑定之結果。</b></li>
+        </ol>
+      </div>
+      <div class="info-footer">
+        <button class="win-btn primary" onclick="startExam()" style="min-width: 100px; padding: 6px 28px;">開 始</button>
+      </div>
+      <div class="info-statusbar">試卷資料已載入完成，請點擊「開始」按鈕進行計時練習。</div>
+    </div>
+  `;
+}
+
+function startExam() {
+  state.stage = "exam";
+  shuffleExam();              // 每次進入考試都重新洗牌（題目 + 選項）
+  state.startTime = Date.now();
+  state.remaining = TOTAL_TIME_SEC;
+  startTimer();
+  renderExam();
+}
+
+function startTimer() {
+  if (state.timerId) clearInterval(state.timerId);
+  state.timerId = setInterval(() => {
+    state.remaining--;
+    if (state.remaining <= 0) {
+      state.remaining = 0;
+      clearInterval(state.timerId);
+      // 時間到自動交卷
+      finalizeExam();
+      return;
+    }
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, "0");
+  const s = (sec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById("timerDisplay");
+  if (!el) return;
+  el.textContent = `${formatTime(state.remaining)} / ${formatTime(TOTAL_TIME_SEC)}`;
+  if (state.remaining <= 300) {
+    el.classList.add("warning");
+  }
+}
+
+function renderExam() {
+  const q = QUESTIONS[state.currentIdx];
+  const total = QUESTIONS.length;
+  const isMarked = !!state.marked[q.id];
+  const userAns = state.answers[q.id];
+
+  $stage.innerHTML = `
+    <div class="exam-frame">
+      <div class="exam-topbar">
+        <div class="tab-active">學科測驗</div>
+      </div>
+      <div class="exam-identity-bar">
+        <span>${EXAM_TITLE}</span>
+        <span class="progress" id="progressDisplay">A${(state.currentIdx+1).toString().padStart(3,"0")} / A${total.toString().padStart(3,"0")}</span>
+        <span class="timer" id="timerDisplay">${formatTime(state.remaining)} / ${formatTime(TOTAL_TIME_SEC)}</span>
+        <button class="end-btn" onclick="confirmEndExam()">結束測驗</button>
+      </div>
+      <div class="exam-toolbar">
+        <button class="win-btn" onclick="prevQuestion()" ${state.currentIdx === 0 ? 'disabled' : ''}>◁ 上一題</button>
+        <button class="win-btn" onclick="nextQuestion()" ${state.currentIdx === total - 1 ? 'disabled' : ''}>下一題 ▷</button>
+        <button class="win-btn" onclick="clearAnswer()">不作答</button>
+        <button class="win-btn ${isMarked ? 'marked' : ''}" onclick="toggleMark()">${isMarked ? '★ 已標記' : '試題標記'}</button>
+        <button class="win-btn" onclick="openOverview()">試題總覽</button>
+        <button class="win-btn zoom-btn" onclick="zoomIn()" title="放大">🔍＋</button>
+        <button class="win-btn zoom-btn" onclick="zoomOut()" title="縮小" style="margin-left:0;">🔍－</button>
+      </div>
+      <div class="question-area zoom-${state.zoomLevel}" id="questionArea">
+        <div class="question-stem">
+          <span class="qnum">${state.currentIdx + 1}.</span>${escapeHtml(q.stem)}
+        </div>
+        <div class="options">
+          ${q.opts.map((opt, i) => `
+            <label class="option-row">
+              <input type="radio" name="opt" value="${i}" ${userAns === i ? 'checked' : ''} onchange="selectAnswer(${i})">
+              <span class="option-label">(${String.fromCharCode(65+i)})</span>
+              <span>${escapeHtml(opt)}</span>
+            </label>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function selectAnswer(i) {
+  const q = QUESTIONS[state.currentIdx];
+  state.answers[q.id] = i;
+}
+
+function clearAnswer() {
+  const q = QUESTIONS[state.currentIdx];
+  delete state.answers[q.id];
+  renderExam();
+}
+
+function toggleMark() {
+  const q = QUESTIONS[state.currentIdx];
+  if (state.marked[q.id]) {
+    delete state.marked[q.id];
+  } else {
+    state.marked[q.id] = true;
+  }
+  renderExam();
+}
+
+function prevQuestion() {
+  if (state.currentIdx > 0) {
+    state.currentIdx--;
+    renderExam();
+  }
+}
+
+function nextQuestion() {
+  if (state.currentIdx < QUESTIONS.length - 1) {
+    state.currentIdx++;
+    renderExam();
+  }
+}
+
+function zoomIn() {
+  if (state.zoomLevel < 3) {
+    state.zoomLevel++;
+    renderExam();
+  }
+}
+
+function zoomOut() {
+  if (state.zoomLevel > 0) {
+    state.zoomLevel--;
+    renderExam();
+  }
+}
+
+// ============================================================
+// 試題總覽
+// ============================================================
+function openOverview() {
+  const grid = document.getElementById("overviewGrid");
+  grid.innerHTML = QUESTIONS.map((q, i) => {
+    const answered = state.answers[q.id] !== undefined;
+    const marked = state.marked[q.id];
+    let cls = "qnum-cell";
+    if (marked) cls += " marked";
+    else if (answered) cls += " answered";
+    return `<div class="${cls}" onclick="jumpTo(${i})">${i+1}</div>`;
+  }).join("");
+  document.getElementById("overviewModal").classList.add("show");
+}
+
+function closeOverview() {
+  document.getElementById("overviewModal").classList.remove("show");
+}
+
+function jumpTo(idx) {
+  state.currentIdx = idx;
+  closeOverview();
+  renderExam();
+}
+
+// ============================================================
+// 結束測驗
+// ============================================================
+function confirmEndExam() {
+  const total = QUESTIONS.length;
+  const answered = Object.keys(state.answers).length;
+  const unanswered = total - answered;
+  document.getElementById("endStats").innerHTML = `
+    學科總題數 : ${total}<br>
+    已作答題數 : ${answered}<br>
+    未作答題數 : ${unanswered}
+  `;
+  document.getElementById("endConfirmModal").classList.add("show");
+}
+
+function closeEndModal() {
+  document.getElementById("endConfirmModal").classList.remove("show");
+}
+
+function finalizeExam() {
+  closeEndModal();
+  state.submitted = true;
+  if (state.timerId) clearInterval(state.timerId);
+  renderEndScreen();
+}
+
+function renderEndScreen() {
+  state.stage = "end";
+  $stage.innerHTML = `
+    <div class="end-screen">
+      <h1>本次練習已結束</h1>
+      <p>感謝您的作答，點擊下方按鈕查看成績與逐題解析。</p>
+      <button class="win-btn primary" onclick="renderResult()" style="min-width: 140px; padding: 8px 24px;">查看模擬成績與解析</button>
+    </div>
+  `;
+}
+
+// ============================================================
+// 成績與逐題解析
+// ============================================================
+function calcResult() {
+  const byCat = { A:{n:0,c:0}, B:{n:0,c:0}, C:{n:0,c:0}, D:{n:0,c:0} };
+  let correct = 0, wrong = 0, blank = 0;
+  QUESTIONS.forEach(q => {
+    byCat[q.cat].n++;
+    const a = state.answers[q.id];
+    if (a === undefined) {
+      blank++;
+    } else if (a === q.ans) {
+      correct++;
+      byCat[q.cat].c++;
+    } else {
+      wrong++;
+    }
+  });
+  const score = Math.round((correct / QUESTIONS.length) * 100);
+  return { byCat, correct, wrong, blank, score, pass: score >= 70 };
+}
+
+function renderResult() {
+  state.stage = "result";
+  const r = calcResult();
+  const scoreCls = r.pass ? "pass" : "fail";
+
+  const catRows = ["A","B","C","D"].map(cat => {
+    const info = r.byCat[cat];
+    const pct = info.n > 0 ? Math.round((info.c / info.n) * 100) : 0;
+    let barCls = "";
+    if (pct < 60) barCls = "low";
+    else if (pct < 75) barCls = "mid";
+    return `
+      <div class="category-row">
+        <span class="cat-name">${cat}. ${CAT_NAMES[cat]}</span>
+        <span class="cat-bar-wrap"><span class="cat-bar ${barCls}" style="width: ${pct}%;"></span></span>
+        <span class="cat-score">${info.c}/${info.n} (${pct}%)</span>
+      </div>
+    `;
+  }).join("");
+
+  const usedMin = Math.floor((TOTAL_TIME_SEC - state.remaining) / 60);
+  const usedSec = (TOTAL_TIME_SEC - state.remaining) % 60;
+
+  $stage.innerHTML = `
+    <div class="result-screen">
+      <div class="result-header">
+        <div class="result-subtitle">資訊安全模擬測驗 — 非官方個人練習版</div>
+        <div class="result-title">${SUBJECT_CODE} ${EXAM_TITLE.replace("[模擬測驗] ","")}</div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-main">
+          <div class="score-number ${scoreCls}">${r.score}</div>
+          <div class="score-label">總 分（滿分 100）</div>
+          <div class="score-verdict ${scoreCls}">${r.pass ? "✓ 合 格" : "✗ 不合格"}</div>
+        </div>
+        <div class="score-breakdown">
+          <h3>各評鑑主題表現</h3>
+          ${catRows}
+        </div>
+      </div>
+
+      <div class="stats-summary">
+        <div class="stats-item correct">
+          <span class="num">${r.correct}</span>
+          <span class="lab">答對題數</span>
+        </div>
+        <div class="stats-item wrong">
+          <span class="num">${r.wrong}</span>
+          <span class="lab">答錯題數</span>
+        </div>
+        <div class="stats-item blank">
+          <span class="num">${r.blank}</span>
+          <span class="lab">未作答</span>
+        </div>
+        <div class="stats-item">
+          <span class="num">${usedMin}:${usedSec.toString().padStart(2,"0")}</span>
+          <span class="lab">實際作答時間</span>
+        </div>
+        <div class="stats-item">
+          <span class="num">${Object.keys(state.marked).length}</span>
+          <span class="lab">曾標記題數</span>
+        </div>
+      </div>
+
+      <div id="leaderboardSection" class="leaderboard-section">
+        <h3>
+          🏆 社群排行榜
+          <button class="leaderboard-refresh" onclick="refreshLeaderboard()">重新整理</button>
+        </h3>
+        <div id="leaderboardContent">
+          <div class="leaderboard-loading">載入中...</div>
+        </div>
+      </div>
+
+      <div id="teacherAdminSection"></div>
+
+      <div class="review-section">
+        <h2>
+          <span>逐題檢視與解析</span>
+          <div class="filter-buttons">
+            <button class="filter-btn ${state.filter==='all'?'active':''}" onclick="setFilter('all')">全部 (${QUESTIONS.length})</button>
+            <button class="filter-btn ${state.filter==='wrong'?'active':''}" onclick="setFilter('wrong')">錯題 (${r.wrong})</button>
+            <button class="filter-btn ${state.filter==='blank'?'active':''}" onclick="setFilter('blank')">未作答 (${r.blank})</button>
+            <button class="filter-btn ${state.filter==='correct'?'active':''}" onclick="setFilter('correct')">答對 (${r.correct})</button>
+          </div>
+        </h2>
+        <div id="reviewList">${renderReviewList()}</div>
+      </div>
+
+      <div class="result-actions">
+        <button class="win-btn" onclick="retakeExam()">重新挑戰</button>
+        <button class="win-btn primary" onclick="window.print()">列印成績單</button>
+      </div>
+    </div>
+  `;
+  // 成績頁渲染完畢後，觸發排行榜提交與載入
+  setTimeout(() => submitToLeaderboard(), 100);
+}
+
+
+// ============================================================
+// API 版排行榜功能
+// ============================================================
+const API_URL = "https://script.google.com/macros/s/AKfycbyD5I7sJoJ2YnF9v47Ul-ATPF1y4_ztCctRFltI_G6ZEIHZZKyP2p6KZfWMyLtEKVYINA/exec";
+const TEACHER_ADMIN_CODE = "#admin志祥";
+
+// 全域快取
+window._qstatsCache = null;
+window._leaderboardCache = null;
+
+// ============================================================
+// 呼叫 API 工具函數
+// ============================================================
+async function apiGet(action) {
+  const url = `${API_URL}?action=${action}&subject=${SUBJECT_CODE}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("API 回應失敗");
+  return await res.json();
+}
+
+async function apiPost(data) {
+  // 用 text/plain 避免 CORS preflight
+  const res = await fetch(API_URL, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error("API 上傳失敗");
+  return await res.json();
+}
+
+// ============================================================
+// 登入畫面：載入榜首
+// ============================================================
+async function loadChampionPreview() {
+  const box = document.getElementById("loginChampion");
+  if (!box) return;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      box.innerHTML = `<div class="champion-empty">🎯 尚無上榜紀錄，成為第一位登榜者！</div>`;
+      return;
+    }
+
+    // 每人最高分
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+
+    const champion = sorted[0];
+    const mins = Math.floor(champion.time / 60);
+    const secs = champion.time % 60;
+    const timeStr = `${mins}:${secs.toString().padStart(2, "0")}`;
+
+    box.innerHTML = `
+      <div>
+        <div class="champion-row">
+          <span class="champion-title">🏆 目前榜首</span>
+          <span class="champion-name">${escapeHtml(champion.name)}</span>
+          <span class="champion-score">${champion.score} 分</span>
+          <span style="color: #888;">｜ 用時 ${timeStr}</span>
+        </div>
+        <div class="champion-count">共 ${sorted.length} 位上榜</div>
+      </div>
+    `;
+  } catch (e) {
+    box.innerHTML = `<div class="champion-empty">（榜首資訊暫無法載入）</div>`;
+  }
+}
+
+// ============================================================
+// 考前預覽排行榜 Modal
+// ============================================================
+async function showLeaderboardPreview() {
+  let mask = document.getElementById("lbPreviewMask");
+  if (!mask) {
+    mask = document.createElement("div");
+    mask.id = "lbPreviewMask";
+    mask.className = "lb-preview-mask";
+    mask.innerHTML = `
+      <div class="lb-preview-box">
+        <h3>
+          🏆 目前社群排行榜
+          <button class="lb-preview-close" onclick="closeLeaderboardPreview()">關閉</button>
+        </h3>
+        <div class="lb-preview-subtitle">Top 10 · 登錄後可挑戰上榜</div>
+        <div id="lbPreviewContent">
+          <div class="leaderboard-loading">載入中...</div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(mask);
+    mask.addEventListener("click", (e) => {
+      if (e.target === mask) closeLeaderboardPreview();
+    });
+  }
+  mask.classList.add("show");
+
+  const container = document.getElementById("lbPreviewContent");
+  container.innerHTML = `<div class="leaderboard-loading">載入中...</div>`;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      container.innerHTML = `
+        <div class="leaderboard-mode-notice">
+          <div class="big">🎯 尚無上榜紀錄</div>
+          成為第一位登榜者吧！完成測驗後成績將顯示於此。
+        </div>
+      `;
+      return;
+    }
+
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+    const top10 = sorted.slice(0, 10);
+
+    const medalFor = (r) => r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "🥉" : r;
+    const fmtTime = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,"0")}`;
+
+    let html = `<table class="leaderboard-table">
+      <thead><tr><th class="num">名次</th><th>姓名</th><th class="score">分數</th><th class="time">時間</th></tr></thead>
+      <tbody>`;
+    top10.forEach((r, i) => {
+      html += `<tr>
+        <td class="num medal">${medalFor(i+1)}</td>
+        <td>${escapeHtml(r.name)}</td>
+        <td class="score">${r.score}</td>
+        <td class="time">${fmtTime(r.time)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    const avg = Math.round(sorted.reduce((s, r) => s + r.score, 0) / sorted.length);
+    const passCount = sorted.filter(r => r.score >= 70).length;
+    const passRate = Math.round(passCount / sorted.length * 100);
+    html += `<div class="leaderboard-stats">📊 共 ${sorted.length} 位上榜 ｜ 平均 ${avg} 分 ｜ 通過率 ${passRate}%</div>`;
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `
+      <div class="leaderboard-mode-notice">
+        <div class="big">⚠️ 載入失敗</div>
+        ${escapeHtml(e.message || "未知錯誤")}
+      </div>
+    `;
+  }
+}
+
+function closeLeaderboardPreview() {
+  const mask = document.getElementById("lbPreviewMask");
+  if (mask) mask.classList.remove("show");
+}
+
+// ============================================================
+// 成績頁：提交成績
+// ============================================================
+async function submitToLeaderboard() {
+  const userId = state.userId || "練習者";
+  const r = calcResult();
+  const usedTime = TOTAL_TIME_SEC - state.remaining;
+
+  // 老師後台入口
+  if (userId === TEACHER_ADMIN_CODE) {
+    renderTeacherAdmin();
+    document.getElementById("leaderboardSection").style.display = "none";
+    return;
+  }
+
+  // 測試模式
+  if (userId === "練習者" || userId === "") {
+    renderTeacherMode();
+    await loadAndRenderQStats();
+    return;
+  }
+
+  // 防刷
+  const answered = Object.keys(state.answers).length;
+  if (usedTime < 60) {
+    renderLeaderboardBlocked("作答時間過短（未滿 1 分鐘），不列入排行榜");
+    await loadAndRenderQStats();
+    return;
+  }
+  if (answered < QUESTIONS.length) {
+    renderLeaderboardBlocked(`僅完整作答全部 ${QUESTIONS.length} 題者才列入排行榜（您答了 ${answered} 題）`);
+    await loadAndRenderQStats();
+    return;
+  }
+
+  // 準備上傳資料
+  const answers = {};
+  QUESTIONS.forEach(q => {
+    const ans = state.answers[q.id];
+    if (ans !== undefined) answers[q.id] = ans;
+  });
+
+  const payload = {
+    action: "submit",
+    subject: SUBJECT_CODE,
+    name: userId,
+    score: r.score,
+    correct: r.correct,
+    time: usedTime,
+    date: new Date().toISOString().slice(0, 10),
+    timestamp: Date.now(),
+    answers: answers
+  };
+
+  try {
+    await apiPost(payload);
+    await renderLeaderboard();
+    await loadAndRenderQStats();
+  } catch (e) {
+    console.error("上傳失敗:", e);
+    renderLeaderboardBlocked("無法連線排行榜（請檢查網路或重試）");
+    await loadAndRenderQStats();
+  }
+}
+
+function renderTeacherMode() {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="leaderboard-mode-notice">
+      <div class="big">📝 個人練習模式</div>
+      本次成績未上傳至排行榜<br>
+      想加入社群競賽？下次於登入畫面填入姓名 🚀
+    </div>
+  `;
+}
+
+function renderLeaderboardBlocked(reason) {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="leaderboard-mode-notice">
+      <div class="big">ℹ️ 未加入排行榜</div>
+      ${reason}
+    </div>
+  `;
+}
+
+// ============================================================
+// 成績頁：渲染排行榜
+// ============================================================
+async function renderLeaderboard() {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `<div class="leaderboard-loading">載入中...</div>`;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      container.innerHTML = `
+        <div class="leaderboard-mode-notice">
+          <div class="big">🎯 尚無上榜紀錄</div>
+          你是第一位作答者！成為榜首等候挑戰吧 🏆
+        </div>
+      `;
+      return;
+    }
+
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+    const top10 = sorted.slice(0, 10);
+    const myName = state.userId;
+    const myIndex = sorted.findIndex(r => r.name === myName);
+
+    const medalFor = (r) => r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "🥉" : r;
+    const fmtTime = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,"0")}`;
+
+    let html = `<table class="leaderboard-table">
+      <thead><tr><th class="num">名次</th><th>姓名</th><th class="score">分數</th><th class="time">時間</th></tr></thead>
+      <tbody>`;
+    top10.forEach((r, i) => {
+      const isMe = r.name === myName;
+      html += `<tr class="${isMe ? "me" : ""}">
+        <td class="num medal">${medalFor(i+1)}</td>
+        <td>${escapeHtml(r.name)}</td>
+        <td class="score">${r.score}</td>
+        <td class="time">${fmtTime(r.time)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    if (myIndex >= 10) {
+      const me = sorted[myIndex];
+      html += `<div class="leaderboard-my-rank">
+        你目前排名第 <strong>${myIndex + 1}</strong> 名 ｜ ${me.score} 分 ｜ 用時 ${fmtTime(me.time)}
+      </div>`;
+    } else if (myIndex >= 0 && myIndex < 10) {
+      html += `<div class="leaderboard-my-rank">🎉 你在榜上第 <strong>${myIndex + 1}</strong> 名！</div>`;
+    }
+
+    const avg = Math.round(sorted.reduce((s, r) => s + r.score, 0) / sorted.length);
+    const passCount = sorted.filter(r => r.score >= 70).length;
+    const passRate = Math.round(passCount / sorted.length * 100);
+    html += `<div class="leaderboard-stats">📊 共 ${sorted.length} 位上榜 ｜ 平均 ${avg} 分 ｜ 通過率 ${passRate}%</div>`;
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `
+      <div class="leaderboard-mode-notice">
+        <div class="big">⚠️ 載入失敗</div>
+        ${escapeHtml(e.message || "未知錯誤")}
+      </div>
+    `;
+  }
+}
+
+async function refreshLeaderboard() {
+  await renderLeaderboard();
+}
+
+// ============================================================
+// 題目統計
+// ============================================================
+async function loadAndRenderQStats() {
+  try {
+    const result = await apiGet("qstats");
+    window._qstatsCache = result.stats || {};
+  } catch (e) {
+    window._qstatsCache = {};
+  }
+  const reviewList = document.getElementById("reviewList");
+  if (reviewList) {
+    reviewList.innerHTML = renderReviewList();
+  }
+}
+
+// ============================================================
+// 老師後台
+// ============================================================
+async function renderTeacherAdmin() {
+  const container = document.getElementById("teacherAdminSection");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="teacher-admin-panel">
+      <h4>🔐 老師後台（管理模式）</h4>
+      <div id="adminContent">載入中...</div>
+    </div>
+  `;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+    records.sort((a, b) => b.timestamp - a.timestamp);
+
+    let html = `<div>全部 ${records.length} 筆紀錄 ｜ <button onclick="exportCSV()">匯出 CSV</button></div>
+      <div style="margin-top:10px; max-height:400px; overflow-y:auto;">`;
+
+    records.forEach(r => {
+      const t = new Date(r.timestamp).toLocaleString("zh-TW");
+      const mins = Math.floor(r.time / 60);
+      const secs = r.time % 60;
+      html += `<div class="admin-row">
+        <div>
+          <strong>${escapeHtml(r.name)}</strong>
+          - ${r.score} 分 (${r.correct}/50) - ${mins}:${secs.toString().padStart(2,"0")}
+          <br><small style="color:#999;">${t}</small>
+        </div>
+      </div>`;
+    });
+
+    html += `</div>
+      <div style="margin-top:10px; font-size:11px; color:#95a5a6;">
+        💡 提示：刪除資料請直接到 Google Sheet 編輯；批量清空請清空 scores 分頁的第 2 列以下資料。
+      </div>`;
+    document.getElementById("adminContent").innerHTML = html;
+  } catch (e) {
+    document.getElementById("adminContent").innerHTML = `❌ 載入失敗: ${e.message}`;
+  }
+}
+
+async function exportCSV() {
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+    records.sort((a, b) => b.timestamp - a.timestamp);
+    let csv = "姓名,分數,答對題數,作答秒數,日期,時間戳記\n";
+    records.forEach(r => {
+      csv += `"${r.name}",${r.score},${r.correct},${r.time},${r.date},${r.timestamp}\n`;
+    });
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `leaderboard_${SUBJECT_CODE}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert("匯出失敗: " + e.message);
+  }
+}
+
+function setFilter(f) {
+  state.filter = f;
+  // 重新渲染整個結果頁以更新篩選按鈕 active 狀態
+  renderResult();
+}
+
+function renderReviewList() {
+  return QUESTIONS.map((q, idx) => {
+    const userAns = state.answers[q.id];
+    const isBlank = userAns === undefined;
+    const isCorrect = !isBlank && userAns === q.ans;
+    const isWrong = !isBlank && !isCorrect;
+
+    if (state.filter === "wrong" && !isWrong) return "";
+    if (state.filter === "blank" && !isBlank) return "";
+    if (state.filter === "correct" && !isCorrect) return "";
+
+    let itemCls = "review-item";
+    let badgeCls, badgeText;
+    if (isCorrect) { badgeCls = "correct"; badgeText = "✓ 答對"; }
+    else if (isBlank) { itemCls += " blank"; badgeCls = "blank"; badgeText = "— 未作答"; }
+    else { itemCls += " wrong"; badgeCls = "wrong"; badgeText = "✗ 答錯"; }
+
+    // 取得本題社群統計
+    const qstat = (window._qstatsCache && window._qstatsCache["q" + q.id]) || null;
+    const qstatTotal = qstat ? (qstat[0] + qstat[1] + qstat[2] + qstat[3]) : 0;
+
+    const opts = q.opts.map((opt, i) => {
+      let optCls = "review-opt";
+      let tag = "";
+      if (i === q.ans && i === userAns) {
+        optCls += " user-correct";
+        tag = "← 您的答案 ✓";
+      } else if (i === q.ans) {
+        optCls += " correct-ans";
+        tag = "← 正解";
+      } else if (i === userAns) {
+        optCls += " user-wrong";
+        tag = "← 您的答案 ✗";
+      }
+      let statBar = "";
+      if (qstat && qstatTotal > 0) {
+        const cnt = qstat[i];
+        const pct = Math.round(cnt / qstatTotal * 100);
+        const barCls = i === q.ans ? "stat-correct" : (cnt === Math.max(...qstat) && cnt > 0 && i !== q.ans ? "stat-top-wrong" : "stat-normal");
+        statBar = `<span class="opt-stat ${barCls}">${cnt} 人 / ${pct}%</span>`;
+      }
+      return `
+        <div class="${optCls}">
+          <span class="opt-marker">(${String.fromCharCode(65+i)})</span>
+          <span class="opt-text">${escapeHtml(opt)}</span>
+          ${tag ? `<span class="opt-tag">${tag}</span>` : ""}
+          ${statBar}
+        </div>
+      `;
+    }).join("");
+
+    let qstatHeader = "";
+    if (qstat && qstatTotal > 0) {
+      const correctCnt = qstat[q.ans];
+      const correctPct = Math.round(correctCnt / qstatTotal * 100);
+      qstatHeader = `<div class="review-qstat">📊 社群作答：共 ${qstatTotal} 人 ｜ 答對率 ${correctPct}%</div>`;
+    }
+
+    return `
+      <div class="${itemCls}">
+        <div class="review-header">
+          <span class="rq-num">Q${(idx+1).toString().padStart(2,"0")}</span>
+          <span class="rq-cat">${q.cat}. ${CAT_NAMES[q.cat]}</span>
+          <span class="rq-badge ${badgeCls}">${badgeText}</span>
+          ${state.marked[q.id] ? '<span class="rq-badge" style="background:#fff4d0;color:#a08020;">★ 曾標記</span>' : ''}
+        </div>
+        <div class="review-stem">${escapeHtml(q.stem)}</div>
+        ${qstatHeader}
+        <div class="review-opts">${opts}</div>
+        <div class="review-expl">
+          <span class="expl-label">解析：</span>${escapeHtml(q.expl)}
+        </div>
+      </div>
+    `;
+  }).join("") || `<div style="padding:40px;text-align:center;color:#888;">此分類目前沒有題目</div>`;
+}
+
+function retakeExam() {
+  state.currentIdx = 0;
+  state.answers = {};
+  state.marked = {};
+  state.zoomLevel = 1;
+  state.startTime = null;
+  state.remaining = TOTAL_TIME_SEC;
+  state.submitted = false;
+  state.filter = "all";
+  if (state.timerId) clearInterval(state.timerId);
+  renderLogin();
+}
+
+// ============================================================
+// 鍵盤快捷鍵
+// ============================================================
+document.addEventListener("keydown", (e) => {
+  if (state.stage !== "exam") return;
+  // 1-4 或 A-D 選答
+  const keyMap = { "1":0,"2":1,"3":2,"4":3,"a":0,"b":1,"c":2,"d":3,"A":0,"B":1,"C":2,"D":3 };
+  if (keyMap[e.key] !== undefined) {
+    selectAnswer(keyMap[e.key]);
+    renderExam();
+    return;
+  }
+  if (e.key === "ArrowLeft") prevQuestion();
+  else if (e.key === "ArrowRight") nextQuestion();
+});
+
+// 啟動
+renderLogin();
+</script>
+
+</body>
+</html>

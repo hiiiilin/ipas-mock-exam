@@ -1,0 +1,2805 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>資訊安全模擬測驗系統 — 技術概論（非官方練習用）</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft JhengHei", "微軟正黑體", "新細明體", PMingLiU, sans-serif;
+  background: #b8c4d4;
+  background-image: linear-gradient(135deg, #d8e0ec 0%, #b0bccc 100%);
+  min-height: 100vh;
+  color: #000;
+  font-size: 14px;
+  user-select: none;
+}
+
+.app-window {
+  max-width: 1080px;
+  margin: 20px auto;
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  min-height: 680px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-titlebar {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-titlebar .controls { display: flex; gap: 2px; }
+
+.app-titlebar .ctrl-btn {
+  width: 22px; height: 18px;
+  background: #5b7fb5;
+  border: 1px solid #2d4870;
+  color: #fff;
+  font-size: 11px;
+  text-align: center;
+  line-height: 16px;
+}
+
+.app-header {
+  background: #f0f0f0;
+  padding: 8px 14px;
+  border-bottom: 1px solid #c0c0c0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ipas-logo {
+  font-weight: 700;
+  color: #8c1d2c;
+  font-size: 20px;
+  letter-spacing: 1px;
+  font-family: Arial, sans-serif;
+}
+
+.ipas-logo .check { color: #2d8a6e; font-size: 22px; }
+
+.ipas-subtitle {
+  color: #333;
+  font-size: 13px;
+  border-left: 2px solid #c0c0c0;
+  padding-left: 12px;
+  line-height: 1.3;
+}
+
+.ipas-subtitle .en { color: #666; font-size: 10px; }
+
+.stage { flex: 1; padding: 24px; background: #fff; position: relative; }
+
+/* 登入畫面 */
+.disclaimer-box {
+  max-width: 540px;
+  margin: 0 auto 20px;
+  padding: 14px 18px;
+  background: #fff9e6;
+  border: 1px solid #d9b85c;
+  border-left: 4px solid #d4a024;
+  border-radius: 2px;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: #5c4a10;
+}
+
+.disclaimer-box .dc-title {
+  font-weight: 700;
+  color: #8a6410;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.disclaimer-box .dc-title::before {
+  content: "⚠";
+  font-size: 16px;
+}
+
+.disclaimer-box ul {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+
+.disclaimer-box li {
+  margin-bottom: 2px;
+}
+
+.disclaimer-box .dc-ack {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #d9b85c;
+  font-size: 12px;
+  color: #6a5420;
+}
+
+.login-box {
+  max-width: 440px;
+  margin: 0 auto;
+  border: 1px solid #4a6fa5;
+  background: #f8f9fc;
+}
+
+.login-title {
+  background: linear-gradient(to bottom, #e8eef7 0%, #d0dae8 100%);
+  border-bottom: 1px solid #4a6fa5;
+  padding: 16px;
+  text-align: center;
+}
+
+.login-title h2 {
+  font-size: 22px;
+  color: #2c4870;
+  letter-spacing: 3px;
+  font-weight: 500;
+}
+
+.login-title .ver {
+  display: block;
+  text-align: right;
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+  font-family: "Courier New", monospace;
+}
+
+.login-body { padding: 40px 32px; }
+
+.login-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.login-field label { font-size: 14px; color: #333; min-width: 72px; }
+
+.login-field input {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  font-size: 14px;
+  font-family: "Courier New", monospace;
+}
+
+.login-field input:focus {
+  outline: none;
+  border-color: #4a6fa5;
+  box-shadow: inset 0 0 2px rgba(74,111,165,0.3);
+}
+
+.login-buttons { text-align: center; display: flex; justify-content: center; gap: 16px; }
+
+.win-btn {
+  background: linear-gradient(to bottom, #fafafa 0%, #d8dde3 100%);
+  border: 1px solid #7b8a9c;
+  border-radius: 2px;
+  padding: 5px 22px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #000;
+  cursor: pointer;
+  min-width: 72px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.win-btn:hover {
+  background: linear-gradient(to bottom, #fff 0%, #e8ecf2 100%);
+  border-color: #4a6fa5;
+}
+
+.win-btn:active {
+  background: linear-gradient(to bottom, #c8ced6 0%, #dde2e8 100%);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.win-btn:disabled { color: #888; background: #e8e8e8; cursor: not-allowed; }
+
+.win-btn.primary {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  border-color: #2c4870;
+  font-weight: 500;
+}
+
+.win-btn.primary:hover {
+  background: linear-gradient(to bottom, #6a99cf 0%, #4a77ac 100%);
+}
+
+.info-panel {
+  border: 1px solid #7b8a9c;
+  background: #fff;
+}
+
+.info-panel-header {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 0;
+  font-size: 13px;
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid #2c4870;
+}
+
+.info-panel-header .tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  background: linear-gradient(to bottom, #3d5d8f 0%, #2c4870 100%);
+  color: #fff;
+  border-right: 1px solid #2c4870;
+  font-weight: 500;
+}
+
+.info-panel-header .tab-inactive {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  color: #c4d0e0;
+  font-size: 12px;
+}
+
+.info-identity {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  padding: 5px 14px;
+  font-size: 13px;
+  display: flex;
+  gap: 40px;
+  letter-spacing: 0.5px;
+}
+
+.info-content {
+  padding: 24px;
+  min-height: 320px;
+  line-height: 2;
+  font-size: 14px;
+  color: #000;
+}
+
+.info-content ol { padding-left: 0; list-style: none; }
+
+.info-content li { margin-bottom: 12px; padding-left: 0; }
+
+.info-footer {
+  padding: 12px;
+  text-align: center;
+  background: #f5f5f5;
+  border-top: 1px solid #c0c0c0;
+}
+
+.info-statusbar {
+  background: #e8e8e8;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #555;
+  border-top: 1px solid #c0c0c0;
+}
+
+/* 考試畫面 */
+.exam-frame {
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 560px;
+}
+
+.exam-topbar {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 0;
+  display: flex;
+  font-size: 13px;
+  border-bottom: 1px solid #2c4870;
+}
+
+.exam-topbar .tab-active {
+  padding: 8px 20px;
+  background: linear-gradient(to bottom, #3d5d8f 0%, #2c4870 100%);
+  color: #fff;
+  border-right: 1px solid #2c4870;
+  font-weight: 500;
+}
+
+.exam-identity-bar {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  padding: 5px 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  letter-spacing: 0.5px;
+}
+
+.exam-identity-bar .progress {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+}
+
+.exam-identity-bar .timer {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  color: #ffe89a;
+}
+
+.exam-identity-bar .timer.warning {
+  color: #ff9090;
+  animation: flash 1s infinite;
+}
+
+@keyframes flash {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.5; }
+}
+
+.exam-identity-bar .end-btn {
+  margin-left: auto;
+  background: linear-gradient(to bottom, #fafafa 0%, #d8dde3 100%);
+  color: #000;
+  border: 1px solid #2c4870;
+  padding: 2px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.exam-identity-bar .end-btn::before {
+  content: "⏻";
+  color: #2d8a6e;
+  font-weight: 700;
+}
+
+.exam-toolbar {
+  background: #f0f0f0;
+  padding: 6px 10px;
+  border-bottom: 1px solid #c0c0c0;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.exam-toolbar .win-btn {
+  min-width: 88px;
+  padding: 4px 14px;
+  font-size: 13px;
+}
+
+.exam-toolbar .win-btn.marked {
+  background: linear-gradient(to bottom, #fff4a0 0%, #f5d560 100%);
+  border-color: #c09020;
+}
+
+.exam-toolbar .zoom-btn {
+  min-width: 32px;
+  padding: 2px 6px;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.question-area {
+  padding: 22px 28px;
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.9;
+  min-height: 360px;
+}
+
+.question-area.zoom-1 { font-size: 15px; }
+.question-area.zoom-2 { font-size: 17px; }
+.question-area.zoom-3 { font-size: 19px; }
+.question-area.zoom-0 { font-size: 13px; }
+
+.question-stem {
+  font-weight: 700;
+  margin-bottom: 14px;
+  line-height: 1.7;
+}
+
+.question-stem .qnum { color: #000; margin-right: 6px; }
+
+.options { margin-left: 0; }
+
+.option-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 5px 4px;
+  cursor: pointer;
+  line-height: 1.7;
+  border: 1px solid transparent;
+}
+
+.option-row:hover { background: #f0f5fc; }
+
+.option-row input[type="radio"] {
+  margin-right: 8px;
+  margin-top: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.option-label { margin-right: 4px; font-weight: 500; }
+
+.end-screen {
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.end-screen h1 {
+  font-size: 26px;
+  color: #2c4870;
+  font-weight: 500;
+  letter-spacing: 4px;
+  margin-bottom: 14px;
+}
+
+.end-screen p {
+  color: #444;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-box {
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  min-width: 340px;
+  max-width: 500px;
+}
+
+.modal-title {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 20px 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #fff;
+}
+
+.modal-icon {
+  width: 32px; height: 32px;
+  background: #fbbf24;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 32px;
+  flex-shrink: 0;
+}
+
+.modal-text { flex: 1; line-height: 1.8; font-size: 13px; }
+
+.modal-text .stats {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed #c0c0c0;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+
+.modal-buttons {
+  padding: 10px;
+  text-align: center;
+  background: #f0f0f0;
+  border-top: 1px solid #c0c0c0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modal-buttons .win-btn { min-width: 72px; }
+
+.overview-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+}
+
+.overview-modal.show { display: flex; }
+
+.overview-box {
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-title {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.overview-title .close {
+  cursor: pointer;
+  width: 20px;
+  text-align: center;
+  background: #c94848;
+  color: #fff;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.overview-body {
+  background: #fff;
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.overview-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #c0c0c0;
+  color: #555;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.legend-dot.g { background: #6abf4b; }
+.legend-dot.y { background: #f5c518; }
+.legend-dot.r { background: #d94040; }
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+}
+
+.qnum-cell {
+  aspect-ratio: 1.6;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  border: 1px solid rgba(0,0,0,0.2);
+  background: #d94040;
+  transition: transform 0.1s;
+}
+
+.qnum-cell:hover { transform: scale(1.08); box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+
+.qnum-cell.answered { background: #6abf4b; }
+.qnum-cell.marked { background: #f5c518; color: #000; }
+
+.overview-footer {
+  background: #f0f0f0;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #666;
+  border-top: 1px solid #c0c0c0;
+  text-align: center;
+}
+
+/* 成績畫面 */
+.result-screen { padding: 0; background: #fff; }
+
+.result-header {
+  background: linear-gradient(135deg, #2c4870 0%, #4a6fa5 100%);
+  color: #fff;
+  padding: 36px 40px;
+  text-align: center;
+  border-bottom: 3px solid #f0b429;
+}
+
+.result-header .result-subtitle {
+  font-size: 13px;
+  letter-spacing: 3px;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+
+.result-header .result-title {
+  font-size: 22px;
+  letter-spacing: 2px;
+  font-weight: 500;
+}
+
+.score-card {
+  display: flex;
+  padding: 32px 40px;
+  gap: 32px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafbfd;
+}
+
+.score-main { text-align: center; min-width: 200px; }
+
+.score-number {
+  font-size: 72px;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  line-height: 1;
+}
+
+.score-number.pass { color: #2d8a6e; }
+.score-number.fail { color: #c94848; }
+
+.score-label { font-size: 13px; color: #666; margin-top: 6px; letter-spacing: 2px; }
+
+.score-verdict {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 2px;
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.score-verdict.pass { background: #e5f4eb; color: #2d8a6e; border: 1px solid #a6d8bd; }
+.score-verdict.fail { background: #fbe9e9; color: #c94848; border: 1px solid #e6b0b0; }
+
+.score-breakdown { flex: 1; }
+
+.score-breakdown h3 {
+  font-size: 14px;
+  color: #2c4870;
+  margin-bottom: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.category-row .cat-name { min-width: 200px; color: #333; }
+
+.category-row .cat-bar-wrap {
+  flex: 1;
+  height: 14px;
+  background: #e8ecf2;
+  border-radius: 7px;
+  margin: 0 12px;
+  overflow: hidden;
+}
+
+.category-row .cat-bar {
+  height: 100%;
+  background: linear-gradient(to right, #4a6fa5 0%, #5b8ac0 100%);
+  border-radius: 7px;
+  transition: width 0.6s ease-out;
+}
+
+.category-row .cat-bar.low { background: linear-gradient(to right, #c94848 0%, #e66060 100%); }
+.category-row .cat-bar.mid { background: linear-gradient(to right, #d4a024 0%, #f0b429 100%); }
+
+.category-row .cat-score {
+  min-width: 60px;
+  text-align: right;
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  color: #2c4870;
+}
+
+.stats-summary {
+  padding: 24px 40px;
+  display: flex;
+  gap: 40px;
+  background: #f5f7fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px;
+}
+
+.stats-item { display: flex; flex-direction: column; gap: 2px; }
+
+.stats-item .num {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  color: #2c4870;
+}
+
+.stats-item.correct .num { color: #2d8a6e; }
+.stats-item.wrong .num { color: #c94848; }
+.stats-item.blank .num { color: #999; }
+
+.stats-item .lab { font-size: 12px; color: #666; letter-spacing: 1px; }
+
+.review-section { padding: 28px 40px; }
+
+.review-section h2 {
+  font-size: 16px;
+  color: #2c4870;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #4a6fa5;
+  font-weight: 500;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.review-section .filter-buttons { display: flex; gap: 6px; }
+
+.filter-btn {
+  padding: 4px 12px;
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  font-family: inherit;
+}
+
+.filter-btn.active { background: #4a6fa5; color: #fff; border-color: #2c4870; }
+
+.review-item {
+  margin-bottom: 18px;
+  padding: 16px 18px;
+  border: 1px solid #dde2ea;
+  border-left: 4px solid #6abf4b;
+  background: #fafbfd;
+  border-radius: 2px;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.review-item.wrong { border-left-color: #c94848; background: #fcf5f5; }
+.review-item.blank { border-left-color: #888; background: #f7f7f7; }
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.review-header .rq-num { font-weight: 700; color: #2c4870; font-family: "Courier New", monospace; }
+
+.review-header .rq-cat {
+  font-size: 11px;
+  padding: 1px 8px;
+  background: #e8ecf2;
+  color: #2c4870;
+  border-radius: 10px;
+}
+
+.review-header .rq-badge { font-size: 11px; padding: 1px 8px; border-radius: 10px; font-weight: 700; }
+
+.review-header .rq-badge.correct { background: #d7edde; color: #2d8a6e; }
+.review-header .rq-badge.wrong { background: #f7d8d8; color: #c94848; }
+.review-header .rq-badge.blank { background: #e0e0e0; color: #555; }
+
+.review-stem { font-weight: 500; color: #000; margin-bottom: 10px; }
+
+.review-opts { margin: 10px 0; padding-left: 4px; }
+
+.review-opt {
+  padding: 4px 10px;
+  margin-bottom: 3px;
+  border-radius: 2px;
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  line-height: 1.6;
+}
+
+.review-opt.user-wrong { background: #fbe5e5; color: #8a2020; text-decoration: line-through; }
+.review-opt.correct-ans { background: #d7edde; color: #1b5f45; font-weight: 500; }
+.review-opt.user-correct { background: #d7edde; color: #1b5f45; font-weight: 500; }
+
+.review-opt .opt-marker { font-family: "Courier New", monospace; font-weight: 700; flex-shrink: 0; width: 20px; }
+
+.review-opt .opt-tag { margin-left: auto; font-size: 11px; color: #666; flex-shrink: 0; }
+
+.review-expl {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border-left: 3px solid #4a6fa5;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.8;
+}
+
+.review-expl .expl-label { font-weight: 700; color: #2c4870; margin-right: 6px; }
+
+.result-actions {
+  padding: 24px 40px;
+  background: #f5f7fa;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 720px) {
+  .app-window { margin: 0; border: none; }
+  .score-card { flex-direction: column; }
+  .stats-summary { flex-wrap: wrap; gap: 20px; }
+  .overview-grid { grid-template-columns: repeat(5, 1fr); }
+  .overview-box { width: 95vw; }
+  .category-row { flex-wrap: wrap; }
+  .category-row .cat-name { min-width: 160px; }
+  .review-section, .score-card, .stats-summary, .result-header, .result-actions { padding-left: 16px; padding-right: 16px; }
+  .question-area { padding: 16px; }
+  .exam-toolbar { gap: 3px; padding: 5px; }
+  .exam-toolbar .win-btn { min-width: 64px; padding: 3px 8px; font-size: 12px; }
+}
+
+    /* ============== API 版排行榜 ============== */
+    .login-hint {
+      margin: -16px 0 24px 0;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #555;
+      background: #f0f4f8;
+      border-left: 3px solid #4a90e2;
+      border-radius: 3px;
+      line-height: 1.7;
+    }
+    .login-champion {
+      margin-top: 18px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #fff8e7 0%, #ffecb3 100%);
+      border: 1px solid #e0b95e;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 13px;
+      color: #5d4409;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-champion .champion-loading,
+    .login-champion .champion-empty {
+      color: #888;
+      font-size: 12px;
+    }
+    .login-champion .champion-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .login-champion .champion-title { font-weight: 600; color: #8b6914; }
+    .login-champion .champion-name { font-weight: 700; color: #c0392b; }
+    .login-champion .champion-score { font-weight: 700; color: #27ae60; }
+    .login-champion .champion-count {
+      font-size: 11px; color: #888; margin-top: 4px; width: 100%;
+    }
+    .login-preview-link { margin-top: 14px; text-align: center; font-size: 13px; }
+    .login-preview-link a {
+      color: #8b6914;
+      text-decoration: none;
+      padding: 4px 10px;
+      border-bottom: 1px dashed #c09a3a;
+    }
+    .login-preview-link a:hover { background: #fff3c4; color: #5d4409; }
+
+    .leaderboard-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #fff8e7 0%, #fef3d7 100%);
+      border: 1px solid #f0d27f;
+      border-radius: 8px;
+    }
+    .leaderboard-section h3 {
+      margin: 0 0 14px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0b95e;
+      color: #8b6914;
+      font-size: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .leaderboard-refresh {
+      margin-left: auto;
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #555;
+    }
+    .leaderboard-refresh:hover { background: #f5f5f5; }
+    .leaderboard-mode-notice {
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px dashed #bbb;
+      border-radius: 6px;
+      color: #666;
+      text-align: center;
+      font-size: 13px;
+    }
+    .leaderboard-mode-notice .big {
+      font-size: 14px; color: #333; margin-bottom: 4px; font-weight: 600;
+    }
+    .leaderboard-loading {
+      padding: 20px; text-align: center; color: #888; font-size: 13px;
+    }
+    .leaderboard-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .leaderboard-table th {
+      padding: 8px 12px; background: #e0b95e; color: #fff;
+      text-align: left; font-weight: 600;
+    }
+    .leaderboard-table th.num,
+    .leaderboard-table td.num { text-align: center; width: 50px; }
+    .leaderboard-table th.score,
+    .leaderboard-table td.score { text-align: center; width: 70px; }
+    .leaderboard-table th.time,
+    .leaderboard-table td.time { text-align: center; width: 80px; }
+    .leaderboard-table td {
+      padding: 8px 12px; border-bottom: 1px solid #f0d27f;
+    }
+    .leaderboard-table tr.me {
+      background: #fff3c4; font-weight: 600;
+    }
+    .leaderboard-table tr.me td { color: #8b6914; }
+    .leaderboard-table td.medal { font-size: 16px; }
+    .leaderboard-my-rank {
+      margin-top: 10px; padding: 10px 14px;
+      background: #fff3c4; border: 1px solid #e0b95e;
+      border-radius: 6px; font-size: 13px; color: #8b6914;
+      text-align: center;
+    }
+    .leaderboard-stats {
+      margin-top: 10px; padding: 8px 14px;
+      font-size: 12px; color: #888; text-align: right;
+    }
+    @media (max-width: 600px) {
+      .leaderboard-table th.time,
+      .leaderboard-table td.time { display: none; }
+    }
+
+    /* 排行榜預覽 Modal */
+    .lb-preview-mask {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .lb-preview-mask.show { display: flex; }
+    .lb-preview-box {
+      background: linear-gradient(135deg, #fff8e7 0%, #fef3d7 100%);
+      border: 2px solid #e0b95e;
+      border-radius: 10px;
+      padding: 20px 24px;
+      max-width: 520px; width: 92%;
+      max-height: 85vh; overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+    .lb-preview-box h3 {
+      margin: 0 0 14px 0; padding-bottom: 10px;
+      border-bottom: 2px solid #e0b95e;
+      color: #8b6914; font-size: 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+    }
+    .lb-preview-close {
+      background: transparent; border: 1px solid #8b6914;
+      color: #8b6914; font-size: 16px; cursor: pointer;
+      padding: 2px 10px; border-radius: 4px; line-height: 1;
+    }
+    .lb-preview-close:hover { background: #8b6914; color: #fff; }
+    .lb-preview-subtitle {
+      font-size: 12px; color: #666; margin-bottom: 10px;
+      text-align: center; font-style: italic;
+    }
+
+    /* 題目社群統計 */
+    .review-qstat {
+      margin: 6px 0 10px 0; padding: 6px 12px;
+      background: #f0f7ff; border-left: 3px solid #4a90e2;
+      border-radius: 3px; font-size: 12px; color: #2c5282;
+    }
+    .opt-stat {
+      margin-left: auto; padding: 2px 8px;
+      font-size: 11px; border-radius: 3px;
+      font-family: "Consolas", monospace; white-space: nowrap;
+    }
+    .opt-stat.stat-correct { background: #d4edda; color: #155724; font-weight: 600; }
+    .opt-stat.stat-top-wrong { background: #f8d7da; color: #721c24; font-weight: 600; }
+    .opt-stat.stat-normal { background: #e9ecef; color: #495057; }
+    .review-opt { display: flex; align-items: center; gap: 6px; }
+    .opt-text { flex: 1; }
+
+    /* 老師後台 */
+    .teacher-admin-panel {
+      margin: 20px 0; padding: 16px;
+      background: #2c3e50; color: #ecf0f1;
+      border-radius: 8px;
+      font-family: "Consolas", monospace; font-size: 12px;
+    }
+    .teacher-admin-panel h4 { margin: 0 0 10px 0; color: #f39c12; }
+    .teacher-admin-panel button {
+      padding: 4px 10px; margin: 2px;
+      background: #e74c3c; color: #fff;
+      border: none; border-radius: 4px; cursor: pointer;
+      font-size: 11px;
+    }
+    .teacher-admin-panel .admin-row {
+      padding: 4px 0; border-bottom: 1px solid #34495e;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+  </style>
+</head>
+<body>
+<div class="app-window">
+  <div class="app-titlebar">
+    <span>資訊安全模擬測驗系統（ISMP）- 個人練習版</span>
+    <div class="controls">
+      <span class="ctrl-btn">_</span>
+      <span class="ctrl-btn">□</span>
+      <span class="ctrl-btn">×</span>
+    </div>
+  </div>
+  <div class="app-header">
+    <div class="ipas-logo">IS<span class="check">✓</span>MP</div>
+    <div class="ipas-subtitle">
+      <div>資訊安全模擬測驗系統</div>
+      <div class="en">Information Security Mock Practice — For Self-Study Only</div>
+    </div>
+  </div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="modal-overlay" id="endConfirmModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span>模擬測驗系統</span>
+      <span>×</span>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">!</div>
+      <div class="modal-text">
+        以下是您學科測驗作答情況，<br>
+        正確請按'是'結束學科測驗，<br>
+        錯誤請按'否'回到學科測驗。
+        <div class="stats" id="endStats"></div>
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button class="win-btn primary" onclick="finalizeExam()">是(Y)</button>
+      <button class="win-btn" onclick="closeEndModal()">否(N)</button>
+    </div>
+  </div>
+</div>
+
+<div class="overview-modal" id="overviewModal">
+  <div class="overview-box">
+    <div class="overview-title">
+      <span>試題總覽</span>
+      <span class="close" onclick="closeOverview()">×</span>
+    </div>
+    <div class="overview-body">
+      <div class="overview-legend">
+        <span><span class="legend-dot g"></span>綠：有作答</span>
+        <span><span class="legend-dot y"></span>黃：有註記</span>
+        <span><span class="legend-dot r"></span>紅：未作答</span>
+      </div>
+      <div class="overview-grid" id="overviewGrid"></div>
+    </div>
+    <div class="overview-footer">選擇任意一題作答或瀏覽</div>
+  </div>
+</div>
+
+<script>
+// 題目資料接續注入
+
+</script>
+<script>
+window.QUESTIONS = [
+  {
+    id: 1, cat: "E",
+    stem: "依 OSI 七層模型，下列分層由下而上（第 1 層至第 7 層）排序何者正確？",
+    opts: [
+      "實體層 → 資料連結層 → 網路層 → 會議層 → 傳輸層 → 表達層 → 應用層",
+      "實體層 → 網路層 → 資料連結層 → 傳輸層 → 會議層 → 表達層 → 應用層",
+      "實體層 → 資料連結層 → 網路層 → 傳輸層 → 會議層 → 表達層 → 應用層",
+      "資料連結層 → 實體層 → 網路層 → 傳輸層 → 會議層 → 表達層 → 應用層"
+    ],
+    ans: 2,
+    expl: "正解 C：OSI 七層模型由下而上依序為 Physical（實體）→ Data Link（資料連結）→ Network（網路）→ Transport（傳輸）→ Session（會議）→ Presentation（表達）→ Application（應用）。"
+  },
+  {
+    id: 2, cat: "E",
+    stem: "TCP/IP 四層模型之「網際網路層（Internet Layer）」主要對應 OSI 七層模型之下列何層？",
+    opts: [
+      "實體層（Physical Layer）",
+      "資料連結層（Data Link Layer）",
+      "傳輸層（Transport Layer）",
+      "網路層（Network Layer）"
+    ],
+    ans: 3,
+    expl: "正解 D：TCP/IP 的「網際網路層」對應 OSI 的「網路層」，負責 IP 定址與路由（IP、ICMP、ARP 等協定位於此層）。"
+  },
+  {
+    id: 3, cat: "E",
+    stem: "關於 TCP 與 UDP 傳輸層協定之比較，下列敘述何者最正確？",
+    opts: [
+      "TCP 為非連接式、不保證送達；UDP 為連接式、保證送達",
+      "TCP 為連接式、提供可靠傳輸（三向交握、重傳、流量控制）；UDP 為非連接式、低延遲、常用於 DNS、VoIP、串流",
+      "TCP 與 UDP 功能完全相同，僅命名不同",
+      "UDP 具備 TCP 所有功能，但比 TCP 更快"
+    ],
+    ans: 1,
+    expl: "正解 B：TCP 為連線導向（connection-oriented）並提供可靠傳輸；UDP 為非連線式（connectionless），無交握與重傳機制，延遲較低，適合 DNS 查詢、VoIP、即時串流等可容忍少量封包遺失之應用。"
+  },
+  {
+    id: 4, cat: "E",
+    stem: "某公司取得 IP 位址區段 192.168.10.0/24，欲切割為 4 個相等大小之子網，下列每個子網可用主機數（排除網路位址與廣播位址）最接近何者？",
+    opts: [
+      "每子網 128 台主機",
+      "每子網 254 台主機",
+      "每子網 62 台主機",
+      "每子網 30 台主機"
+    ],
+    ans: 2,
+    expl: "正解 C：/24 共 256 個 IP。切 4 個等分子網需再借 2 bit，變為 /26，每個子網 64 個 IP；扣除網路位址與廣播位址後可用主機數為 64-2 = 62 台。"
+  },
+  {
+    id: 5, cat: "E",
+    stem: "關於 TCP 三向交握（Three-way Handshake）與 SYN Flood 攻擊，下列敘述何者最正確？",
+    opts: [
+      "三向交握順序為 SYN → SYN/ACK → ACK；SYN Flood 攻擊者大量發送 SYN 封包但不回應最後 ACK，耗盡伺服器半連線佇列資源，可以 SYN Cookie 等機制緩解",
+      "三向交握順序為 ACK → SYN → SYN/ACK；與 SYN Flood 無關",
+      "SYN Flood 屬於被動監聽，不會造成服務中斷",
+      "SYN Flood 必定需要入侵伺服器取得 root 權限才能執行"
+    ],
+    ans: 0,
+    expl: "正解 A：TCP 連線建立採三向交握：Client 送 SYN，Server 回 SYN/ACK，Client 再送 ACK。SYN Flood 藉由大量未完成之半連線耗盡伺服器資源，可透過 SYN Cookie、縮短 SYN_RECV 逾時、增加佇列容量等方式緩解。"
+  },
+  {
+    id: 6, cat: "E",
+    stem: "關於 ARP 欺騙（ARP Spoofing）攻擊，下列敘述何者「不」正確？",
+    opts: [
+      "攻擊者發送偽造之 ARP 回應封包，將受害者 ARP 快取中的 IP-MAC 對應改指向攻擊者",
+      "ARP 欺騙僅發生於不同子網之間，不會影響同一 LAN 內之通訊",
+      "ARP 欺騙常用於中間人攻擊（MITM）以竊聽或竄改流量",
+      "可透過靜態 ARP 表、Dynamic ARP Inspection（DAI）或 ARP 監控工具偵測與防禦"
+    ],
+    ans: 1,
+    expl: "正解 B：ARP 僅於同一 L2 廣播網域（同一子網／LAN）作用，ARP 欺騙正是發生於同一 LAN 內，攻擊者與受害者必須位於相同廣播域。選項 B 顛倒事實，故為錯誤敘述。"
+  },
+  {
+    id: 7, cat: "E",
+    stem: "關於 DNS 安全與相關攻擊手法，下列敘述何者「不」正確？",
+    opts: [
+      "DNSSEC 採用對稱式加密保護 DNS 查詢內容免於被竊聽",
+      "DNS 快取污染（Cache Poisoning）將偽造之查詢結果注入 DNS 伺服器快取，誘導使用者連至惡意站",
+      "DoH（DNS over HTTPS）與 DoT（DNS over TLS）可加密 DNS 查詢流量，防止被中途竊聽或竄改",
+      "DNS 放大攻擊利用開放遞迴 DNS 伺服器之回應放大倍率，對受害者發動 DDoS"
+    ],
+    ans: 0,
+    expl: "正解 A：DNSSEC 採用「非對稱式加密」產生數位簽章以驗證 DNS 紀錄之「完整性與來源真實性」，並「不加密查詢內容」；想加密 DNS 查詢應使用 DoH / DoT。選項 A 有雙重錯誤（加密方式與功能），故為錯誤敘述。"
+  },
+  {
+    id: 8, cat: "E",
+    stem: "關於 DMZ（Demilitarized Zone，非軍事區）之設計目的與部署，下列敘述何者最符合業界最佳實務？",
+    opts: [
+      "DMZ 須與內部網路完全合併，以簡化管理",
+      "DMZ 僅適用於大型企業，中小型組織不需要",
+      "DMZ 內資產完全不受保護，任人進出",
+      "DMZ 介於內部信任網路與外部非信任網路之間，用於部署對外服務（如 Web、Mail、DNS）；內→DMZ 與 DMZ→外之流量皆應受防火牆規則限制，DMZ 伺服器被攻陷時攻擊者仍無法直接進入內部網路"
+    ],
+    ans: 3,
+    expl: "正解 D：DMZ 之設計目的為「隔離對外公開服務與內部核心網路」，即使 DMZ 伺服器遭入侵，攻擊者仍需再突破另一道防火牆才能進入內網，形成縱深防禦。"
+  },
+  {
+    id: 9, cat: "E",
+    stem: "關於 VLAN（Virtual LAN）之功能與應用，下列敘述何者最正確？",
+    opts: [
+      "VLAN 必須透過實體線路分離，無法以邏輯方式區隔",
+      "VLAN 將同一實體交換器之連接埠依邏輯分組，不同 VLAN 間預設無法直接 L2 通訊，需透過路由器／L3 交換器；可減少廣播範圍並實施網段隔離",
+      "VLAN 僅能區隔 IP 層流量，無法區隔 L2 廣播",
+      "VLAN 等同於實體防火牆，可過濾所有應用層惡意流量"
+    ],
+    ans: 1,
+    expl: "正解 B：VLAN 於資料連結層以 IEEE 802.1Q tag 邏輯區分網段，同一 VLAN 內為同一廣播域；不同 VLAN 間須經 L3 路由。VLAN 主要用於縮小廣播範圍與基本網段隔離，並非應用層防火牆。"
+  },
+  {
+    id: 10, cat: "E",
+    stem: "關於各類型防火牆之功能比較，下列敘述何者「不」正確？",
+    opts: [
+      "封包過濾（Packet Filter）防火牆檢查 IP、Port 等 L3/L4 標頭，不維護連線狀態",
+      "Stateful Inspection 防火牆維護連線狀態表，可驗證封包是否屬於合法已建立之連線",
+      "NGFW（次世代防火牆）整合應用層辨識、IPS、威脅情資等進階功能；與傳統封包過濾相比功能完全相同",
+      "Proxy（應用層閘道）防火牆代理用戶端與伺服器之連線，能深度檢視應用層內容但效能開銷較高"
+    ],
+    ans: 2,
+    expl: "正解 C：NGFW 相較於傳統封包過濾，具備應用層辨識（App-ID）、IPS、TLS 解密、威脅情資整合等進階能力，功能「並不相同」；選項 C 自相矛盾，故為錯誤敘述。"
+  },
+  {
+    id: 11, cat: "E",
+    stem: "關於 IDS（入侵偵測系統）與 IPS（入侵防禦系統）之差異，下列敘述何者最正確？",
+    opts: [
+      "IDS 以旁路（Out-of-band）部署，僅偵測並告警，不主動阻斷；IPS 以串聯（Inline）部署，偵測到攻擊時可即時阻斷或丟棄封包",
+      "IDS 與 IPS 功能完全相同，僅命名不同",
+      "IPS 僅能用於無線網路，IDS 僅能用於有線網路",
+      "IDS 能自動阻斷攻擊，IPS 只能事後告警"
+    ],
+    ans: 0,
+    expl: "正解 A：IDS（Intrusion Detection System）通常以旁路方式鏡像流量進行偵測告警；IPS（Intrusion Prevention System）以串聯方式置於流量路徑上，能即時阻斷攻擊封包。"
+  },
+  {
+    id: 12, cat: "E",
+    stem: "關於 IPsec VPN 相關機制，下列敘述何者「不」正確？",
+    opts: [
+      "AH（Authentication Header）提供資料完整性與來源鑑別，但不提供機密性加密",
+      "ESP（Encapsulating Security Payload）可同時提供機密性、完整性與來源鑑別",
+      "IKE（Internet Key Exchange）用於建立安全關聯（SA）與協商金鑰",
+      "IPsec 僅能運作於 Transport Mode，無法以 Tunnel Mode 封裝整個 IP 封包"
+    ],
+    ans: 3,
+    expl: "正解 D：IPsec 有 Transport 與 Tunnel 兩種運作模式。Transport Mode 僅加密 Payload，常用於端到端；Tunnel Mode 封裝整個原始 IP 封包，常用於 Site-to-Site VPN。選項 D 否定 Tunnel Mode 存在，故為錯誤敘述。"
+  },
+  {
+    id: 13, cat: "E",
+    stem: "關於 SSL / TLS / HTTPS 之正確敘述，下列何者最為恰當？",
+    opts: [
+      "HTTPS = HTTP over TLS，藉由 TLS 提供伺服器憑證驗證、金鑰交換與傳輸加密；現行建議禁用 SSLv2/v3 與 TLS 1.0/1.1，採用 TLS 1.2 以上並優先使用 TLS 1.3",
+      "TLS 僅提供加密，不提供伺服器身分驗證",
+      "SSLv3 為目前最安全推薦之傳輸加密協定",
+      "TLS 1.3 已廢止，組織應回退使用 TLS 1.0"
+    ],
+    ans: 0,
+    expl: "正解 A：TLS 透過伺服器憑證（X.509）驗證身分並協商會談金鑰，HTTPS 即 HTTP 使用 TLS 加密通道。SSLv2/v3 與 TLS 1.0/1.1 因多項已知弱點已不再建議使用，應採 TLS 1.2 以上，優先支援 TLS 1.3。"
+  },
+  {
+    id: 14, cat: "E",
+    stem: "關於 SSH 與 Telnet 之差異，下列敘述何者最正確？",
+    opts: [
+      "SSH 為明文傳輸，Telnet 為加密傳輸",
+      "SSH（Secure Shell，Port 22）採加密通道傳輸，可驗證伺服器並保護登入帳密；Telnet（Port 23）為明文傳輸，帳密可被竊聽，不建議使用",
+      "SSH 與 Telnet 均為明文傳輸，資安性相同",
+      "Telnet 使用公開金鑰加密，安全性優於 SSH"
+    ],
+    ans: 1,
+    expl: "正解 B：SSH 透過非對稱金鑰交換建立加密通道並可驗證伺服器指紋；Telnet 為明文協定，所有交互資訊（含密碼）皆可被竊聽，應以 SSH 取代。"
+  },
+  {
+    id: 15, cat: "E",
+    stem: "關於無線網路加密標準之安全強度演進，下列排序何者最正確？",
+    opts: [
+      "WPA3 < WPA2 < WPA < WEP",
+      "WEP ≥ WPA = WPA2 = WPA3",
+      "WEP（已破解，不應使用）< WPA（TKIP）< WPA2（AES-CCMP）< WPA3（SAE，提供前向保密與抗離線字典）",
+      "四者安全性完全相同"
+    ],
+    ans: 2,
+    expl: "正解 C：WEP 因 RC4 金鑰流重用與弱 IV 已完全破解；WPA 過渡仍使用 TKIP；WPA2 採 AES-CCMP；WPA3 以 SAE（Simultaneous Authentication of Equals）取代 PSK、提供前向保密（Forward Secrecy），對離線字典攻擊具更強抵抗力。"
+  },
+  {
+    id: 16, cat: "E",
+    stem: "組織遭遇大規模 DDoS 攻擊時，下列因應作法何者最為正確與完整？",
+    opts: [
+      "僅加大內部伺服器硬碟空間即可抵禦所有 DDoS 攻擊",
+      "結合 ISP／雲端清洗中心上游過濾、邊界限流與 ACL、Anycast 分散、內容分送網路（CDN）、異常流量基線比對與自動化應變等多層縱深措施；並關閉不必要之開放遞迴服務以避免成為反射放大之中繼",
+      "直接停用整個網站服務即可完全解決",
+      "攻擊必定來自單一 IP，僅封鎖一個 IP 即可"
+    ],
+    ans: 1,
+    expl: "正解 B：現代大規模 DDoS（尤其含反射放大攻擊如 NTP、DNS、memcached）通常需要多層防護，包含上游 ISP／雲端清洗、Anycast、CDN、流量基線分析與自動化應變。同時組織也應避免自身成為被濫用之反射源（例如關閉開放遞迴 DNS、限制 UDP 回應放大比）。"
+  },
+  {
+    id: 17, cat: "F",
+    stem: "關於 Windows NTFS 檔案系統之存取控制清單（ACL），下列敘述何者最正確？",
+    opts: [
+      "NTFS 僅支援簡單 rwx 九位元權限，無法針對個別使用者設定",
+      "NTFS ACL 由多筆 ACE 組成，可對使用者或群組指定允許／拒絕之權限（讀取、寫入、修改、完全控制等），並支援繼承機制；Deny 通常優先於 Allow",
+      "NTFS 權限僅適用於網路分享，不適用於本機檔案",
+      "NTFS ACL 無法用於系統管理員設定之稽核目的"
+    ],
+    ans: 1,
+    expl: "正解 B：NTFS 的 ACL 由多筆存取控制項目（ACE）組成，可以針對個別使用者或群組設定允許／拒絕之細粒度權限，並支援由上層資料夾繼承；處理順序上「明確 Deny > 明確 Allow > 繼承 Deny > 繼承 Allow」。"
+  },
+  {
+    id: 18, cat: "F",
+    stem: "Linux 檔案權限設定 chmod 755 file 代表下列何者？",
+    opts: [
+      "擁有者：讀／寫／執行；同群組：讀／執行；其他人：讀／執行",
+      "擁有者：讀／寫；同群組：寫／執行；其他人：讀",
+      "擁有者：讀；同群組：讀／寫；其他人：讀／寫／執行",
+      "擁有者：無權限；同群組：讀／寫／執行；其他人：讀"
+    ],
+    ans: 0,
+    expl: "正解 A：755 對應 rwx r-x r-x。第一位 7=rwx（擁有者讀寫執行），第二位 5=r-x（同群組讀與執行），第三位 5=r-x（其他人讀與執行）。"
+  },
+  {
+    id: 19, cat: "F",
+    stem: "關於緩衝區溢位（Buffer Overflow）攻擊與防護機制，下列敘述何者「不」正確？",
+    opts: [
+      "ASLR（位址空間隨機化）可使攻擊者難以預測程式碼與資料的實際記憶體位址",
+      "DEP / NX（資料執行禁止）標記資料區段為不可執行，防止 shellcode 在堆疊上執行",
+      "Stack Canary（金絲雀值）置於堆疊返回位址前，函式返回時檢查是否被竄改",
+      "只要使用現代編譯器與作業系統，Buffer Overflow 即完全無法被利用"
+    ],
+    ans: 3,
+    expl: "正解 D：ASLR、DEP、Stack Canary、CFG 等僅提高利用難度或縮減可利用面，並非根除 Buffer Overflow。仍存在資訊洩漏結合 ROP、繞過 ASLR、堆疊噴射等進階利用手法，故不能宣稱「完全無法被利用」。"
+  },
+  {
+    id: 20, cat: "F",
+    stem: "OWASP Top 10:2021 版中新增、排名第 A10 之風險類別為下列何者？",
+    opts: [
+      "A01 Broken Access Control",
+      "A03 Injection",
+      "A10 Server-Side Request Forgery（SSRF）",
+      "A05 Security Misconfiguration"
+    ],
+    ans: 2,
+    expl: "正解 C：OWASP Top 10:2021 將 SSRF（伺服器端請求偽造）新增為 A10 類別，反映雲端服務中應用程式對內網資源存取之風險上升。A01、A03、A05 雖同為 Top 10 項目但非本題指定之新增項。"
+  },
+  {
+    id: 21, cat: "F",
+    stem: "關於 SQL Injection 之根本緩解作法，下列何者最為有效且為業界首選？",
+    opts: [
+      "使用參數化查詢（Parameterized Query / Prepared Statement）或 ORM 安全 API，避免將使用者輸入直接串接至 SQL 字串",
+      "僅做前端 JavaScript 長度驗證即可防止 SQL Injection",
+      "將所有查詢結果快取即可防止 SQL Injection",
+      "停用資料庫日誌可避免 SQL Injection"
+    ],
+    ans: 0,
+    expl: "正解 A：SQL Injection 之根因為「將未驗證之使用者輸入當作 SQL 語句的一部分」。首選防禦為參數化查詢與 Prepared Statement，將資料與指令分離；搭配最小權限、輸入驗證與 WAF 形成縱深防禦。"
+  },
+  {
+    id: 22, cat: "F",
+    stem: "關於跨站腳本（XSS）類型與防護，下列敘述何者「不」正確？",
+    opts: [
+      "Reflected XSS：惡意腳本藉由請求參數反射於回應內執行，通常透過誘騙連結傳播",
+      "Stored XSS：惡意腳本被持久化儲存於伺服器端（如留言板），其他使用者瀏覽時於其瀏覽器執行",
+      "DOM-Based XSS：漏洞存在於前端 JavaScript 對 DOM 操作過程，伺服器端不一定涉入",
+      "XSS 僅靠設定 HTTPS 即可完全阻擋，無需輸出編碼、CSP 或框架內建防禦"
+    ],
+    ans: 3,
+    expl: "正解 D：HTTPS 保護傳輸層機密性與完整性，對 XSS 之執行並無直接防禦。XSS 需以輸出編碼（context-aware output encoding）、嚴格 CSP、HttpOnly/SameSite Cookie、前端框架之預設跳脫（如 React）等多層防禦。"
+  },
+  {
+    id: 23, cat: "F",
+    stem: "關於 CSRF（跨站請求偽造）攻擊與防禦，下列敘述何者最正確？",
+    opts: [
+      "CSRF 與 XSS 完全相同，僅命名不同",
+      "CSRF 利用使用者已登入之 Cookie，誘使其瀏覽器發出非本意之請求；可以 CSRF Token、Cookie 之 SameSite=Lax/Strict、檢查 Origin/Referer 等機制防禦",
+      "CSRF 只能用於竊取密碼，無法執行任何交易動作",
+      "僅使用 HTTPS 即可完全防止 CSRF"
+    ],
+    ans: 1,
+    expl: "正解 B：CSRF 藉由受害者已登入狀態之 Cookie 發動非本意之操作（如轉帳、變更密碼）。防禦以 CSRF Token（Synchronizer / Double-Submit）、SameSite Cookie、驗證 Origin/Referer、關鍵操作需要重新驗證為主。HTTPS 防止竊聽但無法阻擋 CSRF。"
+  },
+  {
+    id: 24, cat: "F",
+    stem: "關於 SSRF（Server-Side Request Forgery）之正確敘述，下列何者最為恰當？",
+    opts: [
+      "攻擊者藉由應用程式讓伺服器端對攻擊者指定之內部或外部資源發起請求，常用於存取雲端 metadata 服務、內網服務與繞過邊界；防禦包含嚴格 URL 白名單、封鎖私有 IP、禁用非必要協定與 DNS 防護",
+      "SSRF 僅影響前端 JavaScript，不涉及伺服器端",
+      "SSRF 與 CSRF 完全相同",
+      "只要限制檔案上傳即可完全防禦 SSRF"
+    ],
+    ans: 0,
+    expl: "正解 A：SSRF 使伺服器代理發出攻擊者指定之請求，常見攻擊標的包括雲端 Instance Metadata（如 169.254.169.254）、內網管理介面。防禦以 URL／主機白名單、封鎖私有與保留網段（RFC1918、Link-Local）、禁用 file://、gopher:// 等非必要協定、對 DNS Rebinding 進行防護為主。"
+  },
+  {
+    id: 25, cat: "F",
+    stem: "關於應用程式儲存使用者密碼之最佳實務，下列敘述何者最為正確？",
+    opts: [
+      "直接以明文儲存密碼，便於必要時回覆用戶原密碼",
+      "以 Base64 編碼後儲存即可視為已加密",
+      "以 MD5 雜湊儲存即可，無需加鹽",
+      "採用 bcrypt、scrypt 或 Argon2 等專為密碼設計之慢速雜湊函數，並為每位使用者加入獨一無二之隨機 Salt，必要時依硬體進步調整 work factor（成本參數）"
+    ],
+    ans: 3,
+    expl: "正解 D：密碼儲存必須使用「專為密碼設計的慢速雜湊函數」並為每位使用者加入獨立隨機 Salt。bcrypt、scrypt、Argon2（OWASP 與 NIST SP 800-63B 建議）具可調整之成本參數以抵禦暴力與彩虹表攻擊。明文儲存、Base64 編碼（非加密）、未加鹽之 MD5／SHA1（已知碰撞且快速）皆為錯誤作法。"
+  },
+  {
+    id: 26, cat: "F",
+    stem: "關於 JSON Web Token（JWT）安全性之正確敘述，下列何者最為恰當？",
+    opts: [
+      "JWT 載體內容為 Base64Url 編碼即為加密，可放置明文機敏資料",
+      "JWT 簽章僅為裝飾用途，可忽略驗證",
+      "應驗證 alg 欄位、禁止 alg=none，並於伺服器端強制指定簽章演算法（如 RS256/ES256）；避免過長之逾期時間並搭配撤銷機制；機敏資料如需機密性應使用 JWE 或不放置於 JWT 內",
+      "JWT 不需設定逾期時間，一旦簽發即可永久使用而無風險"
+    ],
+    ans: 2,
+    expl: "正解 C：JWS 格式之 JWT 僅為 Base64Url 編碼之簽章保護，「非加密」；alg=none 漏洞若未嚴格驗證可使簽章被繞過。伺服器應固定並強制驗證演算法、設定合理 exp、搭配刷新與撤銷策略；若需機密性應改用 JWE 或不將敏感資料放入 JWT。"
+  },
+  {
+    id: 27, cat: "F",
+    stem: "關於身分驗證三因素之技術實作範例，下列配對何者最正確？",
+    opts: [
+      "所知（Something you know）：密碼、PIN；所持（Something you have）：硬體 Token、智慧卡、手機 OTP；所是（Something you are）：指紋、虹膜、臉部等生物特徵",
+      "密碼屬於所持因素；指紋屬於所知因素；智慧卡屬於所是因素",
+      "三因素定義已廢止，目前僅剩單因素驗證",
+      "MFA 須同時使用三個密碼，不得混用不同因素"
+    ],
+    ans: 0,
+    expl: "正解 A：身分驗證三因素之標準對應為：Something you know（所知，如密碼、PIN）、Something you have（所持，如硬體 Token、智慧卡、手機 OTP）、Something you are（所是，如指紋、臉部等生物特徵）。MFA 要求至少組合其中兩個「不同類別」因素。"
+  },
+  {
+    id: 28, cat: "F",
+    stem: "關於惡意程式分類，下列敘述何者「不」正確？",
+    opts: [
+      "病毒（Virus）須附著於宿主檔案或程式，須人為動作觸發才會執行並複製",
+      "蠕蟲（Worm）可自我複製並透過網路主動傳播，無需宿主檔案",
+      "木馬（Trojan）偽裝為正常程式誘使使用者安裝執行，通常不具自我複製能力",
+      "病毒、蠕蟲、木馬三者意義完全相同，可互相替換使用"
+    ],
+    ans: 3,
+    expl: "正解 D：病毒、蠕蟲、木馬各有明確特徵：Virus 附宿主並需觸發；Worm 具自我複製與自動散播能力；Trojan 偽裝合法程式誘騙執行、通常無自我複製。三者不可互換。"
+  },
+  {
+    id: 29, cat: "F",
+    stem: "關於勒索軟體（Ransomware）之應對最佳實務，下列敘述何者最正確？",
+    opts: [
+      "被勒索後第一時間即應支付贖金以快速復原",
+      "定期執行 3-2-1 備份（3 份副本、2 種媒體、1 份異地離線），搭配不可變儲存（Immutable Backup）、最小權限、網段隔離、EDR/XDR 與員工社交工程演練，感染後優先隔離受害主機並依通報辦法向主管機關通報",
+      "勒索軟體僅影響個人電腦，企業伺服器不會受害",
+      "僅安裝防毒軟體即可完全防禦勒索軟體"
+    ],
+    ans: 1,
+    expl: "正解 B：勒索軟體防禦以「備份策略 + 最小權限 + 網段隔離 + 端點偵測 + 員工訓練」為核心。支付贖金並不保證解密，且可能違反法規；應依公務機關事件通報應變辦法（115/1/5 新版）於規定時限通報。"
+  },
+  {
+    id: 30, cat: "F",
+    stem: "關於釣魚（Phishing）與社交工程攻擊，下列敘述何者「不」正確？",
+    opts: [
+      "Spear Phishing 為針對特定個人或組織量身打造之釣魚，可信度較高、成功率較高",
+      "BEC（Business Email Compromise）常冒充高階主管或供應商，以郵件欺騙財務人員轉帳或變更收款帳號",
+      "只要員工全部通過一次性教育訓練，組織即可永久免於社交工程攻擊，無需再行演練",
+      "Vishing 為語音（電話）形式之社交工程，Smishing 則為簡訊形式"
+    ],
+    ans: 2,
+    expl: "正解 C：社交工程手法持續演進且加入 AI 語音／影像偽造，員工意識易隨時間衰退，需「定期」辦理教育訓練與演練（如社交工程郵件演練）。一次性訓練並無法永久免疫，選項 C 之敘述違反實務與法規要求，故為錯誤敘述。"
+  },
+  {
+    id: 31, cat: "G",
+    stem: "關於 SIEM（Security Information and Event Management）之主要用途，下列敘述何者最正確？",
+    opts: [
+      "SIEM 主要為端點防毒軟體，負責掃描惡意檔案",
+      "SIEM 為雲端備份服務",
+      "SIEM 集中蒐集各來源日誌（作業系統、網路設備、資安設備、應用程式），進行正規化、關聯分析、告警與長期保存，協助偵測威脅、進行事件鑑識與符合法規保存要求",
+      "SIEM 為防火牆之替代品，取代所有邊界防護設備"
+    ],
+    ans: 2,
+    expl: "正解 C：SIEM 之核心功能為「日誌集中 + 正規化 + 關聯分析 + 告警 + 長期保存」，用以偵測跨來源攻擊行為並提供稽核佐證。並非端點防毒、備份或防火牆之替代品。"
+  },
+  {
+    id: 32, cat: "G",
+    stem: "關於弱點掃描（Vulnerability Scanning）與滲透測試（Penetration Testing）之差異，下列敘述何者最正確？",
+    opts: [
+      "兩者完全相同，僅命名不同",
+      "弱點掃描為高度客製化之實際入侵，滲透測試僅比對 CVE 清單",
+      "弱點掃描多以自動化工具比對已知弱點，廣度為主、頻率高；滲透測試由人員以攻擊者視角進行實際利用驗證，深度為主、頻率較低，兩者互補",
+      "組織僅需擇一執行即可，不需兩者並行"
+    ],
+    ans: 2,
+    expl: "正解 C：弱點掃描以工具廣泛比對已知弱點（如 CVE、組態偏差），頻率可高；滲透測試由安全人員以真實攻擊手法進行深度驗證與串鏈（chain），驗證風險實際可利用性。兩者為互補而非替代。"
+  },
+  {
+    id: 33, cat: "G",
+    stem: "關於 CVSS（Common Vulnerability Scoring System）之評分分級，下列敘述何者最正確？",
+    opts: [
+      "CVSS 僅有「高」與「低」兩級，無數值分數",
+      "CVSS 分數完全主觀，無標準計算方式",
+      "CVSS v3.1 以 0.0–10.0 數值分數評定，分級為 None(0.0)、Low(0.1–3.9)、Medium(4.0–6.9)、High(7.0–8.9)、Critical(9.0–10.0)；v4.0 加入補充指標與 Threat/Environmental 更新",
+      "CVSS 分數與弱點實際風險無關，不需參考"
+    ],
+    ans: 2,
+    expl: "正解 C：CVSS v3.1 以 0.0–10.0 量化弱點嚴重度，分級為 None / Low / Medium / High / Critical；v4.0（2023 發布）重整指標結構，加入補充指標（Supplemental Metrics）並更新 Threat 與 Environmental 評分，提升風險表達精度。"
+  },
+  {
+    id: 34, cat: "G",
+    stem: "關於數位簽章之技術實作，下列敘述何者「不」正確？",
+    opts: [
+      "簽章與加密完全相同；以公鑰簽章、以私鑰驗證",
+      "數位簽章係以簽署者之私鑰對訊息雜湊值進行加密（簽章），驗證時以對應公鑰還原雜湊並比對，藉此確保完整性、來源鑑別與不可否認性",
+      "雜湊函數建議使用 SHA-256 以上，避免使用 MD5 / SHA-1",
+      "簽章金鑰應由 HSM 或安全儲存區妥善保護，避免私鑰外洩"
+    ],
+    ans: 0,
+    expl: "正解 A：數位簽章使用「私鑰簽章，公鑰驗證」，與加密之「公鑰加密、私鑰解密」方向相反；且簽章目標為雜湊值（訊息摘要），而非整段訊息。選項 A 顛倒簽章與加密之金鑰角色，故為錯誤敘述。"
+  },
+  {
+    id: 35, cat: "G",
+    stem: "關於企業金鑰管理（Key Management）之正確實務，下列敘述何者最為恰當？",
+    opts: [
+      "所有加密金鑰永久不變，無需輪替",
+      "應涵蓋金鑰生命週期全程（產生、分發、儲存、使用、輪替、歸檔、銷毀），以 HSM／KMS 保護金鑰機密性與完整性，分離金鑰管理者與資料使用者之職務，並定期輪替與稽核金鑰存取紀錄",
+      "可將金鑰與受保護之資料儲存於同一儲存空間無妨",
+      "應用程式可將私鑰硬編碼於原始碼中，推送至公開儲存庫"
+    ],
+    ans: 1,
+    expl: "正解 B：金鑰管理須涵蓋完整生命週期，並以 HSM 或集中 KMS（Cloud KMS、企業 KMS）保護金鑰；應落實職務分離（金鑰管理員 vs 資料使用者）、定期輪替、稽核金鑰存取。金鑰不得與受保護資料同儲、不得硬編碼於原始碼或公開庫。"
+  },
+  {
+    id: 36, cat: "G",
+    stem: "下列技術控制與其主要支援之 CIA 特性對應，何者最為正確且完整？",
+    opts: [
+      "AES-256 資料加密 → 機密性（C）；HMAC 訊息鑑別碼 → 完整性（I）；RAID 1 磁碟鏡射 → 可用性（A）；數位簽章 → 完整性（I）與不可否認性",
+      "AES-256 資料加密 → 可用性；HMAC → 機密性；RAID 1 → 完整性；數位簽章 → 可用性",
+      "AES-256 → 完整性；HMAC → 可用性；RAID 1 → 機密性；數位簽章 → 機密性",
+      "AES-256、HMAC、RAID 1、數位簽章皆對應可用性"
+    ],
+    ans: 0,
+    expl: "正解 A：各技術主要支援之特性為：AES（對稱加密）→ 機密性；HMAC（金鑰化雜湊）→ 完整性與來源鑑別；RAID 1（磁碟鏡射）→ 可用性（硬體冗餘）；數位簽章 → 完整性 + 不可否認性（亦可衍生來源鑑別）。選項 B/C/D 之對應皆混淆 CIA 映射。"
+  },
+  {
+    id: 37, cat: "G",
+    stem: "關於 NIST SP 800-207 之零信任架構（Zero Trust Architecture），下列敘述何者最正確？",
+    opts: [
+      "零信任等同於取消所有認證，任人存取",
+      "零信任即僅依賴傳統邊界防火牆防護",
+      "零信任核心原則為「Never Trust, Always Verify」：預設不信任任何主體與連線，每次存取皆依身分、裝置狀態、資源敏感度與情境動態驗證與最小授權；強調持續驗證與微分段",
+      "零信任僅適用於政府機關，企業不得採用"
+    ],
+    ans: 2,
+    expl: "正解 C：NIST SP 800-207 定義零信任為「不以網路位置決定信任，對每次存取動態驗證並最小授權」。核心元件包含 Policy Engine、Policy Administrator、Policy Enforcement Point（PE/PA/PEP）；落地上常搭配微分段、身分導向存取、持續風險評估。"
+  },
+  {
+    id: 38, cat: "G",
+    stem: "關於 SOAR（Security Orchestration, Automation and Response）之主要功能，下列敘述何者最正確？",
+    opts: [
+      "SOAR 僅為一種新型防火牆",
+      "SOAR 整合 SIEM 告警、威脅情資、資安工具 API，依 Playbook 自動化執行調查與應變步驟（如隔離主機、封鎖 IP、重設帳號），縮短 MTTR 並減輕 SOC 人力負擔",
+      "SOAR 為單純備份軟體",
+      "SOAR 會自動關閉所有企業資安設備"
+    ],
+    ans: 1,
+    expl: "正解 B：SOAR 之核心為 Orchestration（整合多工具）+ Automation（依 Playbook 自動化）+ Response（執行應變）。與 SIEM 互補，常用於告警分流（triage）、自動隔離、自動封鎖、事件單管理等，縮短平均應變時間（MTTR）。"
+  },
+  {
+    id: 39, cat: "G",
+    stem: "關於 DLP（Data Loss Prevention）資料外洩防護之正確敘述，下列何者「不」正確？",
+    opts: [
+      "DLP 可依據資料分類標籤、關鍵字、正規表達式、指紋比對等偵測敏感資料之傳輸",
+      "DLP 常涵蓋端點、網路與雲端三個通道（Endpoint DLP、Network DLP、Cloud DLP）",
+      "DLP 可與資料分類（Data Classification）、加密、權限管理整合，形成完整資料保護體系",
+      "DLP 僅能偵測靜態資料（Data at Rest），無法偵測傳輸中（in Transit）或使用中（in Use）的資料"
+    ],
+    ans: 3,
+    expl: "正解 D：DLP 標準上涵蓋資料之三種狀態：Data at Rest（靜態，如檔案伺服器掃描）、Data in Motion/Transit（傳輸中，如郵件、Web 流量）、Data in Use（使用中，如端點剪貼、列印、USB）。選項 D 限縮範圍，違反事實。"
+  },
+  {
+    id: 40, cat: "G",
+    stem: "關於 Rootkit 與 Bootkit 之正確敘述，下列何者最為恰當？",
+    opts: [
+      "Rootkit 僅為普通應用程式，不需額外防護",
+      "Rootkit 藏於核心態（Kernel Mode）或 Hypervisor 層、具隱藏自身與其他惡意程式之能力；Bootkit 則感染開機引導程序（如 MBR/VBR/UEFI），在作業系統載入前取得控制；可透過 Secure Boot、TPM 量測、專用偵測工具緩解",
+      "Bootkit 僅感染使用者應用程式目錄",
+      "Rootkit 一旦安裝即無法再被防毒軟體偵測，故無防護必要"
+    ],
+    ans: 1,
+    expl: "正解 B：Rootkit 藏於核心或虛擬機監督器層以隱藏行為；Bootkit 感染開機引導程序，於作業系統與防毒軟體載入前取得控制，屬 Persistence 手法。Secure Boot、TPM 量測開機、UEFI 簽章驗證、專業 Rootkit 偵測工具（如 chkrootkit）為常見防護手段。"
+  },
+  {
+    id: 41, cat: "G",
+    stem: "關於軟體供應鏈安全與 SBOM（Software Bill of Materials），下列敘述何者「不」正確？",
+    opts: [
+      "SBOM 為軟體之成分清單，列出所使用之函式庫、版本、授權、哈希值等資訊",
+      "SBOM 會自動修補所有第三方套件弱點，組織無須再做更新管理或風險評估",
+      "SPDX 與 CycloneDX 為常用之 SBOM 格式標準",
+      "SBOM 可加速已知弱點（如 Log4Shell 類）影響範圍之辨識與通報，並支援授權合規稽核"
+    ],
+    ans: 1,
+    expl: "正解 B：SBOM 為「可見性」工具，提供清單與版本資訊，並不自動修補漏洞；修補仍需組織依弱點管理流程評估與更新。選項 B 誇大功能、違反事實，故為錯誤敘述。"
+  },
+  {
+    id: 42, cat: "H",
+    stem: "關於 IoT 物聯網安全之常見問題與防護，下列敘述何者「不」正確？",
+    opts: [
+      "IoT 裝置因功能簡單、多為低階硬體，因此天然免疫所有資安攻擊，連上網路後即可長期置之不理、無須任何管控",
+      "IoT 裝置多具預設帳密、不易更新、計算資源有限等特性，易被濫用；Mirai 殭屍網路即利用預設帳密感染大量 IoT 裝置以發動 DDoS",
+      "應修改預設帳密、關閉不必要服務、實施韌體簽章與安全更新、網段隔離（IoT VLAN）、最小授權與監控流量異常",
+      "OWASP IoT Top 10 提供 IoT 產品與佈署之常見風險清單，可作為設計與稽核參考"
+    ],
+    ans: 0,
+    expl: "正解 A：IoT 裝置因體量龐大、韌體更新薄弱、常預設開啟管理介面，反而是被大規模濫用之熱門目標（Mirai 殭屍網路即為典型案例）。應主動落實預設帳密修改、最小服務、韌體簽章、網段隔離、流量監控等防護；選項 A 宣稱「天然免疫、無須管控」違反事實，故為錯誤敘述。"
+  },
+  {
+    id: 43, cat: "H",
+    stem: "關於雲端服務責任共擔模式（Shared Responsibility Model），下列敘述何者最正確？",
+    opts: [
+      "所有雲端服務均由雲服務供應商全權負責，客戶無任何責任",
+      "IaaS、PaaS、SaaS 之客戶責任完全相同",
+      "雲端服務責任皆由客戶單獨承擔，供應商無任何義務",
+      "IaaS 客戶須負責 OS 以上（含中介軟體、應用、資料）安全；PaaS 供應商多負責至執行時平台、客戶負責應用與資料；SaaS 供應商負責大多基礎設施與應用，客戶多負責資料、身分與設定"
+    ],
+    ans: 3,
+    expl: "正解 D：雲端責任共擔之責任界線隨服務模式不同：IaaS 客戶責任最多（OS、應用、資料），SaaS 最少（主要為資料、身分、設定管理）。客戶最常被忽略之責任為「身分與存取管理（IAM）」、「設定正確性」與「資料保護」。"
+  },
+  {
+    id: 44, cat: "H",
+    stem: "關於容器與 Kubernetes 安全（參考 NIST SP 800-190），下列敘述何者「不」正確？",
+    opts: [
+      "應使用受信之最小化基礎映像（Base Image），並於 CI/CD 整合映像掃描（如 Trivy、Grype）",
+      "Pod 應避免以 root 執行、盡量使用 non-root user、啟用 Pod Security Standards 與 NetworkPolicy",
+      "定期輪替 Secret、限制 ServiceAccount 權限（最小權限）、啟用 RBAC 與審計日誌",
+      "容器共享主機核心之特性使其擁有天然完整隔離，無需擔心容器逃逸（Container Escape）風險"
+    ],
+    ans: 3,
+    expl: "正解 D：容器與主機共享 kernel，其隔離強度「弱於」完整虛擬化（VM）；若核心漏洞、特權容器、掛載宿主敏感路徑等情境下即可能造成容器逃逸。應以最小權限、非特權容器、Pod Security、runtime 安全（如 gVisor、Kata）等多層防禦。"
+  },
+  {
+    id: 45, cat: "H",
+    stem: "關於 AI / ML 系統之資安風險，下列配對何者最為正確？",
+    opts: [
+      "對抗式樣本（Adversarial Example）：刻意構造輸入擾動使模型誤判；資料投毒（Data Poisoning）：於訓練階段注入惡意樣本改變模型行為；模型竊取：透過大量查詢重建近似模型；Prompt Injection：於 LLM 提示詞中注入指令覆蓋系統設定",
+      "對抗式樣本 = 資料投毒 = 模型竊取，三者皆為 SQL Injection 之別名",
+      "Prompt Injection 僅為傳統 Buffer Overflow 之延伸，與大型語言模型無關",
+      "AI 系統不受任何資安威脅影響，故無須納入風險管理"
+    ],
+    ans: 0,
+    expl: "正解 A：MITRE ATLAS 與 OWASP LLM Top 10 彙整 AI/ML 專屬威脅：Adversarial Example（推論期）、Data Poisoning（訓練期）、Model Extraction／Stealing、Prompt Injection（LLM 應用特有），此外還有模型反演（Inversion）、成員推斷（Membership Inference）等。"
+  },
+  {
+    id: 46, cat: "H",
+    stem: "關於 API 安全之正確實務，下列敘述何者最為恰當？",
+    opts: [
+      "落實 OWASP API Top 10（2023）關注之控制面：物件層級授權（BOLA）、物件屬性層級授權、認證、過度資料暴露、不安全設定等；實施速率限制、輸入驗證、最小資料原則、授權與稽核，並針對 GraphQL 額外注意查詢深度／複雜度限制",
+      "API 只要走 HTTPS 即可視為安全，無需其他控制",
+      "API 授權只要檢查使用者登入狀態即可，無需檢查物件擁有權",
+      "GraphQL 天然安全，無需限制查詢深度與複雜度"
+    ],
+    ans: 0,
+    expl: "正解 A：OWASP API Top 10:2023 以 BOLA（Broken Object Level Authorization）為榜首，強調「物件層級」授權需驗證當前使用者是否有權存取該物件；GraphQL 因允許客戶端自行組合查詢，須額外限制 query depth、cost 與速率，否則易造成 DoS 或資訊過度暴露。"
+  },
+  {
+    id: 47, cat: "H",
+    stem: "關於 SOC（Security Operations Center）與 CSIRT（Computer Security Incident Response Team）之主要差異，下列敘述何者最正確？",
+    opts: [
+      "SOC 與 CSIRT 完全相同，僅命名不同",
+      "SOC 通常為 7×24 常態監控與一線分流（告警處理、威脅狩獵、基礎應變）；CSIRT 為資安事件應變專門組織，負責事件調查、遏制、根除、復原與對外協調（通報、鑑識、法務）",
+      "CSIRT 為常態監控團隊；SOC 僅於重大事件發生時才成立",
+      "SOC 與 CSIRT 皆僅負責資安教育訓練，不處理事件"
+    ],
+    ans: 1,
+    expl: "正解 B：SOC 多為 7×24 常態運作之監控分流中心；CSIRT（也稱 CERT）為應變團隊，專責事件生命週期（準備、偵測分析、遏制根除、復原、事後活動）。企業常見架構為 SOC 發現事件後升級至 CSIRT 進行深度應變。"
+  },
+  {
+    id: 48, cat: "H",
+    stem: "某金融機構 SOC 於凌晨偵測到 AD 網域內多台端點遭勒索軟體加密並橫向擴散。依 NIST SP 800-61 Rev. 2，此時最應優先採取之動作屬於下列哪個階段？",
+    opts: [
+      "準備（Preparation）：補齊平時教育訓練與演練",
+      "偵測與分析（Detection & Analysis）：才剛開始收集告警",
+      "事件後活動（Post-Incident Activity）：撰寫事件回顧報告",
+      "遏制、根除與復原（Containment, Eradication & Recovery）：立即隔離受害主機／網段（Containment）、關閉高權限受駭帳號、封鎖 C2 與橫向通道，再進行根除與復原"
+    ],
+    ans: 3,
+    expl: "正解 D：依 NIST SP 800-61 Rev. 2 四階段（Preparation → Detection & Analysis → Containment, Eradication & Recovery → Post-Incident Activity），發現勒索軟體橫向擴散時，最緊急之動作為「遏制」以阻止擴散（短期 Containment：網段隔離／斷網、關閉受駭帳號、封鎖 C2），再進入根除（移除惡意程式與持久化機制）與復原（從清潔備份還原）。"
+  },
+  {
+    id: 49, cat: "H",
+    stem: "關於區塊鏈（Blockchain）安全之正確敘述，下列何者最為恰當？",
+    opts: [
+      "區塊鏈完全免疫所有資安攻擊",
+      "區塊鏈資料一旦上鏈即可隨意刪除修改",
+      "區塊鏈透過密碼雜湊鏈結、數位簽章與共識機制確保交易完整性與難以竄改；但仍面臨智慧合約漏洞（重入、整數溢位）、51% 攻擊、私鑰保管、前端釣魚、橋接協定漏洞等資安風險",
+      "私鑰遺失可由區塊鏈自動恢復，無任何風險"
+    ],
+    ans: 2,
+    expl: "正解 C：區塊鏈之「難以竄改」源自雜湊鏈結與共識機制，但並非絕對安全。實務上 Smart Contract 漏洞（如 DAO 重入攻擊）、51% 算力攻擊、跨鏈橋接協定漏洞、私鑰保管不當（冷／熱錢包）、釣魚簽章授權等皆為常見風險。私鑰遺失一般無法恢復（除非另有恢復機制）。"
+  },
+  {
+    id: 50, cat: "H",
+    stem: "關於企業行動裝置管理（MDM／UEM）與 BYOD 安全之正確實務，下列敘述何者最為恰當？",
+    opts: [
+      "允許員工個人裝置於未安裝任何管理機制下，自由存取所有企業資源",
+      "行動裝置僅需設定 Wi-Fi 密碼即可，不需任何企業端控制",
+      "企業資料應直接儲存於員工個人裝置主儲存區，無須分離",
+      "應部署 MDM／UEM 強制執行螢幕鎖定、加密、作業系統版本控管、遠端抹除等政策；BYOD 可採容器化（Containerization）或工作設定檔（Work Profile）分離工作與個人空間，並搭配應用程式管控（MAM）、條件式存取與 Zero Trust 原則"
+    ],
+    ans: 3,
+    expl: "正解 D：企業對行動裝置之管控以 MDM／UEM 為主，強制最低安全基準（鎖定、加密、OS 版本、遠端抹除）；BYOD 情境下應以容器化／Work Profile 分離工作與個人資料，搭配 MAM 管控特定應用與條件式存取（Conditional Access），並落實 Zero Trust 存取決策，避免直接將企業資料落地於未受保護之個人空間。"
+  }
+];
+</script>
+<script>
+// ============================================================
+// 資訊安全模擬測驗系統 - 狀態機與邏輯
+// ============================================================
+const TOTAL_TIME_SEC = 75 * 60;   // 75 分鐘
+const EXAM_TITLE = "[模擬測驗] 資訊安全技術概論";
+const SUBJECT_CODE = "IST-01";
+const CAT_NAMES = {
+  E: "網路與通訊安全",
+  F: "作業系統與應用程式安全",
+  G: "資安維運技術",
+  H: "新興科技安全"
+};
+
+const state = {
+  stage: "login",
+  userId: "",
+  currentIdx: 0,
+  answers: {},      // {qid: 0-3}
+  marked: {},       // {qid: true}
+  zoomLevel: 1,
+  startTime: null,
+  remaining: TOTAL_TIME_SEC,
+  timerId: null,
+  submitted: false,
+  filter: "all"     // all / wrong / blank / correct
+};
+
+const $stage = document.getElementById("stage");
+
+// ============================================================
+// 隨機洗牌（題目順序 + 每題選項順序）
+// ============================================================
+// 保留一份原始題庫深複製，每次洗牌都從原始版重新生成，避免累積污染
+const ORIGINAL_QUESTIONS = QUESTIONS.map(q => ({
+  id: q.id,
+  cat: q.cat,
+  stem: q.stem,
+  opts: [...q.opts],
+  ans: q.ans,
+  expl: q.expl
+}));
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function shuffleExam() {
+  // 從原始題庫深複製一份
+  const fresh = ORIGINAL_QUESTIONS.map(q => ({
+    id: q.id,
+    cat: q.cat,
+    stem: q.stem,
+    opts: [...q.opts],
+    ans: q.ans,
+    expl: q.expl
+  }));
+  // 1. 打散題目順序
+  const shuffled = shuffleArray(fresh);
+  // 2. 每題內部打散選項順序，並更新 ans 指標
+  shuffled.forEach(q => {
+    const correctText = q.opts[q.ans];
+    q.opts = shuffleArray(q.opts);
+    q.ans = q.opts.indexOf(correctText);
+  });
+  // 3. 替換執行時題庫
+  QUESTIONS.length = 0;
+  QUESTIONS.push(...shuffled);
+}
+
+// ============================================================
+// 畫面渲染函式
+// ============================================================
+function renderLogin() {
+  state.stage = "login";
+  $stage.innerHTML = `
+    <div style="padding-top: 20px;">
+      <div class="disclaimer-box">
+        <div class="dc-title">重要聲明 — 請於開始練習前詳讀</div>
+        <ul>
+          <li>本系統為<b>社群志工自製之個人學習練習工具</b>，與任何政府機關、能力鑑定推動辦公室、官方發證單位均<b>無任何關聯、合作或授權關係</b>。</li>
+          <li>系統介面僅為模仿一般電腦化測驗之操作風格，<b>並非任何官方考試系統之實際畫面</b>。</li>
+          <li>題目內容為社群成員參考公開學習資源自行撰寫，<b>非官方歷屆試題</b>，僅作為讀書會學員熟悉題型與觀念之用。</li>
+          <li>本系統<b>不得用於任何商業用途或對外發證</b>，亦不保證與任何正式鑑定測驗之內容一致。</li>
+        </ul>
+        <div class="dc-ack">點擊「登錄」即表示您已知悉上述聲明，並同意僅將本系統用於個人學習。</div>
+      </div>
+      <div class="login-box">
+        <div class="login-title">
+          <h2>資訊安全模擬測驗系統</h2>
+          <span class="ver">Practice Edition v1.0 / 非官方練習用</span>
+        </div>
+        <div class="login-body">
+          <div class="login-field">
+            <label>練習者名稱：</label>
+            <input type="text" id="userIdInput" maxlength="20" placeholder="可輸入暱稱，留空亦可" autocomplete="off">
+          </div>
+          <div class="login-hint">
+            💡 填寫姓名：成績將上傳至社群排行榜<br>
+            📝 留空：個人練習模式，不上傳
+          </div>
+          <div class="login-buttons">
+            <button class="win-btn primary" onclick="doLogin()">登 錄</button>
+            <button class="win-btn" onclick="doCancel()">取 消</button>
+          </div>
+          <div class="login-champion" id="loginChampion">
+            <div class="champion-loading">🏆 載入榜首中...</div>
+          </div>
+          <div class="login-preview-link">
+            <a href="javascript:void(0)" onclick="showLeaderboardPreview()">查看完整排行榜 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  setTimeout(() => {
+    const inp = document.getElementById("userIdInput");
+    if (inp) inp.focus();
+    loadChampionPreview();
+  }, 100);
+}
+
+function doCancel() {
+  const inp = document.getElementById("userIdInput");
+  if (inp) inp.value = "";
+}
+
+function doLogin() {
+  const inp = document.getElementById("userIdInput");
+  const val = (inp.value || "").trim();
+  if (!val) {
+    state.userId = "練習者";
+  } else {
+    state.userId = val;
+  }
+  renderInfo();
+}
+
+function renderInfo() {
+  state.stage = "info";
+  $stage.innerHTML = `
+    <div class="info-panel">
+      <div class="info-panel-header">
+        <div>
+          <span class="tab">${EXAM_TITLE}</span>
+          <span class="tab-inactive">測驗注意事項</span>
+        </div>
+      </div>
+      <div class="info-identity">
+        <span>練習者名稱：${state.userId}</span>
+        <span>模式：個人練習</span>
+      </div>
+      <div class="info-content">
+        <ol>
+          <li>一、本試卷為<b>模擬練習題</b>，全部為<b>單選題</b>，共 <b>50 題</b>，每題 2 分（答錯不倒扣），總分共計 100 分，測驗時間 <b>75 分鐘</b>。</li>
+          <li>二、<b>每次進入本測驗，題目順序與選項順序皆會重新隨機排列</b>，避免記憶題號而非觀念。</li>
+          <li>三、本試題 0 為阿拉伯數字，O 為英文字母，作答時請先確認。</li>
+          <li>四、作答完畢請點選右上方「結束測驗」結束本次練習，系統將顯示成績與逐題解析。</li>
+          <li>五、本測驗達 <b>70 分</b> 為合格參考線（僅供自我檢核）。</li>
+          <li>六、<b style="color:#a04040;">本系統為非官方個人練習工具，題目與結果僅供學習參考，不代表任何正式鑑定之結果。</b></li>
+        </ol>
+      </div>
+      <div class="info-footer">
+        <button class="win-btn primary" onclick="startExam()" style="min-width: 100px; padding: 6px 28px;">開 始</button>
+      </div>
+      <div class="info-statusbar">試卷資料已載入完成，請點擊「開始」按鈕進行計時練習。</div>
+    </div>
+  `;
+}
+
+function startExam() {
+  state.stage = "exam";
+  shuffleExam();              // 每次進入考試都重新洗牌（題目 + 選項）
+  state.startTime = Date.now();
+  state.remaining = TOTAL_TIME_SEC;
+  startTimer();
+  renderExam();
+}
+
+function startTimer() {
+  if (state.timerId) clearInterval(state.timerId);
+  state.timerId = setInterval(() => {
+    state.remaining--;
+    if (state.remaining <= 0) {
+      state.remaining = 0;
+      clearInterval(state.timerId);
+      // 時間到自動交卷
+      finalizeExam();
+      return;
+    }
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, "0");
+  const s = (sec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById("timerDisplay");
+  if (!el) return;
+  el.textContent = `${formatTime(state.remaining)} / ${formatTime(TOTAL_TIME_SEC)}`;
+  if (state.remaining <= 300) {
+    el.classList.add("warning");
+  }
+}
+
+function renderExam() {
+  const q = QUESTIONS[state.currentIdx];
+  const total = QUESTIONS.length;
+  const isMarked = !!state.marked[q.id];
+  const userAns = state.answers[q.id];
+
+  $stage.innerHTML = `
+    <div class="exam-frame">
+      <div class="exam-topbar">
+        <div class="tab-active">學科測驗</div>
+      </div>
+      <div class="exam-identity-bar">
+        <span>${EXAM_TITLE}</span>
+        <span class="progress" id="progressDisplay">A${(state.currentIdx+1).toString().padStart(3,"0")} / A${total.toString().padStart(3,"0")}</span>
+        <span class="timer" id="timerDisplay">${formatTime(state.remaining)} / ${formatTime(TOTAL_TIME_SEC)}</span>
+        <button class="end-btn" onclick="confirmEndExam()">結束測驗</button>
+      </div>
+      <div class="exam-toolbar">
+        <button class="win-btn" onclick="prevQuestion()" ${state.currentIdx === 0 ? 'disabled' : ''}>◁ 上一題</button>
+        <button class="win-btn" onclick="nextQuestion()" ${state.currentIdx === total - 1 ? 'disabled' : ''}>下一題 ▷</button>
+        <button class="win-btn" onclick="clearAnswer()">不作答</button>
+        <button class="win-btn ${isMarked ? 'marked' : ''}" onclick="toggleMark()">${isMarked ? '★ 已標記' : '試題標記'}</button>
+        <button class="win-btn" onclick="openOverview()">試題總覽</button>
+        <button class="win-btn zoom-btn" onclick="zoomIn()" title="放大">🔍＋</button>
+        <button class="win-btn zoom-btn" onclick="zoomOut()" title="縮小" style="margin-left:0;">🔍－</button>
+      </div>
+      <div class="question-area zoom-${state.zoomLevel}" id="questionArea">
+        <div class="question-stem">
+          <span class="qnum">${state.currentIdx + 1}.</span>${escapeHtml(q.stem)}
+        </div>
+        <div class="options">
+          ${q.opts.map((opt, i) => `
+            <label class="option-row">
+              <input type="radio" name="opt" value="${i}" ${userAns === i ? 'checked' : ''} onchange="selectAnswer(${i})">
+              <span class="option-label">(${String.fromCharCode(65+i)})</span>
+              <span>${escapeHtml(opt)}</span>
+            </label>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function selectAnswer(i) {
+  const q = QUESTIONS[state.currentIdx];
+  state.answers[q.id] = i;
+}
+
+function clearAnswer() {
+  const q = QUESTIONS[state.currentIdx];
+  delete state.answers[q.id];
+  renderExam();
+}
+
+function toggleMark() {
+  const q = QUESTIONS[state.currentIdx];
+  if (state.marked[q.id]) {
+    delete state.marked[q.id];
+  } else {
+    state.marked[q.id] = true;
+  }
+  renderExam();
+}
+
+function prevQuestion() {
+  if (state.currentIdx > 0) {
+    state.currentIdx--;
+    renderExam();
+  }
+}
+
+function nextQuestion() {
+  if (state.currentIdx < QUESTIONS.length - 1) {
+    state.currentIdx++;
+    renderExam();
+  }
+}
+
+function zoomIn() {
+  if (state.zoomLevel < 3) {
+    state.zoomLevel++;
+    renderExam();
+  }
+}
+
+function zoomOut() {
+  if (state.zoomLevel > 0) {
+    state.zoomLevel--;
+    renderExam();
+  }
+}
+
+// ============================================================
+// 試題總覽
+// ============================================================
+function openOverview() {
+  const grid = document.getElementById("overviewGrid");
+  grid.innerHTML = QUESTIONS.map((q, i) => {
+    const answered = state.answers[q.id] !== undefined;
+    const marked = state.marked[q.id];
+    let cls = "qnum-cell";
+    if (marked) cls += " marked";
+    else if (answered) cls += " answered";
+    return `<div class="${cls}" onclick="jumpTo(${i})">${i+1}</div>`;
+  }).join("");
+  document.getElementById("overviewModal").classList.add("show");
+}
+
+function closeOverview() {
+  document.getElementById("overviewModal").classList.remove("show");
+}
+
+function jumpTo(idx) {
+  state.currentIdx = idx;
+  closeOverview();
+  renderExam();
+}
+
+// ============================================================
+// 結束測驗
+// ============================================================
+function confirmEndExam() {
+  const total = QUESTIONS.length;
+  const answered = Object.keys(state.answers).length;
+  const unanswered = total - answered;
+  document.getElementById("endStats").innerHTML = `
+    學科總題數 : ${total}<br>
+    已作答題數 : ${answered}<br>
+    未作答題數 : ${unanswered}
+  `;
+  document.getElementById("endConfirmModal").classList.add("show");
+}
+
+function closeEndModal() {
+  document.getElementById("endConfirmModal").classList.remove("show");
+}
+
+function finalizeExam() {
+  closeEndModal();
+  state.submitted = true;
+  if (state.timerId) clearInterval(state.timerId);
+  renderEndScreen();
+}
+
+function renderEndScreen() {
+  state.stage = "end";
+  $stage.innerHTML = `
+    <div class="end-screen">
+      <h1>本次練習已結束</h1>
+      <p>感謝您的作答，點擊下方按鈕查看成績與逐題解析。</p>
+      <button class="win-btn primary" onclick="renderResult()" style="min-width: 140px; padding: 8px 24px;">查看模擬成績與解析</button>
+    </div>
+  `;
+}
+
+// ============================================================
+// 成績與逐題解析
+// ============================================================
+function calcResult() {
+  const byCat = { E:{n:0,c:0}, F:{n:0,c:0}, G:{n:0,c:0}, H:{n:0,c:0} };
+  let correct = 0, wrong = 0, blank = 0;
+  QUESTIONS.forEach(q => {
+    byCat[q.cat].n++;
+    const a = state.answers[q.id];
+    if (a === undefined) {
+      blank++;
+    } else if (a === q.ans) {
+      correct++;
+      byCat[q.cat].c++;
+    } else {
+      wrong++;
+    }
+  });
+  const score = Math.round((correct / QUESTIONS.length) * 100);
+  return { byCat, correct, wrong, blank, score, pass: score >= 70 };
+}
+
+function renderResult() {
+  state.stage = "result";
+  const r = calcResult();
+  const scoreCls = r.pass ? "pass" : "fail";
+
+  const catRows = ["E","F","G","H"].map(cat => {
+    const info = r.byCat[cat];
+    const pct = info.n > 0 ? Math.round((info.c / info.n) * 100) : 0;
+    let barCls = "";
+    if (pct < 60) barCls = "low";
+    else if (pct < 75) barCls = "mid";
+    return `
+      <div class="category-row">
+        <span class="cat-name">${cat}. ${CAT_NAMES[cat]}</span>
+        <span class="cat-bar-wrap"><span class="cat-bar ${barCls}" style="width: ${pct}%;"></span></span>
+        <span class="cat-score">${info.c}/${info.n} (${pct}%)</span>
+      </div>
+    `;
+  }).join("");
+
+  const usedMin = Math.floor((TOTAL_TIME_SEC - state.remaining) / 60);
+  const usedSec = (TOTAL_TIME_SEC - state.remaining) % 60;
+
+  $stage.innerHTML = `
+    <div class="result-screen">
+      <div class="result-header">
+        <div class="result-subtitle">資訊安全模擬測驗 — 非官方個人練習版</div>
+        <div class="result-title">${SUBJECT_CODE} ${EXAM_TITLE.replace("[模擬測驗] ","")}</div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-main">
+          <div class="score-number ${scoreCls}">${r.score}</div>
+          <div class="score-label">總 分（滿分 100）</div>
+          <div class="score-verdict ${scoreCls}">${r.pass ? "✓ 合 格" : "✗ 不合格"}</div>
+        </div>
+        <div class="score-breakdown">
+          <h3>各評鑑主題表現</h3>
+          ${catRows}
+        </div>
+      </div>
+
+      <div class="stats-summary">
+        <div class="stats-item correct">
+          <span class="num">${r.correct}</span>
+          <span class="lab">答對題數</span>
+        </div>
+        <div class="stats-item wrong">
+          <span class="num">${r.wrong}</span>
+          <span class="lab">答錯題數</span>
+        </div>
+        <div class="stats-item blank">
+          <span class="num">${r.blank}</span>
+          <span class="lab">未作答</span>
+        </div>
+        <div class="stats-item">
+          <span class="num">${usedMin}:${usedSec.toString().padStart(2,"0")}</span>
+          <span class="lab">實際作答時間</span>
+        </div>
+        <div class="stats-item">
+          <span class="num">${Object.keys(state.marked).length}</span>
+          <span class="lab">曾標記題數</span>
+        </div>
+      </div>
+
+      <div id="leaderboardSection" class="leaderboard-section">
+        <h3>
+          🏆 社群排行榜
+          <button class="leaderboard-refresh" onclick="refreshLeaderboard()">重新整理</button>
+        </h3>
+        <div id="leaderboardContent">
+          <div class="leaderboard-loading">載入中...</div>
+        </div>
+      </div>
+
+      <div id="teacherAdminSection"></div>
+
+      <div class="review-section">
+        <h2>
+          <span>逐題檢視與解析</span>
+          <div class="filter-buttons">
+            <button class="filter-btn ${state.filter==='all'?'active':''}" onclick="setFilter('all')">全部 (${QUESTIONS.length})</button>
+            <button class="filter-btn ${state.filter==='wrong'?'active':''}" onclick="setFilter('wrong')">錯題 (${r.wrong})</button>
+            <button class="filter-btn ${state.filter==='blank'?'active':''}" onclick="setFilter('blank')">未作答 (${r.blank})</button>
+            <button class="filter-btn ${state.filter==='correct'?'active':''}" onclick="setFilter('correct')">答對 (${r.correct})</button>
+          </div>
+        </h2>
+        <div id="reviewList">${renderReviewList()}</div>
+      </div>
+
+      <div class="result-actions">
+        <button class="win-btn" onclick="retakeExam()">重新挑戰</button>
+        <button class="win-btn primary" onclick="window.print()">列印成績單</button>
+      </div>
+    </div>
+  `;
+  // 成績頁渲染完畢後，觸發排行榜提交與載入
+  setTimeout(() => submitToLeaderboard(), 100);
+}
+
+
+// ============================================================
+// API 版排行榜功能
+// ============================================================
+const API_URL = "https://script.google.com/macros/s/AKfycbyD5I7sJoJ2YnF9v47Ul-ATPF1y4_ztCctRFltI_G6ZEIHZZKyP2p6KZfWMyLtEKVYINA/exec";
+const TEACHER_ADMIN_CODE = "#admin志祥";
+
+// 全域快取
+window._qstatsCache = null;
+window._leaderboardCache = null;
+
+// ============================================================
+// 呼叫 API 工具函數
+// ============================================================
+async function apiGet(action) {
+  const url = `${API_URL}?action=${action}&subject=${SUBJECT_CODE}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("API 回應失敗");
+  return await res.json();
+}
+
+async function apiPost(data) {
+  // 用 text/plain 避免 CORS preflight
+  const res = await fetch(API_URL, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error("API 上傳失敗");
+  return await res.json();
+}
+
+// ============================================================
+// 登入畫面：載入榜首
+// ============================================================
+async function loadChampionPreview() {
+  const box = document.getElementById("loginChampion");
+  if (!box) return;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      box.innerHTML = `<div class="champion-empty">🎯 尚無上榜紀錄，成為第一位登榜者！</div>`;
+      return;
+    }
+
+    // 每人最高分
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+
+    const champion = sorted[0];
+    const mins = Math.floor(champion.time / 60);
+    const secs = champion.time % 60;
+    const timeStr = `${mins}:${secs.toString().padStart(2, "0")}`;
+
+    box.innerHTML = `
+      <div>
+        <div class="champion-row">
+          <span class="champion-title">🏆 目前榜首</span>
+          <span class="champion-name">${escapeHtml(champion.name)}</span>
+          <span class="champion-score">${champion.score} 分</span>
+          <span style="color: #888;">｜ 用時 ${timeStr}</span>
+        </div>
+        <div class="champion-count">共 ${sorted.length} 位上榜</div>
+      </div>
+    `;
+  } catch (e) {
+    box.innerHTML = `<div class="champion-empty">（榜首資訊暫無法載入）</div>`;
+  }
+}
+
+// ============================================================
+// 考前預覽排行榜 Modal
+// ============================================================
+async function showLeaderboardPreview() {
+  let mask = document.getElementById("lbPreviewMask");
+  if (!mask) {
+    mask = document.createElement("div");
+    mask.id = "lbPreviewMask";
+    mask.className = "lb-preview-mask";
+    mask.innerHTML = `
+      <div class="lb-preview-box">
+        <h3>
+          🏆 目前社群排行榜
+          <button class="lb-preview-close" onclick="closeLeaderboardPreview()">關閉</button>
+        </h3>
+        <div class="lb-preview-subtitle">Top 10 · 登錄後可挑戰上榜</div>
+        <div id="lbPreviewContent">
+          <div class="leaderboard-loading">載入中...</div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(mask);
+    mask.addEventListener("click", (e) => {
+      if (e.target === mask) closeLeaderboardPreview();
+    });
+  }
+  mask.classList.add("show");
+
+  const container = document.getElementById("lbPreviewContent");
+  container.innerHTML = `<div class="leaderboard-loading">載入中...</div>`;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      container.innerHTML = `
+        <div class="leaderboard-mode-notice">
+          <div class="big">🎯 尚無上榜紀錄</div>
+          成為第一位登榜者吧！完成測驗後成績將顯示於此。
+        </div>
+      `;
+      return;
+    }
+
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+    const top10 = sorted.slice(0, 10);
+
+    const medalFor = (r) => r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "🥉" : r;
+    const fmtTime = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,"0")}`;
+
+    let html = `<table class="leaderboard-table">
+      <thead><tr><th class="num">名次</th><th>姓名</th><th class="score">分數</th><th class="time">時間</th></tr></thead>
+      <tbody>`;
+    top10.forEach((r, i) => {
+      html += `<tr>
+        <td class="num medal">${medalFor(i+1)}</td>
+        <td>${escapeHtml(r.name)}</td>
+        <td class="score">${r.score}</td>
+        <td class="time">${fmtTime(r.time)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    const avg = Math.round(sorted.reduce((s, r) => s + r.score, 0) / sorted.length);
+    const passCount = sorted.filter(r => r.score >= 70).length;
+    const passRate = Math.round(passCount / sorted.length * 100);
+    html += `<div class="leaderboard-stats">📊 共 ${sorted.length} 位上榜 ｜ 平均 ${avg} 分 ｜ 通過率 ${passRate}%</div>`;
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `
+      <div class="leaderboard-mode-notice">
+        <div class="big">⚠️ 載入失敗</div>
+        ${escapeHtml(e.message || "未知錯誤")}
+      </div>
+    `;
+  }
+}
+
+function closeLeaderboardPreview() {
+  const mask = document.getElementById("lbPreviewMask");
+  if (mask) mask.classList.remove("show");
+}
+
+// ============================================================
+// 成績頁：提交成績
+// ============================================================
+async function submitToLeaderboard() {
+  const userId = state.userId || "練習者";
+  const r = calcResult();
+  const usedTime = TOTAL_TIME_SEC - state.remaining;
+
+  // 老師後台入口
+  if (userId === TEACHER_ADMIN_CODE) {
+    renderTeacherAdmin();
+    document.getElementById("leaderboardSection").style.display = "none";
+    return;
+  }
+
+  // 測試模式
+  if (userId === "練習者" || userId === "") {
+    renderTeacherMode();
+    await loadAndRenderQStats();
+    return;
+  }
+
+  // 防刷
+  const answered = Object.keys(state.answers).length;
+  if (usedTime < 60) {
+    renderLeaderboardBlocked("作答時間過短（未滿 1 分鐘），不列入排行榜");
+    await loadAndRenderQStats();
+    return;
+  }
+  if (answered < QUESTIONS.length) {
+    renderLeaderboardBlocked(`僅完整作答全部 ${QUESTIONS.length} 題者才列入排行榜（您答了 ${answered} 題）`);
+    await loadAndRenderQStats();
+    return;
+  }
+
+  // 準備上傳資料
+  const answers = {};
+  QUESTIONS.forEach(q => {
+    const ans = state.answers[q.id];
+    if (ans !== undefined) answers[q.id] = ans;
+  });
+
+  const payload = {
+    action: "submit",
+    subject: SUBJECT_CODE,
+    name: userId,
+    score: r.score,
+    correct: r.correct,
+    time: usedTime,
+    date: new Date().toISOString().slice(0, 10),
+    timestamp: Date.now(),
+    answers: answers
+  };
+
+  try {
+    await apiPost(payload);
+    await renderLeaderboard();
+    await loadAndRenderQStats();
+  } catch (e) {
+    console.error("上傳失敗:", e);
+    renderLeaderboardBlocked("無法連線排行榜（請檢查網路或重試）");
+    await loadAndRenderQStats();
+  }
+}
+
+function renderTeacherMode() {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="leaderboard-mode-notice">
+      <div class="big">📝 個人練習模式</div>
+      本次成績未上傳至排行榜<br>
+      想加入社群競賽？下次於登入畫面填入姓名 🚀
+    </div>
+  `;
+}
+
+function renderLeaderboardBlocked(reason) {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="leaderboard-mode-notice">
+      <div class="big">ℹ️ 未加入排行榜</div>
+      ${reason}
+    </div>
+  `;
+}
+
+// ============================================================
+// 成績頁：渲染排行榜
+// ============================================================
+async function renderLeaderboard() {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `<div class="leaderboard-loading">載入中...</div>`;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      container.innerHTML = `
+        <div class="leaderboard-mode-notice">
+          <div class="big">🎯 尚無上榜紀錄</div>
+          你是第一位作答者！成為榜首等候挑戰吧 🏆
+        </div>
+      `;
+      return;
+    }
+
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+    const top10 = sorted.slice(0, 10);
+    const myName = state.userId;
+    const myIndex = sorted.findIndex(r => r.name === myName);
+
+    const medalFor = (r) => r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "🥉" : r;
+    const fmtTime = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,"0")}`;
+
+    let html = `<table class="leaderboard-table">
+      <thead><tr><th class="num">名次</th><th>姓名</th><th class="score">分數</th><th class="time">時間</th></tr></thead>
+      <tbody>`;
+    top10.forEach((r, i) => {
+      const isMe = r.name === myName;
+      html += `<tr class="${isMe ? "me" : ""}">
+        <td class="num medal">${medalFor(i+1)}</td>
+        <td>${escapeHtml(r.name)}</td>
+        <td class="score">${r.score}</td>
+        <td class="time">${fmtTime(r.time)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    if (myIndex >= 10) {
+      const me = sorted[myIndex];
+      html += `<div class="leaderboard-my-rank">
+        你目前排名第 <strong>${myIndex + 1}</strong> 名 ｜ ${me.score} 分 ｜ 用時 ${fmtTime(me.time)}
+      </div>`;
+    } else if (myIndex >= 0 && myIndex < 10) {
+      html += `<div class="leaderboard-my-rank">🎉 你在榜上第 <strong>${myIndex + 1}</strong> 名！</div>`;
+    }
+
+    const avg = Math.round(sorted.reduce((s, r) => s + r.score, 0) / sorted.length);
+    const passCount = sorted.filter(r => r.score >= 70).length;
+    const passRate = Math.round(passCount / sorted.length * 100);
+    html += `<div class="leaderboard-stats">📊 共 ${sorted.length} 位上榜 ｜ 平均 ${avg} 分 ｜ 通過率 ${passRate}%</div>`;
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `
+      <div class="leaderboard-mode-notice">
+        <div class="big">⚠️ 載入失敗</div>
+        ${escapeHtml(e.message || "未知錯誤")}
+      </div>
+    `;
+  }
+}
+
+async function refreshLeaderboard() {
+  await renderLeaderboard();
+}
+
+// ============================================================
+// 題目統計
+// ============================================================
+async function loadAndRenderQStats() {
+  try {
+    const result = await apiGet("qstats");
+    window._qstatsCache = result.stats || {};
+  } catch (e) {
+    window._qstatsCache = {};
+  }
+  const reviewList = document.getElementById("reviewList");
+  if (reviewList) {
+    reviewList.innerHTML = renderReviewList();
+  }
+}
+
+// ============================================================
+// 老師後台
+// ============================================================
+async function renderTeacherAdmin() {
+  const container = document.getElementById("teacherAdminSection");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="teacher-admin-panel">
+      <h4>🔐 老師後台（管理模式）</h4>
+      <div id="adminContent">載入中...</div>
+    </div>
+  `;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+    records.sort((a, b) => b.timestamp - a.timestamp);
+
+    let html = `<div>全部 ${records.length} 筆紀錄 ｜ <button onclick="exportCSV()">匯出 CSV</button></div>
+      <div style="margin-top:10px; max-height:400px; overflow-y:auto;">`;
+
+    records.forEach(r => {
+      const t = new Date(r.timestamp).toLocaleString("zh-TW");
+      const mins = Math.floor(r.time / 60);
+      const secs = r.time % 60;
+      html += `<div class="admin-row">
+        <div>
+          <strong>${escapeHtml(r.name)}</strong>
+          - ${r.score} 分 (${r.correct}/50) - ${mins}:${secs.toString().padStart(2,"0")}
+          <br><small style="color:#999;">${t}</small>
+        </div>
+      </div>`;
+    });
+
+    html += `</div>
+      <div style="margin-top:10px; font-size:11px; color:#95a5a6;">
+        💡 提示：刪除資料請直接到 Google Sheet 編輯；批量清空請清空 scores 分頁的第 2 列以下資料。
+      </div>`;
+    document.getElementById("adminContent").innerHTML = html;
+  } catch (e) {
+    document.getElementById("adminContent").innerHTML = `❌ 載入失敗: ${e.message}`;
+  }
+}
+
+async function exportCSV() {
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+    records.sort((a, b) => b.timestamp - a.timestamp);
+    let csv = "姓名,分數,答對題數,作答秒數,日期,時間戳記\n";
+    records.forEach(r => {
+      csv += `"${r.name}",${r.score},${r.correct},${r.time},${r.date},${r.timestamp}\n`;
+    });
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `leaderboard_${SUBJECT_CODE}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert("匯出失敗: " + e.message);
+  }
+}
+
+function setFilter(f) {
+  state.filter = f;
+  // 重新渲染整個結果頁以更新篩選按鈕 active 狀態
+  renderResult();
+}
+
+function renderReviewList() {
+  return QUESTIONS.map((q, idx) => {
+    const userAns = state.answers[q.id];
+    const isBlank = userAns === undefined;
+    const isCorrect = !isBlank && userAns === q.ans;
+    const isWrong = !isBlank && !isCorrect;
+
+    if (state.filter === "wrong" && !isWrong) return "";
+    if (state.filter === "blank" && !isBlank) return "";
+    if (state.filter === "correct" && !isCorrect) return "";
+
+    let itemCls = "review-item";
+    let badgeCls, badgeText;
+    if (isCorrect) { badgeCls = "correct"; badgeText = "✓ 答對"; }
+    else if (isBlank) { itemCls += " blank"; badgeCls = "blank"; badgeText = "— 未作答"; }
+    else { itemCls += " wrong"; badgeCls = "wrong"; badgeText = "✗ 答錯"; }
+
+    // 取得本題社群統計
+    const qstat = (window._qstatsCache && window._qstatsCache["q" + q.id]) || null;
+    const qstatTotal = qstat ? (qstat[0] + qstat[1] + qstat[2] + qstat[3]) : 0;
+
+    const opts = q.opts.map((opt, i) => {
+      let optCls = "review-opt";
+      let tag = "";
+      if (i === q.ans && i === userAns) {
+        optCls += " user-correct";
+        tag = "← 您的答案 ✓";
+      } else if (i === q.ans) {
+        optCls += " correct-ans";
+        tag = "← 正解";
+      } else if (i === userAns) {
+        optCls += " user-wrong";
+        tag = "← 您的答案 ✗";
+      }
+      let statBar = "";
+      if (qstat && qstatTotal > 0) {
+        const cnt = qstat[i];
+        const pct = Math.round(cnt / qstatTotal * 100);
+        const barCls = i === q.ans ? "stat-correct" : (cnt === Math.max(...qstat) && cnt > 0 && i !== q.ans ? "stat-top-wrong" : "stat-normal");
+        statBar = `<span class="opt-stat ${barCls}">${cnt} 人 / ${pct}%</span>`;
+      }
+      return `
+        <div class="${optCls}">
+          <span class="opt-marker">(${String.fromCharCode(65+i)})</span>
+          <span class="opt-text">${escapeHtml(opt)}</span>
+          ${tag ? `<span class="opt-tag">${tag}</span>` : ""}
+          ${statBar}
+        </div>
+      `;
+    }).join("");
+
+    let qstatHeader = "";
+    if (qstat && qstatTotal > 0) {
+      const correctCnt = qstat[q.ans];
+      const correctPct = Math.round(correctCnt / qstatTotal * 100);
+      qstatHeader = `<div class="review-qstat">📊 社群作答：共 ${qstatTotal} 人 ｜ 答對率 ${correctPct}%</div>`;
+    }
+
+    return `
+      <div class="${itemCls}">
+        <div class="review-header">
+          <span class="rq-num">Q${(idx+1).toString().padStart(2,"0")}</span>
+          <span class="rq-cat">${q.cat}. ${CAT_NAMES[q.cat]}</span>
+          <span class="rq-badge ${badgeCls}">${badgeText}</span>
+          ${state.marked[q.id] ? '<span class="rq-badge" style="background:#fff4d0;color:#a08020;">★ 曾標記</span>' : ''}
+        </div>
+        <div class="review-stem">${escapeHtml(q.stem)}</div>
+        ${qstatHeader}
+        <div class="review-opts">${opts}</div>
+        <div class="review-expl">
+          <span class="expl-label">解析：</span>${escapeHtml(q.expl)}
+        </div>
+      </div>
+    `;
+  }).join("") || `<div style="padding:40px;text-align:center;color:#888;">此分類目前沒有題目</div>`;
+}
+
+function retakeExam() {
+  state.currentIdx = 0;
+  state.answers = {};
+  state.marked = {};
+  state.zoomLevel = 1;
+  state.startTime = null;
+  state.remaining = TOTAL_TIME_SEC;
+  state.submitted = false;
+  state.filter = "all";
+  if (state.timerId) clearInterval(state.timerId);
+  renderLogin();
+}
+
+// ============================================================
+// 鍵盤快捷鍵
+// ============================================================
+document.addEventListener("keydown", (e) => {
+  if (state.stage !== "exam") return;
+  // 1-4 或 A-D 選答
+  const keyMap = { "1":0,"2":1,"3":2,"4":3,"a":0,"b":1,"c":2,"d":3,"A":0,"B":1,"C":2,"D":3 };
+  if (keyMap[e.key] !== undefined) {
+    selectAnswer(keyMap[e.key]);
+    renderExam();
+    return;
+  }
+  if (e.key === "ArrowLeft") prevQuestion();
+  else if (e.key === "ArrowRight") nextQuestion();
+});
+
+// 啟動
+renderLogin();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPAS 資訊安全工程師初級 模擬測驗</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 36px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  }
+  h1 {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .subtitle {
+    color: #888;
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+  }
+  .exam-card {
+    display: block;
+    padding: 20px;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .exam-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+  }
+  .exam-card.tech {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  }
+  .exam-card.tech:hover {
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+  }
+  .exam-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .exam-meta {
+    font-size: 12px;
+    opacity: 0.9;
+  }
+  .notice {
+    margin-top: 24px;
+    padding: 14px;
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #856404;
+    line-height: 1.7;
+  }
+  .footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 11px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🛡️ iPAS 資訊安全工程師初級</h1>
+  <div class="subtitle">模擬測驗系統 · 非官方練習版</div>
+
+  <a href="mgmt.html" class="exam-card">
+    <div class="exam-title">📘 資訊安全管理概論</div>
+    <div class="exam-meta">50 題單選 ｜ 75 分鐘 ｜ 70 分及格</div>
+  </a>
+
+  <a href="tech.html" class="exam-card tech">
+    <div class="exam-title">🔧 資訊安全技術概論</div>
+    <div class="exam-meta">50 題單選 ｜ 75 分鐘 ｜ 70 分及格</div>
+  </a>
+
+  <div class="notice">
+    💡 <strong>使用方式</strong><br>
+    · 填寫姓名 → 成績將上傳社群排行榜<br>
+    · 留空姓名 → 個人練習模式，不上傳<br>
+    · 完整作答 50 題才能列入排行榜
+  </div>
+
+  <div class="footer">
+    本模擬測驗僅供學習用途，非官方試題
+  </div>
+</div>
+</body>
+</html>
