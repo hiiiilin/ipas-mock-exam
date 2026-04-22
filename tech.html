@@ -681,9 +681,9 @@ body {
 }
 
 .overview-list {
-  max-height: 400px;
+  max-height: 420px;
   overflow-y: auto;
-  padding: 10px;
+  padding: 0;
   background: #fff;
 }
 .overview-list-table {
@@ -694,15 +694,16 @@ body {
 .overview-list-table thead th {
   background: #2c3e50;
   color: #fff;
-  padding: 8px;
+  padding: 6px 8px;
   text-align: center;
   position: sticky;
   top: 0;
   z-index: 1;
+  font-size: 13px;
 }
 .overview-list-table tbody tr {
   cursor: pointer;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e0e0e0;
   transition: background 0.1s;
 }
 .overview-list-table tbody tr:hover {
@@ -712,7 +713,10 @@ body {
   text-align: center;
   font-weight: 700;
   color: #fff;
-  width: 40px;
+  width: 55px;
+  padding: 6px 0;
+  font-size: 13px;
+  vertical-align: middle;
 }
 .list-row.answered .list-num {
   background: #27ae60;
@@ -725,8 +729,10 @@ body {
   background: #e74c3c;
 }
 .list-stem {
-  padding: 8px 12px;
+  padding: 6px 12px;
   color: #333;
+  line-height: 1.5;
+  word-break: break-word;
 }
 
 .overview-grid {
@@ -2246,10 +2252,9 @@ function renderOverviewList() {
           if (marked) cls += " marked";
           else if (answered) cls += " answered";
           else cls += " unanswered";
-          const stemShort = q.stem.length > 50 ? q.stem.substring(0, 50) + "…" : q.stem;
           return `<tr class="${cls}" onclick="jumpTo(${i})">
             <td class="list-num">${i+1}</td>
-            <td class="list-stem">${stemShort}</td>
+            <td class="list-stem">${q.stem}</td>
           </tr>`;
         }).join("")}
       </tbody>
