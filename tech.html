@@ -82,6 +82,25 @@ body {
 .stage { flex: 1; padding: 24px; background: #fff; position: relative; }
 
 /* 登入畫面 */
+.mini-notice {
+  max-width: 680px;
+  margin: 0 auto 20px;
+  padding: 10px 16px;
+  background: #fff8e7;
+  border: 1px solid #e0b95e;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  color: #8b6914;
+}
+.mini-notice a {
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 8px;
+}
+.mini-notice a:hover {
+  text-decoration: underline;
+}
 .disclaimer-box {
   max-width: 540px;
   margin: 0 auto 20px;
@@ -221,6 +240,41 @@ body {
   background: linear-gradient(to bottom, #6a99cf 0%, #4a77ac 100%);
 }
 
+.key-hint-box {
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: #f5f8fc;
+  border: 1px solid #c8d4e0;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 2;
+}
+.kbd {
+  display: inline-block;
+  min-width: 24px;
+  padding: 2px 8px;
+  margin: 0 2px;
+  background: #fff;
+  border: 1px solid #aaa;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  font-family: "Consolas", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+.key-hint-sep {
+  margin: 0 8px;
+  color: #888;
+  font-size: 12px;
+}
+.key-hint-desc {
+  margin-left: 8px;
+  color: #555;
+  font-size: 12px;
+}
 .info-panel {
   border: 1px solid #7b8a9c;
   background: #fff;
@@ -1841,15 +1895,8 @@ function renderLogin() {
   state.stage = "login";
   $stage.innerHTML = `
     <div style="padding-top: 20px;">
-      <div class="disclaimer-box">
-        <div class="dc-title">重要聲明 — 請於開始練習前詳讀</div>
-        <ul>
-          <li>本系統為<b>社群志工自製之個人學習練習工具</b>，與任何政府機關、能力鑑定推動辦公室、官方發證單位均<b>無任何關聯、合作或授權關係</b>。</li>
-          <li>系統介面僅為模仿一般電腦化測驗之操作風格，<b>並非任何官方考試系統之實際畫面</b>。</li>
-          <li>題目內容為社群成員參考公開學習資源自行撰寫，<b>非官方歷屆試題</b>，僅作為讀書會學員熟悉題型與觀念之用。</li>
-          <li>本系統<b>不得用於任何商業用途或對外發證</b>，亦不保證與任何正式鑑定測驗之內容一致。</li>
-        </ul>
-        <div class="dc-ack">點擊「登錄」即表示您已知悉上述聲明，並同意僅將本系統用於個人學習。</div>
+      <div class="mini-notice">
+        ℹ️ 本系統為社群志工自製練習工具，非官方試題。<a href="./" style="color:#8b6914;">詳閱完整聲明 →</a>
       </div>
       <div class="login-box">
         <div class="login-title">
@@ -1924,6 +1971,17 @@ function renderInfo() {
           <li>四、作答完畢請點選右上方「結束測驗」結束本次練習，系統將顯示成績與逐題解析。</li>
           <li>五、本測驗達 <b>70 分</b> 為合格參考線（僅供自我檢核）。</li>
           <li>六、<b style="color:#a04040;">本系統為非官方個人練習工具，題目與結果僅供學習參考，不代表任何正式鑑定之結果。</b></li>
+          <li>七、<b>鍵盤快捷鍵</b>（作答時可用）：
+            <div class="key-hint-box">
+              <span class="kbd">A</span> <span class="kbd">B</span> <span class="kbd">C</span> <span class="kbd">D</span>
+              <span class="key-hint-sep">或</span>
+              <span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span> <span class="kbd">4</span>
+              <span class="key-hint-desc">：選擇答案</span>
+              <br>
+              <span class="kbd">←</span> <span class="kbd">→</span>
+              <span class="key-hint-desc">：上一題 / 下一題</span>
+            </div>
+          </li>
         </ol>
       </div>
       <div class="info-footer">
@@ -2261,7 +2319,7 @@ function renderResult() {
 // ============================================================
 // API 版排行榜功能
 // ============================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbyD5I7sJoJ2YnF9v47Ul-ATPF1y4_ztCctRFltI_G6ZEIHZZKyP2p6KZfWMyLtEKVYINA/exec";
+const API_URL = "https://ipas-api.hiiii-lin.workers.dev/";
 const TEACHER_ADMIN_CODE = "#admin志祥";
 
 // 全域快取
@@ -2279,11 +2337,9 @@ async function apiGet(action) {
 }
 
 async function apiPost(data) {
-  // 用 text/plain 避免 CORS preflight
   const res = await fetch(API_URL, {
     method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   });
   if (!res.ok) throw new Error("API 上傳失敗");
