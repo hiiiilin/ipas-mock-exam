@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPAS 資訊安全工程師認證考試分析</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
+<script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState } = React;
+const {
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip, Legend, ResponsiveContainer, ComposedChart
+} = Recharts;
+
+const IPASComparison = () => {
+  const data = {
+    '初級': [
+      { year: 114, session: 2, registrants: 1245, subjects: [
+        { name: "管理概論", passRate: 59.74 },
+        { name: "技術概論", passRate: 62.62 }
+      ], certRate: 63.22 },
+      { year: 114, session: 1, registrants: 1318, subjects: [
+        { name: "管理概論", passRate: 76.94 },
+        { name: "技術概論", passRate: 71.01 }
+      ], certRate: 67.81 },
+      { year: 113, session: 2, registrants: 1318, subjects: [
+        { name: "管理概論", passRate: 31.18 },
+        { name: "技術概論", passRate: 43.83 }
+      ], certRate: 33.50 },
+      { year: 113, session: 1, registrants: 1638, subjects: [
+        { name: "管理概論", passRate: 68.68 },
+        { name: "技術概論", passRate: 61.60 }
+      ], certRate: 61.50 },
+      { year: 112, session: 2, registrants: 1256, subjects: [
+        { name: "管理概論", passRate: 60.21 },
+        { name: "技術概論", passRate: 30.14 }
+      ], certRate: 31.56 },
+      { year: 112, session: 1, registrants: 807, subjects: [
+        { name: "管理概論", passRate: 74.89 },
+        { name: "技術概論", passRate: 51.06 }
+      ], certRate: 60.46 },
+      { year: 111, session: 2, registrants: 875, subjects: [
+        { name: "管理概論", passRate: 60.16 },
+        { name: "技術概論", passRate: 20.65 }
+      ], certRate: 33.92 },
+      { year: 111, session: 1, registrants: 661, subjects: [
+        { name: "管理概論", passRate: 45.65 },
+        { name: "技術概論", passRate: 20.49 }
+      ], certRate: 29.98 },
+      { year: 110, session: 2, registrants: 682, subjects: [
+        { name: "管理概論", passRate: 31.58 },
+        { name: "技術概論", passRate: 31.50 }
+      ], certRate: 33.01 },
+      { year: 110, session: 1, registrants: 315, subjects: [
+        { name: "管理概論", passRate: 71.89 },
+        { name: "技術概論", passRate: 38.07 }
+      ], certRate: 48.21 },
+      { year: 109, session: 2, registrants: 648, subjects: [
+        { name: "管理概論", passRate: 57.86 },
+        { name: "技術概論", passRate: 17.92 }
+      ], certRate: 30.71 },
+      { year: 109, session: 1, registrants: 329, subjects: [
+        { name: "管理概論", passRate: 69.15 },
+        { name: "技術概論", passRate: 46.67 }
+      ], certRate: 55.48 }
+    ],
+    '中級': [
+      { year: 115, session: 1, registrants: 904, subjects: [
+        { name: "規劃實務", passRate: 61.52 },
+        { name: "防護實務", passRate: 69.77 }
+      ], certRate: 63.56 },
+      { year: 114, session: 2, registrants: 923, subjects: [
+        { name: "規劃實務", passRate: 80.50 },
+        { name: "防護實務", passRate: 36.56 }
+      ], certRate: 44.72 },
+      { year: 114, session: 1, registrants: 641, subjects: [
+        { name: "規劃實務", passRate: 61.79 },
+        { name: "防護實務", passRate: 28.14 }
+      ], certRate: 27.20 },
+      { year: 113, session: 2, registrants: 853, subjects: [
+        { name: "規劃實務", passRate: 51.53 },
+        { name: "防護實務", passRate: 26.32 }
+      ], certRate: 22.61 },
+      { year: 113, session: 1, registrants: 721, subjects: [
+        { name: "規劃實務", passRate: 73.55 },
+        { name: "防護實務", passRate: 39.38 }
+      ], certRate: 37.71 },
+      { year: 112, session: 2, registrants: 742, subjects: [
+        { name: "規劃實務", passRate: 58.63 },
+        { name: "防護實務", passRate: 36.32 }
+      ], certRate: 30.60 },
+      { year: 112, session: 1, registrants: 476, subjects: [
+        { name: "規劃實務", passRate: 21.33 },
+        { name: "防護實務", passRate: 17.41 }
+      ], certRate: 13.87 },
+      { year: 111, session: 1, registrants: 478, subjects: [
+        { name: "規劃實務", passRate: 37.17 },
+        { name: "防護實務", passRate: 29.09 }
+      ], certRate: 21.61 },
+      { year: 110, session: 1, registrants: 292, subjects: [
+        { name: "規劃實務", passRate: 47.15 },
+        { name: "防護實務", passRate: 37.79 }
+      ], certRate: 32.20 },
+      { year: 109, session: 1, registrants: 167, subjects: [
+        { name: "規劃實務", passRate: 65.69 },
+        { name: "防護實務", passRate: 41.50 }
+      ], certRate: 37.09 },
+      { year: 108, session: 1, registrants: 79, subjects: [
+        { name: "規劃實務", passRate: 56.52 },
+        { name: "防護實務", passRate: 33.82 }
+      ], certRate: 25.37 }
+    ]
+  };
+
+  const [activeLevel, setActiveLevel] = useState('初級');
+
+  const getSortedData = (levelData) => {
+    return [...levelData].sort((a, b) => a.year - b.year || a.session - b.session);
+  };
+
+  const sortedData = getSortedData(data[activeLevel]);
+
+  const registrantsTrend = sortedData.map(item => ({
+    label: `${item.year}年第${item.session}次`,
+    報考人數: item.registrants
+  }));
+
+  const passRateTrend = sortedData.map(item => {
+    const subject1 = item.subjects[0];
+    const subject2 = item.subjects[1];
+    return {
+      label: `${item.year}年第${item.session}次`,
+      [subject1.name]: subject1.passRate,
+      [subject2.name]: subject2.passRate,
+      獲證率: item.certRate
+    };
+  });
+
+  const getSubjectNames = () => {
+    if (activeLevel === '初級') {
+      return ["管理概論", "技術概論"];
+    } else {
+      return ["規劃實務", "防護實務"];
+    }
+  };
+
+  const subjectNames = getSubjectNames();
+
+  const calculateAverages = () => {
+    const avgSubject1PassRate = data[activeLevel].reduce((sum, item) => sum + item.subjects[0].passRate, 0) / data[activeLevel].length;
+    const avgSubject2PassRate = data[activeLevel].reduce((sum, item) => sum + item.subjects[1].passRate, 0) / data[activeLevel].length;
+    const avgCertRate = data[activeLevel].reduce((sum, item) => sum + item.certRate, 0) / data[activeLevel].length;
+    return [
+      {
+        name: "平均通過率與獲證率",
+        [subjectNames[0]]: avgSubject1PassRate,
+        [subjectNames[1]]: avgSubject2PassRate,
+        獲證率: avgCertRate
+      }
+    ];
+  };
+
+  const averageData = calculateAverages();
+
+  return (
+    <div className="flex flex-col gap-4 p-4 bg-gray-50 min-h-screen">
+      <div className="bg-white p-4 rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold text-center mb-4">iPAS {activeLevel}認證考試分析</h1>
+
+        <div className="flex justify-center mb-6">
+          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+            <button
+              className={`px-4 py-2 ${activeLevel === '初級' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'}`}
+              onClick={() => setActiveLevel('初級')}
+            >
+              初級認證
+            </button>
+            <button
+              className={`px-4 py-2 ${activeLevel === '中級' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'}`}
+              onClick={() => setActiveLevel('中級')}
+            >
+              中級認證
+            </button>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <div className="bg-blue-50 p-4 rounded-lg shadow max-w-5xl mx-auto">
+            <h3 className="text-lg font-medium text-blue-800 mb-4 text-center">認證概況</h3>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
+              <div className="text-center">
+                <p className="text-sm text-gray-600">總發出證照</p>
+                <p className="text-xl font-bold mt-2 text-red-600">{activeLevel === "初級" ? "5,127" : "1,878"} 張</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-600">平均報考人數</p>
+                <p className="text-xl font-bold mt-2">{Math.round(data[activeLevel].reduce((sum, item) => sum + item.registrants, 0) / data[activeLevel].length)}</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-600">{subjectNames[0]}平均</p>
+                <p className="text-xl font-bold mt-2 text-purple-600">{averageData[0][subjectNames[0]].toFixed(2)}%</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-600">{subjectNames[1]}平均</p>
+                <p className="text-xl font-bold mt-2 text-green-600">{averageData[0][subjectNames[1]].toFixed(2)}%</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-600">平均獲證率</p>
+                <p className="text-xl font-bold mt-2 text-orange-500">{averageData[0].獲證率.toFixed(2)}%</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-600">最近一次獲證率</p>
+                <p className="text-xl font-bold mt-2">{data[activeLevel].reduce((latest, item) =>
+                  (item.year > latest.year || (item.year === latest.year && item.session > latest.session)) ? item : latest,
+                  data[activeLevel][0]).certRate.toFixed(2)}%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">1. 報名人數趨勢分析</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={registrantsTrend.map((item, index, array) => {
+                const avgRegistrants = Math.round(data[activeLevel].reduce((sum, d) => sum + d.registrants, 0) / data[activeLevel].length);
+                const diffFromAvg = item.報考人數 ? Math.round((item.報考人數 - avgRegistrants) / avgRegistrants * 100) : 0;
+                let diffFromPrev = 0;
+                if (index > 0 && array[index-1].報考人數 && item.報考人數) {
+                  diffFromPrev = Math.round((item.報考人數 - array[index-1].報考人數) / array[index-1].報考人數 * 100);
+                }
+                return { ...item, diffFromAvg, diffFromPrev, avgRegistrants };
+              })}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="label" />
+                <YAxis />
+                <Tooltip
+                  formatter={(value, name, props) => {
+                    if (name === "報考人數") {
+                      return [
+                        `${value} 人 (${props.payload.diffFromAvg > 0 ? '+' : ''}${props.payload.diffFromAvg}% 於平均)`,
+                        "報考人數"
+                      ];
+                    }
+                    return [value, name];
+                  }}
+                />
+                <Legend />
+                <Bar dataKey="報考人數" fill="#8884d8" />
+                <Line type="monotone" dataKey="報考人數" stroke="#ff7300" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-sm text-gray-600 mt-2">
+            註: 此圖展示了各年度各場次的報考人數變化趨勢，滑鼠懸停可查看與平均值的比較。
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">2. 通過率與獲證率比較</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={passRateTrend.map((item, index, array) => {
+                const avgSubject1Rate = averageData[0][subjectNames[0]];
+                const avgSubject2Rate = averageData[0][subjectNames[1]];
+                const avgCertRate = averageData[0].獲證率;
+                const subject1Diff = Math.round((item[subjectNames[0]] - avgSubject1Rate) * 100) / 100;
+                const subject2Diff = Math.round((item[subjectNames[1]] - avgSubject2Rate) * 100) / 100;
+                const certRateDiff = Math.round((item.獲證率 - avgCertRate) * 100) / 100;
+                let prevCertRateDiff = 0;
+                if (index > 0 && array[index-1].獲證率) {
+                  prevCertRateDiff = Math.round((item.獲證率 - array[index-1].獲證率) * 100) / 100;
+                }
+                return { ...item, subject1Diff, subject2Diff, certRateDiff, prevCertRateDiff, avgSubject1Rate, avgSubject2Rate, avgCertRate };
+              })}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="label" />
+                <YAxis domain={[0, 100]} />
+                <Tooltip
+                  formatter={(value, name, props) => {
+                    if (name === subjectNames[0]) {
+                      return [
+                        `${value.toFixed(2)}% (${props.payload.subject1Diff > 0 ? '+' : ''}${props.payload.subject1Diff.toFixed(2)}% 於平均)`,
+                        subjectNames[0]
+                      ];
+                    } else if (name === subjectNames[1]) {
+                      return [
+                        `${value.toFixed(2)}% (${props.payload.subject2Diff > 0 ? '+' : ''}${props.payload.subject2Diff.toFixed(2)}% 於平均)`,
+                        subjectNames[1]
+                      ];
+                    } else if (name === "獲證率") {
+                      return [
+                        `${value.toFixed(2)}% (${props.payload.certRateDiff > 0 ? '+' : ''}${props.payload.certRateDiff.toFixed(2)}% 於平均)`,
+                        "獲證率"
+                      ];
+                    }
+                    return [value, name];
+                  }}
+                />
+                <Legend />
+                <Bar dataKey={subjectNames[0]} fill="#8884d8" />
+                <Bar dataKey={subjectNames[1]} fill="#82ca9d" />
+                <Line type="monotone" dataKey="獲證率" stroke="#ff7300" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-sm text-gray-600 mt-2">
+            註: 此圖比較了各場次的兩科通過率與整體獲證率。
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">3. 平均通過率與獲證率統計</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={averageData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis domain={[0, 100]} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey={subjectNames[0]} fill="#8884d8" />
+                <Bar dataKey={subjectNames[1]} fill="#82ca9d" />
+                <Bar dataKey="獲證率" fill="#ff7300" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-sm text-gray-600 mt-2">
+            註: {subjectNames[0]}平均通過率 {averageData[0][subjectNames[0]].toFixed(2)}%，
+            {subjectNames[1]}平均通過率 {averageData[0][subjectNames[1]].toFixed(2)}%，
+            整體獲證率 {averageData[0].獲證率.toFixed(2)}%。
+          </p>
+        </div>
+      </div>
+
+      <div className="bg-white p-4 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold mb-4">數據分析總結</h2>
+        <ul className="list-disc pl-5 space-y-2">
+          <li><strong>科目難度差異：</strong>{activeLevel === '初級' ? '管理概論' : '規劃實務'}的平均通過率({averageData[0][subjectNames[0]].toFixed(2)}%)高於{activeLevel === '初級' ? '技術概論' : '防護實務'}({averageData[0][subjectNames[1]].toFixed(2)}%)，顯示後者難度較高。</li>
+          <li><strong>獲證挑戰：</strong>平均獲證率({averageData[0].獲證率.toFixed(2)}%)明顯低於兩科的平均通過率({((averageData[0][subjectNames[0]] + averageData[0][subjectNames[1]]) / 2).toFixed(2)}%)，反映同時通過兩科考試的挑戰性。</li>
+          <li><strong>最具挑戰性：</strong>{(() => {
+            let minCertRate = 100;
+            let minCertInfo = '';
+            data[activeLevel].forEach(item => {
+              if (item.certRate < minCertRate) {
+                minCertRate = item.certRate;
+                minCertInfo = `${item.year}年第${item.session}次`;
+              }
+            });
+            return `${minCertInfo}的獲證率最低，僅為${minCertRate.toFixed(2)}%`;
+          })()}</li>
+          <li><strong>最高獲證率：</strong>{(() => {
+            let maxCertRate = 0;
+            let maxCertInfo = '';
+            data[activeLevel].forEach(item => {
+              if (item.certRate > maxCertRate) {
+                maxCertRate = item.certRate;
+                maxCertInfo = `${item.year}年第${item.session}次`;
+              }
+            });
+            return `${maxCertInfo}的獲證率最高，達到${maxCertRate.toFixed(2)}%`;
+          })()}</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<IPASComparison />);
+</script>
+</body>
+</html>
