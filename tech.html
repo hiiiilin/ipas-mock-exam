@@ -2161,6 +2161,14 @@ function renderExam() {
   `;
 }
 
+// 洗牌後，解析裡的「正解 X」要改成真實正解字母
+function fixExplLetter(q) {
+  const correctLetter = "ABCD"[q.ans];
+  // 正則：「正解 A」、「正解 B:」、「正解 C：」、「正解D」 等
+  const fixed = q.expl.replace(/正解\s*[A-D]/g, `正解 ${correctLetter}`);
+  return escapeHtml(fixed);
+}
+
 function escapeHtml(s) {
   return (s || "").replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
@@ -2951,7 +2959,7 @@ function renderReviewList() {
         ${qstatHeader}
         <div class="review-opts">${opts}</div>
         <div class="review-expl">
-          <span class="expl-label">解析：</span>${escapeHtml(q.expl)}
+          <span class="expl-label">解析：</span>${fixExplLetter(q)}
         </div>
       </div>
     `;
