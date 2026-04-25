@@ -1367,7 +1367,7 @@ window.QUESTIONS = [
       "可透過靜態 ARP 表、Dynamic ARP Inspection（DAI）或 ARP 監控工具偵測與防禦"
     ],
     ans: 1,
-    expl: "正解 B：ARP 僅於同一 L2 廣播網域（同一子網／LAN）作用，ARP 欺騙正是發生於同一 LAN 內，攻擊者與受害者必須位於相同廣播域。選項 B 顛倒事實，故為錯誤敘述。"
+    expl: "正解 B：ARP 僅於同一 L2 廣播網域（同一子網、LAN）作用，ARP 欺騙正是發生於同一 LAN 內，攻擊者與受害者必須位於相同廣播域。選項 B 顛倒事實，故為錯誤敘述。"
   },
   {
     id: 7, cat: "E",
@@ -1398,7 +1398,7 @@ window.QUESTIONS = [
     stem: "關於 VLAN（Virtual LAN）之功能與應用，下列敘述何者最正確？",
     opts: [
       "VLAN 必須透過實體線路分離，無法以邏輯方式區隔",
-      "VLAN 將同一實體交換器之連接埠依邏輯分組，不同 VLAN 間預設無法直接 L2 通訊，需透過路由器／L3 交換器；可減少廣播範圍並實施網段隔離",
+      "VLAN 將同一實體交換器之連接埠依邏輯分組，不同 VLAN 間預設無法直接 L2 通訊，需透過路由器、L3 交換器；可減少廣播範圍並實施網段隔離",
       "VLAN 僅能區隔 IP 層流量，無法區隔 L2 廣播",
       "VLAN 等同於實體防火牆，可過濾所有應用層惡意流量"
     ],
@@ -1415,7 +1415,7 @@ window.QUESTIONS = [
       "Proxy（應用層閘道）防火牆代理用戶端與伺服器之連線，能深度檢視應用層內容但效能開銷較高"
     ],
     ans: 2,
-    expl: "正解 C：NGFW 相較於傳統封包過濾，具備應用層辨識（App-ID）、IPS、TLS 解密、威脅情資整合等進階能力，功能「並不相同」；選項 C 自相矛盾，故為錯誤敘述。"
+    expl: "正解 C：NGFW 相較於傳統封包過濾，具備應用層辨識（App-ID）、IPS、TLS 解密、威脅情資整合等進階能力，功能「並不相同」；該選項（NGFW 與傳統封包過濾功能完全相同）自相矛盾，故為錯誤敘述。"
   },
   {
     id: 11, cat: "E",
@@ -1482,12 +1482,12 @@ window.QUESTIONS = [
     stem: "組織遭遇大規模 DDoS 攻擊時，下列因應作法何者最為正確與完整？",
     opts: [
       "僅加大內部伺服器硬碟空間即可抵禦所有 DDoS 攻擊",
-      "結合 ISP／雲端清洗中心上游過濾、邊界限流與 ACL、Anycast 分散、內容分送網路（CDN）、異常流量基線比對與自動化應變等多層縱深措施；並關閉不必要之開放遞迴服務以避免成為反射放大之中繼",
+      "結合 ISP、雲端清洗中心上游過濾、邊界限流與 ACL、Anycast 分散、內容分送網路（CDN）、異常流量基線比對與自動化應變等多層縱深措施；並關閉不必要之開放遞迴服務以避免成為反射放大之中繼",
       "直接停用整個網站服務即可完全解決",
       "攻擊必定來自單一 IP，僅封鎖一個 IP 即可"
     ],
     ans: 1,
-    expl: "正解 B：現代大規模 DDoS（尤其含反射放大攻擊如 NTP、DNS、memcached）通常需要多層防護，包含上游 ISP／雲端清洗、Anycast、CDN、流量基線分析與自動化應變。同時組織也應避免自身成為被濫用之反射源（例如關閉開放遞迴 DNS、限制 UDP 回應放大比）。"
+    expl: "正解 B：現代大規模 DDoS（尤其含反射放大攻擊如 NTP、DNS、memcached）通常需要多層防護，包含上游 ISP、雲端清洗、Anycast、CDN、流量基線分析與自動化應變。同時組織也應避免自身成為被濫用之反射源（例如關閉開放遞迴 DNS、限制 UDP 回應放大比）。"
   },
   {
     id: 17, cat: "F",
@@ -1535,7 +1535,7 @@ window.QUESTIONS = [
       "A05 Security Misconfiguration"
     ],
     ans: 2,
-    expl: "正解 C：OWASP Top 10:2021 將 SSRF（伺服器端請求偽造）新增為 A10 類別，反映雲端服務中應用程式對內網資源存取之風險上升。A01、A03、A05 雖同為 Top 10 項目但非本題指定之新增項。"
+    expl: "正解 C：OWASP Top 10:2021 將 SSRF（伺服器端請求偽造）新增為 A10 類別，反映雲端服務中應用程式對內網資源存取之風險上升。A01、A03、A05 雖同為 Top 10 項目但非本題指定之新增項。補充：OWASP Top 10:2025（2025 年 11 月發布）已將 SSRF 併入 A01 Broken Access Control，新版 A10 改為「Mishandling of Exceptional Conditions（例外處理失當）」；本題以 2021 版為命題依據。"
   },
   {
     id: 21, cat: "F",
@@ -1583,7 +1583,7 @@ window.QUESTIONS = [
       "只要限制檔案上傳即可完全防禦 SSRF"
     ],
     ans: 0,
-    expl: "正解 A：SSRF 使伺服器代理發出攻擊者指定之請求，常見攻擊標的包括雲端 Instance Metadata（如 169.254.169.254）、內網管理介面。防禦以 URL／主機白名單、封鎖私有與保留網段（RFC1918、Link-Local）、禁用 file://、gopher:// 等非必要協定、對 DNS Rebinding 進行防護為主。"
+    expl: "正解 A：SSRF 使伺服器代理發出攻擊者指定之請求，常見攻擊標的包括雲端 Instance Metadata（如 169.254.169.254）、內網管理介面。防禦以 URL、主機白名單、封鎖私有與保留網段（RFC1918、Link-Local）、禁用 file://、gopher:// 等非必要協定、對 DNS Rebinding 進行防護為主。"
   },
   {
     id: 25, cat: "F",
@@ -1592,7 +1592,7 @@ window.QUESTIONS = [
       "直接以明文儲存密碼，便於必要時回覆用戶原密碼",
       "以 Base64 編碼後儲存即可視為已加密",
       "以 MD5 雜湊儲存即可，無需加鹽",
-      "採用 bcrypt、scrypt 或 Argon2 等專為密碼設計之慢速雜湊函數，並為每位使用者加入獨一無二之隨機 Salt，必要時依硬體進步調整 work factor（成本參數）"
+      "採用 bcrypt、scrypt 或 Argon2 等專為密碼設計之慢速雜湊函數，並為每位使用者加入獨一無二之隨機 Salt，必要時依硬體進步調整成本參數（work factor）"
     ],
     ans: 3,
     expl: "正解 D：密碼儲存必須使用「專為密碼設計的慢速雜湊函數」並為每位使用者加入獨立隨機 Salt。bcrypt、scrypt、Argon2（OWASP 與 NIST SP 800-63B 建議）具可調整之成本參數以抵禦暴力與彩虹表攻擊。明文儲存、Base64 編碼（非加密）、未加鹽之 MD5／SHA1（已知碰撞且快速）皆為錯誤作法。"
@@ -1781,7 +1781,7 @@ window.QUESTIONS = [
     id: 41, cat: "G",
     stem: "關於軟體供應鏈安全與 SBOM（Software Bill of Materials），下列敘述何者「不」正確？",
     opts: [
-      "SBOM 為軟體之成分清單，列出所使用之函式庫、版本、授權、哈希值等資訊",
+      "SBOM 為軟體之成分清單，列出所使用之函式庫、版本、授權、雜湊值等資訊",
       "SBOM 會自動修補所有第三方套件弱點，組織無須再做更新管理或風險評估",
       "SPDX 與 CycloneDX 為常用之 SBOM 格式標準",
       "SBOM 可加速已知弱點（如 Log4Shell 類）影響範圍之辨識與通報，並支援授權合規稽核"
@@ -1895,7 +1895,7 @@ window.QUESTIONS = [
       "應部署 MDM／UEM 強制執行螢幕鎖定、加密、作業系統版本控管、遠端抹除等政策；BYOD 可採容器化（Containerization）或工作設定檔（Work Profile）分離工作與個人空間，並搭配應用程式管控（MAM）、條件式存取與 Zero Trust 原則"
     ],
     ans: 3,
-    expl: "正解 D：企業對行動裝置之管控以 MDM／UEM 為主，強制最低安全基準（鎖定、加密、OS 版本、遠端抹除）；BYOD 情境下應以容器化／Work Profile 分離工作與個人資料，搭配 MAM 管控特定應用與條件式存取（Conditional Access），並落實 Zero Trust 存取決策，避免直接將企業資料落地於未受保護之個人空間。"
+    expl: "正解 D：企業對行動裝置之管控以 MDM／UEM 為主，強制最低安全基準（鎖定、加密、OS 版本、遠端抹除）；BYOD 情境下應以容器化、Work Profile 分離工作與個人資料，搭配 MAM 管控特定應用與條件式存取（Conditional Access），並落實 Zero Trust 存取決策，避免直接將企業資料落地於未受保護之個人空間。"
   }
 ];
 </script>
@@ -2171,8 +2171,29 @@ function renderExam() {
 // 洗牌後，解析裡的「正解 X」要改成真實正解字母
 function fixExplLetter(q) {
   const correctLetter = "ABCD"[q.ans];
-  // 正則：「正解 A」、「正解 B:」、「正解 C：」、「正解D」 等
-  const fixed = q.expl.replace(/正解\s*[A-D]/g, `正解 ${correctLetter}`);
+  // 「正解 X」→ 動態替換成洗牌後的正解字母
+  let fixed = q.expl.replace(/正解\s*[A-D]/g, `正解 ${correctLetter}`);
+  // 「選項 X」→ 替換成洗牌後對應的字母（要從原始位置反推到畫面位置）
+  // q.optOriginalIdx[displayIndex] = originalIndex
+  // 反過來：若解析提到「選項 C」(原始 index 2)，要找出洗牌後它的畫面位置
+  if (Array.isArray(q.optOriginalIdx)) {
+    fixed = fixed.replace(/選項\s*([A-D])/g, (match, letter) => {
+      const originalIdx = letter.charCodeAt(0) - 65;
+      const displayIdx = q.optOriginalIdx.indexOf(originalIdx);
+      if (displayIdx === -1) return match;
+      return `選項 ${"ABCD"[displayIdx]}`;
+    });
+    // 「B/C/D」、「A/B」這種多選項組合也要處理
+    fixed = fixed.replace(/選項\s*([A-D](?:\/[A-D])+)/g, (match, group) => {
+      const letters = group.split("/");
+      const newLetters = letters.map(l => {
+        const originalIdx = l.charCodeAt(0) - 65;
+        const displayIdx = q.optOriginalIdx.indexOf(originalIdx);
+        return displayIdx === -1 ? l : "ABCD"[displayIdx];
+      });
+      return `選項 ${newLetters.join("/")}`;
+    });
+  }
   return escapeHtml(fixed);
 }
 

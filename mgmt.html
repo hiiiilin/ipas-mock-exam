@@ -1415,7 +1415,7 @@ window.QUESTIONS = [
       "實體控制（Physical controls）"
     ],
     ans: 1,
-    expl: "正解 B：ISO/IEC 27001:2022 附錄 A 四大主題為「組織（37）／人員（8）／實體（14）／技術（34）」共 93 項控制。並無「流程控制」此項。"
+    expl: "正解 B：ISO/IEC 27001:2022 附錄 A 四大主題為「組織（37）、人員（8）、實體（14）、技術（34）」共 93 項控制。並無「流程控制」此項。"
   },
   {
     id: 11, cat: "A",
@@ -1553,7 +1553,7 @@ window.QUESTIONS = [
     id: 22, cat: "B",
     stem: "資訊安全「風險（Risk）」之主要構成要素為下列何者？",
     opts: [
-      "威脅（Threat）、脆弱點（Vulnerability）、衝擊（Impact）",
+      "威脅、脆弱點、衝擊",
       "成本、效益、時程",
       "法規、合約、倫理",
       "政策、標準、程序"
@@ -1643,7 +1643,7 @@ window.QUESTIONS = [
       "你本身（What you are）"
     ],
     ans: 3,
-    expl: "正解 D：身分驗證三大因素為：(1) 你所知道的（知識，如密碼／PIN）、(2) 你所擁有的（持有物，如硬體 Token、手機）、(3) 你本身（生物特徵，如指紋、臉部、虹膜）。"
+    expl: "正解 D：身分驗證三大因素為：(1) 你所知道的（知識，如密碼、PIN）、(2) 你所擁有的（持有物，如硬體 Token、手機）、(3) 你本身（生物特徵，如指紋、臉部、虹膜）。"
   },
   {
     id: 30, cat: "C",
@@ -1655,7 +1655,7 @@ window.QUESTIONS = [
       "指紋登入後再以虹膜掃描驗證"
     ],
     ans: 2,
-    expl: "正解 C：真正的 MFA 須結合「不同類別」的驗證因素。選項 C 為「你所知道的（密碼）」+「你所擁有的（手機／Token）」；A、B 皆屬同類（知識）；D 皆屬同類（生物特徵），故均不構成真正 MFA。"
+    expl: "正解 C：真正的 MFA 須結合「不同類別」的驗證因素。選項 C 為「你所知道的（密碼）」+「你所擁有的（手機、Token）」；A、B 皆屬同類（知識）；D 皆屬同類（生物特徵），故均不構成真正 MFA。"
   },
   {
     id: 31, cat: "C",
@@ -1796,7 +1796,7 @@ window.QUESTIONS = [
       "偵測與分析 → 準備 → 遏制、根除、復原 → 事件後活動",
       "準備 → 遏制、根除、復原 → 偵測與分析 → 事件後活動",
       "遏制、根除、復原 → 準備 → 偵測與分析 → 事件後活動",
-      "準備（Preparation）→ 偵測與分析（Detection & Analysis）→ 遏制、根除與復原（Containment, Eradication & Recovery）→ 事件後活動（Post-Incident Activity）"
+      "準備 → 偵測與分析 → 遏制、根除與復原 → 事件後活動"
     ],
     ans: 3,
     expl: "正解 D：NIST SP 800-61 Rev. 2 之事件處理四階段依序為：(1) Preparation（準備）、(2) Detection & Analysis（偵測與分析）、(3) Containment, Eradication & Recovery（遏制、根除與復原）、(4) Post-Incident Activity（事件後活動）。為持續循環之程序，與 SANS PICERL 六階段分類不同。"
@@ -2171,8 +2171,29 @@ function renderExam() {
 // 洗牌後，解析裡的「正解 X」要改成真實正解字母
 function fixExplLetter(q) {
   const correctLetter = "ABCD"[q.ans];
-  // 正則：「正解 A」、「正解 B:」、「正解 C：」、「正解D」 等
-  const fixed = q.expl.replace(/正解\s*[A-D]/g, `正解 ${correctLetter}`);
+  // 「正解 X」→ 動態替換成洗牌後的正解字母
+  let fixed = q.expl.replace(/正解\s*[A-D]/g, `正解 ${correctLetter}`);
+  // 「選項 X」→ 替換成洗牌後對應的字母（要從原始位置反推到畫面位置）
+  // q.optOriginalIdx[displayIndex] = originalIndex
+  // 反過來：若解析提到「選項 C」(原始 index 2)，要找出洗牌後它的畫面位置
+  if (Array.isArray(q.optOriginalIdx)) {
+    fixed = fixed.replace(/選項\s*([A-D])/g, (match, letter) => {
+      const originalIdx = letter.charCodeAt(0) - 65;
+      const displayIdx = q.optOriginalIdx.indexOf(originalIdx);
+      if (displayIdx === -1) return match;
+      return `選項 ${"ABCD"[displayIdx]}`;
+    });
+    // 「B/C/D」、「A/B」這種多選項組合也要處理
+    fixed = fixed.replace(/選項\s*([A-D](?:\/[A-D])+)/g, (match, group) => {
+      const letters = group.split("/");
+      const newLetters = letters.map(l => {
+        const originalIdx = l.charCodeAt(0) - 65;
+        const displayIdx = q.optOriginalIdx.indexOf(originalIdx);
+        return displayIdx === -1 ? l : "ABCD"[displayIdx];
+      });
+      return `選項 ${newLetters.join("/")}`;
+    });
+  }
   return escapeHtml(fixed);
 }
 
