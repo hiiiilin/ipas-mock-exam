@@ -206,7 +206,7 @@
 </script>
 
 <script type="text/babel" data-type="module" data-presets="react">
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -309,6 +309,25 @@ const fmt2 = (n) => n.toFixed(2);
 const fmtInt = (n) => Math.round(n).toLocaleString();
 
 const sortAsc = (arr) => [...arr].sort((a, b) => a.year - b.year || a.session - b.session);
+
+// 智能跳號：依螢幕寬度與資料筆數動態決定 X 軸標籤間隔
+// 邏輯：手機最多顯示 11 個標籤、桌機最多 18 個；超過則自動跳一格、兩格...
+// Bar 與 Line 永遠全部繪製，只是 X 軸文字間隔顯示
+const useResponsiveInterval = (dataLength) => {
+  const [width, setWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1024
+  );
+
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
+  const maxLabels = width < 768 ? 11 : 18;
+  if (dataLength <= maxLabels) return 0;
+  return Math.ceil(dataLength / maxLabels) - 1;
+};
 
 // Custom tooltip — 解決 Recharts Bar+Line 共享 dataKey 的重複顯示
 // 同時統一 editorial 風格的色塊 + 名稱 + 值排版
@@ -654,6 +673,7 @@ const RegistrantsSection = ({ data, level, stats }) => {
 
   const peak = chartData.reduce((a, b) => b.報考人數 > a.報考人數 ? b : a);
   const trough = chartData.reduce((a, b) => b.報考人數 < a.報考人數 ? b : a);
+  const labelInterval = useResponsiveInterval(chartData.length);
 
   return (
     <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-20 fade-up">
@@ -670,7 +690,7 @@ const RegistrantsSection = ({ data, level, stats }) => {
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <CartesianGrid stroke={C.rule} vertical={false} />
-                <XAxis dataKey="label" tickLine={false} axisLine={{ stroke: C.ink }} interval={0} angle={-30} textAnchor="end" height={50} />
+                <XAxis dataKey="label" tickLine={false} axisLine={{ stroke: C.ink }} interval={labelInterval} angle={-30} textAnchor="end" height={50} />
                 <YAxis tickLine={false} axisLine={false} />
                 <Tooltip
                   cursor={{ fill: 'rgba(158, 42, 43, 0.06)' }}
@@ -725,6 +745,7 @@ const PassRateSection = ({ data, level, stats, subjects }) => {
 
   const gap = stats.subj1 - stats.subj2;
   const harderSubject = stats.subj1 < stats.subj2 ? subjects[0] : subjects[1];
+  const labelInterval = useResponsiveInterval(chartData.length);
 
   return (
     <section className="relative z-10 py-12 md:py-20 fade-up" style={{background: 'var(--paper-deep)'}}>
@@ -740,7 +761,7 @@ const PassRateSection = ({ data, level, stats, subjects }) => {
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
               <CartesianGrid stroke={C.rule} vertical={false} />
-              <XAxis dataKey="label" tickLine={false} axisLine={{ stroke: C.ink }} interval={0} angle={-30} textAnchor="end" height={50} />
+              <XAxis dataKey="label" tickLine={false} axisLine={{ stroke: C.ink }} interval={labelInterval} angle={-30} textAnchor="end" height={50} />
               <YAxis domain={[0, 100]} tickLine={false} axisLine={false} unit="%" />
               <Tooltip
                 cursor={{ fill: 'rgba(158, 42, 43, 0.06)' }}
