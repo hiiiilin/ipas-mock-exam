@@ -220,12 +220,15 @@ import {
 //  資料來源：iPAS 官網「各考科通過人數統計」PDF
 //
 //  STEP 1 — 在對應 level 陣列「最上方」插入一筆新物件：
-//    { year: <民國年>, session: <第幾次>, registrants: <每科報考人數>,
+//    { year: <民國年>, session: <第幾次>, registrants: <總報考人數，去重後>,
 //      subjects: [
 //        { name: "<科目1>", passRate: <通過率%> },
 //        { name: "<科目2>", passRate: <通過率%> }
 //      ],
 //      certRate: <整體獲證率%> }
+//
+//    ※ registrants 對應官方 PDF 的「報考人數（去重）」，例如「317 人 / 615 人次」中的 317；
+//      不是兩科加總後的「人次」。
 //
 //  STEP 2 — 更新 TOTAL_CERTS：加上該場次「本次證書共核發（當次+跨次）」
 //
