@@ -19,7 +19,7 @@
     background: #fff;
     border-radius: 12px;
     padding: 36px 32px;
-    max-width: 560px;
+    max-width: 580px;
     width: 100%;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     margin: 20px 0;
@@ -38,10 +38,31 @@
     padding-bottom: 18px;
     border-bottom: 1px solid #eee;
   }
+  .version-section {
+    margin-bottom: 22px;
+  }
+  .version-section h2 {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+    padding-left: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .version-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .tag-v20 { background: #e8f5e9; color: #2e7d32; }
+  .tag-v21 { background: #fff3e0; color: #e65100; }
   .exam-card {
     display: block;
-    padding: 18px 20px;
-    margin-bottom: 12px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
     background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
     color: #fff;
     border-radius: 8px;
@@ -58,8 +79,20 @@
   .exam-card.tech:hover {
     box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
   }
+  .exam-card.v21-mgmt {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+  }
+  .exam-card.v21-mgmt:hover {
+    box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+  }
+  .exam-card.v21-tech {
+    background: linear-gradient(135deg, #8e44ad 0%, #732d91 100%);
+  }
+  .exam-card.v21-tech:hover {
+    box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+  }
   .exam-title {
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     margin-bottom: 4px;
   }
@@ -68,7 +101,7 @@
     opacity: 0.9;
   }
   .usage-notice {
-    margin-top: 20px;
+    margin-top: 18px;
     padding: 12px 14px;
     background: #e8f4f8;
     border-left: 4px solid #4a90e2;
@@ -83,7 +116,7 @@
     color: #1a3a5c;
   }
   .disclaimer {
-    margin-top: 24px;
+    margin-top: 20px;
     padding: 16px 18px;
     background: #fff8e7;
     border: 1px solid #e0b95e;
@@ -119,7 +152,7 @@
     text-align: center;
   }
   .footer {
-    margin-top: 20px;
+    margin-top: 18px;
     text-align: center;
     font-size: 11px;
     color: #aaa;
@@ -131,21 +164,40 @@
   <h1>🛡️ iPAS 資訊安全工程師初級</h1>
   <div class="subtitle">模擬測驗系統 · 非官方練習版</div>
 
-  <a href="mgmt.html" class="exam-card">
-    <div class="exam-title">📘 資訊安全管理概論</div>
-    <div class="exam-meta">50 題單選 ｜ 75 分鐘 ｜ 70 分及格</div>
-  </a>
+  <div class="version-section">
+    <h2>📚 v2.0 題庫 <span class="version-tag tag-v20">穩定版</span></h2>
 
-  <a href="tech.html" class="exam-card tech">
-    <div class="exam-title">🔧 資訊安全技術概論</div>
-    <div class="exam-meta">50 題單選 ｜ 75 分鐘 ｜ 70 分及格</div>
-  </a>
+    <a href="mgmt.html" class="exam-card">
+      <div class="exam-title">📘 資訊安全管理概論</div>
+      <div class="exam-meta">50 題單選 ｜ 75 分鐘 ｜ 70 分及格</div>
+    </a>
+
+    <a href="tech.html" class="exam-card tech">
+      <div class="exam-title">🔧 資訊安全技術概論</div>
+      <div class="exam-meta">50 題單選 ｜ 75 分鐘 ｜ 70 分及格</div>
+    </a>
+  </div>
+
+  <div class="version-section">
+    <h2>🆕 v2.1 題庫 <span class="version-tag tag-v21">新版</span></h2>
+
+    <a href="mgmt-v2.1.html" class="exam-card v21-mgmt">
+      <div class="exam-title">📙 資訊安全管理概論 v2.1</div>
+      <div class="exam-meta">50 題單選 ｜ 75 分鐘 ｜ 70 分及格 ｜ 強化鑑別度</div>
+    </a>
+
+    <a href="tech-v2.1.html" class="exam-card v21-tech">
+      <div class="exam-title">🔮 資訊安全技術概論 v2.1</div>
+      <div class="exam-meta">50 題單選 ｜ 75 分鐘 ｜ 70 分及格 ｜ 強化鑑別度</div>
+    </a>
+  </div>
 
   <div class="usage-notice">
     <div class="lbl">💡 使用方式</div>
-    · 填寫姓名 → 成績將上傳社群排行榜<br>
+    · 填寫姓名 → 成績將上傳社群排行榜（v2.0、v2.1 排行榜獨立）<br>
     · 留空姓名 → 個人練習模式，不上傳<br>
-    · 完整作答 50 題才能列入排行榜
+    · 完整作答 50 題才能列入排行榜<br>
+    · v2.1 為強化鑑別度的新版題庫，建議搭配 v2.0 練習
   </div>
 
   <div class="disclaimer">

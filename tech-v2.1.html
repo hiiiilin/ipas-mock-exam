@@ -1,0 +1,2132 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>資訊安全模擬測驗系統 — 技術概論（非官方練習用）</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft JhengHei", "微軟正黑體", "新細明體", PMingLiU, sans-serif;
+  background: #b8c4d4;
+  background-image: linear-gradient(135deg, #d8e0ec 0%, #b0bccc 100%);
+  min-height: 100vh;
+  color: #000;
+  font-size: 14px;
+  user-select: none;
+}
+
+.app-window {
+  max-width: 1080px;
+  margin: 20px auto;
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  min-height: 680px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-titlebar {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-titlebar .controls { display: flex; gap: 2px; }
+
+.app-titlebar .ctrl-btn {
+  width: 22px; height: 18px;
+  background: #5b7fb5;
+  border: 1px solid #2d4870;
+  color: #fff;
+  font-size: 11px;
+  text-align: center;
+  line-height: 16px;
+}
+
+.app-header {
+  background: #f0f0f0;
+  padding: 8px 14px;
+  border-bottom: 1px solid #c0c0c0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ipas-logo {
+  font-weight: 700;
+  color: #8c1d2c;
+  font-size: 20px;
+  letter-spacing: 1px;
+  font-family: Arial, sans-serif;
+}
+
+.ipas-logo .check { color: #2d8a6e; font-size: 22px; }
+
+.ipas-subtitle {
+  color: #333;
+  font-size: 13px;
+  border-left: 2px solid #c0c0c0;
+  padding-left: 12px;
+  line-height: 1.3;
+}
+
+.ipas-subtitle .en { color: #666; font-size: 10px; }
+
+.stage { flex: 1; padding: 24px; background: #fff; position: relative; }
+
+/* 登入畫面 */
+.disclaimer-box {
+  max-width: 540px;
+  margin: 0 auto 20px;
+  padding: 14px 18px;
+  background: #fff9e6;
+  border: 1px solid #d9b85c;
+  border-left: 4px solid #d4a024;
+  border-radius: 2px;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: #5c4a10;
+}
+
+.disclaimer-box .dc-title {
+  font-weight: 700;
+  color: #8a6410;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.disclaimer-box .dc-title::before {
+  content: "⚠";
+  font-size: 16px;
+}
+
+.disclaimer-box ul {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+
+.disclaimer-box li {
+  margin-bottom: 2px;
+}
+
+.disclaimer-box .dc-ack {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #d9b85c;
+  font-size: 12px;
+  color: #6a5420;
+}
+
+.login-box {
+  max-width: 440px;
+  margin: 0 auto;
+  border: 1px solid #4a6fa5;
+  background: #f8f9fc;
+}
+
+.login-title {
+  background: linear-gradient(to bottom, #e8eef7 0%, #d0dae8 100%);
+  border-bottom: 1px solid #4a6fa5;
+  padding: 16px;
+  text-align: center;
+}
+
+.login-title h2 {
+  font-size: 22px;
+  color: #2c4870;
+  letter-spacing: 3px;
+  font-weight: 500;
+}
+
+.login-title .ver {
+  display: block;
+  text-align: right;
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+  font-family: "Courier New", monospace;
+}
+
+.login-body { padding: 40px 32px; }
+
+.login-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.login-field label { font-size: 14px; color: #333; min-width: 72px; }
+
+.login-field input {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  font-size: 14px;
+  font-family: "Courier New", monospace;
+}
+
+.login-field input:focus {
+  outline: none;
+  border-color: #4a6fa5;
+  box-shadow: inset 0 0 2px rgba(74,111,165,0.3);
+}
+
+.login-buttons { text-align: center; display: flex; justify-content: center; gap: 16px; }
+
+.win-btn {
+  background: linear-gradient(to bottom, #fafafa 0%, #d8dde3 100%);
+  border: 1px solid #7b8a9c;
+  border-radius: 2px;
+  padding: 5px 22px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #000;
+  cursor: pointer;
+  min-width: 72px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.win-btn:hover {
+  background: linear-gradient(to bottom, #fff 0%, #e8ecf2 100%);
+  border-color: #4a6fa5;
+}
+
+.win-btn:active {
+  background: linear-gradient(to bottom, #c8ced6 0%, #dde2e8 100%);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.win-btn:disabled { color: #888; background: #e8e8e8; cursor: not-allowed; }
+
+.win-btn.primary {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  border-color: #2c4870;
+  font-weight: 500;
+}
+
+.win-btn.primary:hover {
+  background: linear-gradient(to bottom, #6a99cf 0%, #4a77ac 100%);
+}
+
+.info-panel {
+  border: 1px solid #7b8a9c;
+  background: #fff;
+}
+
+.info-panel-header {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 0;
+  font-size: 13px;
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid #2c4870;
+}
+
+.info-panel-header .tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  background: linear-gradient(to bottom, #3d5d8f 0%, #2c4870 100%);
+  color: #fff;
+  border-right: 1px solid #2c4870;
+  font-weight: 500;
+}
+
+.info-panel-header .tab-inactive {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  color: #c4d0e0;
+  font-size: 12px;
+}
+
+.info-identity {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  padding: 5px 14px;
+  font-size: 13px;
+  display: flex;
+  gap: 40px;
+  letter-spacing: 0.5px;
+}
+
+.info-content {
+  padding: 24px;
+  min-height: 320px;
+  line-height: 2;
+  font-size: 14px;
+  color: #000;
+}
+
+.info-content ol { padding-left: 0; list-style: none; }
+
+.info-content li { margin-bottom: 12px; padding-left: 0; }
+
+.info-footer {
+  padding: 12px;
+  text-align: center;
+  background: #f5f5f5;
+  border-top: 1px solid #c0c0c0;
+}
+
+.info-statusbar {
+  background: #e8e8e8;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #555;
+  border-top: 1px solid #c0c0c0;
+}
+
+/* 考試畫面 */
+.exam-frame {
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 560px;
+}
+
+.exam-topbar {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 0;
+  display: flex;
+  font-size: 13px;
+  border-bottom: 1px solid #2c4870;
+}
+
+.exam-topbar .tab-active {
+  padding: 8px 20px;
+  background: linear-gradient(to bottom, #3d5d8f 0%, #2c4870 100%);
+  color: #fff;
+  border-right: 1px solid #2c4870;
+  font-weight: 500;
+}
+
+.exam-identity-bar {
+  background: linear-gradient(to bottom, #5b8ac0 0%, #3d6a9f 100%);
+  color: #fff;
+  padding: 5px 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  letter-spacing: 0.5px;
+}
+
+.exam-identity-bar .progress {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+}
+
+.exam-identity-bar .timer {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  color: #ffe89a;
+}
+
+.exam-identity-bar .timer.warning {
+  color: #ff9090;
+  animation: flash 1s infinite;
+}
+
+@keyframes flash {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.5; }
+}
+
+.exam-identity-bar .end-btn {
+  margin-left: auto;
+  background: linear-gradient(to bottom, #fafafa 0%, #d8dde3 100%);
+  color: #000;
+  border: 1px solid #2c4870;
+  padding: 2px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.exam-identity-bar .end-btn::before {
+  content: "⏻";
+  color: #2d8a6e;
+  font-weight: 700;
+}
+
+.exam-toolbar {
+  background: #f0f0f0;
+  padding: 6px 10px;
+  border-bottom: 1px solid #c0c0c0;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.exam-toolbar .win-btn {
+  min-width: 88px;
+  padding: 4px 14px;
+  font-size: 13px;
+}
+
+.exam-toolbar .win-btn.marked {
+  background: linear-gradient(to bottom, #fff4a0 0%, #f5d560 100%);
+  border-color: #c09020;
+}
+
+.exam-toolbar .zoom-btn {
+  min-width: 32px;
+  padding: 2px 6px;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.question-area {
+  padding: 22px 28px;
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.9;
+  min-height: 360px;
+}
+
+.question-area.zoom-1 { font-size: 15px; }
+.question-area.zoom-2 { font-size: 17px; }
+.question-area.zoom-3 { font-size: 19px; }
+.question-area.zoom-0 { font-size: 13px; }
+
+.question-stem {
+  font-weight: 700;
+  margin-bottom: 14px;
+  line-height: 1.7;
+}
+
+.question-stem .qnum { color: #000; margin-right: 6px; }
+
+.options { margin-left: 0; }
+
+.option-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 5px 4px;
+  cursor: pointer;
+  line-height: 1.7;
+  border: 1px solid transparent;
+}
+
+.option-row:hover { background: #f0f5fc; }
+
+.option-row input[type="radio"] {
+  margin-right: 8px;
+  margin-top: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.option-label { margin-right: 4px; font-weight: 500; }
+
+.end-screen {
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.end-screen h1 {
+  font-size: 26px;
+  color: #2c4870;
+  font-weight: 500;
+  letter-spacing: 4px;
+  margin-bottom: 14px;
+}
+
+.end-screen p {
+  color: #444;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-box {
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  min-width: 340px;
+  max-width: 500px;
+}
+
+.modal-title {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 20px 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #fff;
+}
+
+.modal-icon {
+  width: 32px; height: 32px;
+  background: #fbbf24;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 32px;
+  flex-shrink: 0;
+}
+
+.modal-text { flex: 1; line-height: 1.8; font-size: 13px; }
+
+.modal-text .stats {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed #c0c0c0;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+
+.modal-buttons {
+  padding: 10px;
+  text-align: center;
+  background: #f0f0f0;
+  border-top: 1px solid #c0c0c0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modal-buttons .win-btn { min-width: 72px; }
+
+.overview-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+}
+
+.overview-modal.show { display: flex; }
+
+.overview-box {
+  background: #f0f0f0;
+  border: 1px solid #7b8a9c;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-title {
+  background: linear-gradient(to bottom, #4a6fa5 0%, #3d5d8f 100%);
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.overview-title .close {
+  cursor: pointer;
+  width: 20px;
+  text-align: center;
+  background: #c94848;
+  color: #fff;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.overview-body {
+  background: #fff;
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.overview-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #c0c0c0;
+  color: #555;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.legend-dot.g { background: #6abf4b; }
+.legend-dot.y { background: #f5c518; }
+.legend-dot.r { background: #d94040; }
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+}
+
+.qnum-cell {
+  aspect-ratio: 1.6;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  border: 1px solid rgba(0,0,0,0.2);
+  background: #d94040;
+  transition: transform 0.1s;
+}
+
+.qnum-cell:hover { transform: scale(1.08); box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+
+.qnum-cell.answered { background: #6abf4b; }
+.qnum-cell.marked { background: #f5c518; color: #000; }
+
+.overview-footer {
+  background: #f0f0f0;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #666;
+  border-top: 1px solid #c0c0c0;
+  text-align: center;
+}
+
+/* 成績畫面 */
+.result-screen { padding: 0; background: #fff; }
+
+.result-header {
+  background: linear-gradient(135deg, #2c4870 0%, #4a6fa5 100%);
+  color: #fff;
+  padding: 36px 40px;
+  text-align: center;
+  border-bottom: 3px solid #f0b429;
+}
+
+.result-header .result-subtitle {
+  font-size: 13px;
+  letter-spacing: 3px;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+
+.result-header .result-title {
+  font-size: 22px;
+  letter-spacing: 2px;
+  font-weight: 500;
+}
+
+.score-card {
+  display: flex;
+  padding: 32px 40px;
+  gap: 32px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafbfd;
+}
+
+.score-main { text-align: center; min-width: 200px; }
+
+.score-number {
+  font-size: 72px;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  line-height: 1;
+}
+
+.score-number.pass { color: #2d8a6e; }
+.score-number.fail { color: #c94848; }
+
+.score-label { font-size: 13px; color: #666; margin-top: 6px; letter-spacing: 2px; }
+
+.score-verdict {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 2px;
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.score-verdict.pass { background: #e5f4eb; color: #2d8a6e; border: 1px solid #a6d8bd; }
+.score-verdict.fail { background: #fbe9e9; color: #c94848; border: 1px solid #e6b0b0; }
+
+.score-breakdown { flex: 1; }
+
+.score-breakdown h3 {
+  font-size: 14px;
+  color: #2c4870;
+  margin-bottom: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.category-row .cat-name { min-width: 200px; color: #333; }
+
+.category-row .cat-bar-wrap {
+  flex: 1;
+  height: 14px;
+  background: #e8ecf2;
+  border-radius: 7px;
+  margin: 0 12px;
+  overflow: hidden;
+}
+
+.category-row .cat-bar {
+  height: 100%;
+  background: linear-gradient(to right, #4a6fa5 0%, #5b8ac0 100%);
+  border-radius: 7px;
+  transition: width 0.6s ease-out;
+}
+
+.category-row .cat-bar.low { background: linear-gradient(to right, #c94848 0%, #e66060 100%); }
+.category-row .cat-bar.mid { background: linear-gradient(to right, #d4a024 0%, #f0b429 100%); }
+
+.category-row .cat-score {
+  min-width: 60px;
+  text-align: right;
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  color: #2c4870;
+}
+
+.stats-summary {
+  padding: 24px 40px;
+  display: flex;
+  gap: 40px;
+  background: #f5f7fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px;
+}
+
+.stats-item { display: flex; flex-direction: column; gap: 2px; }
+
+.stats-item .num {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  color: #2c4870;
+}
+
+.stats-item.correct .num { color: #2d8a6e; }
+.stats-item.wrong .num { color: #c94848; }
+.stats-item.blank .num { color: #999; }
+
+.stats-item .lab { font-size: 12px; color: #666; letter-spacing: 1px; }
+
+.review-section { padding: 28px 40px; }
+
+.review-section h2 {
+  font-size: 16px;
+  color: #2c4870;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #4a6fa5;
+  font-weight: 500;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.review-section .filter-buttons { display: flex; gap: 6px; }
+
+.filter-btn {
+  padding: 4px 12px;
+  border: 1px solid #7b8a9c;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  font-family: inherit;
+}
+
+.filter-btn.active { background: #4a6fa5; color: #fff; border-color: #2c4870; }
+
+.review-item {
+  margin-bottom: 18px;
+  padding: 16px 18px;
+  border: 1px solid #dde2ea;
+  border-left: 4px solid #6abf4b;
+  background: #fafbfd;
+  border-radius: 2px;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.review-item.wrong { border-left-color: #c94848; background: #fcf5f5; }
+.review-item.blank { border-left-color: #888; background: #f7f7f7; }
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.review-header .rq-num { font-weight: 700; color: #2c4870; font-family: "Courier New", monospace; }
+
+.review-header .rq-cat {
+  font-size: 11px;
+  padding: 1px 8px;
+  background: #e8ecf2;
+  color: #2c4870;
+  border-radius: 10px;
+}
+
+.review-header .rq-badge { font-size: 11px; padding: 1px 8px; border-radius: 10px; font-weight: 700; }
+
+.review-header .rq-badge.correct { background: #d7edde; color: #2d8a6e; }
+.review-header .rq-badge.wrong { background: #f7d8d8; color: #c94848; }
+.review-header .rq-badge.blank { background: #e0e0e0; color: #555; }
+
+.review-stem { font-weight: 500; color: #000; margin-bottom: 10px; }
+
+.review-opts { margin: 10px 0; padding-left: 4px; }
+
+.review-opt {
+  padding: 4px 10px;
+  margin-bottom: 3px;
+  border-radius: 2px;
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  line-height: 1.6;
+}
+
+.review-opt.user-wrong { background: #fbe5e5; color: #8a2020; text-decoration: line-through; }
+.review-opt.correct-ans { background: #d7edde; color: #1b5f45; font-weight: 500; }
+.review-opt.user-correct { background: #d7edde; color: #1b5f45; font-weight: 500; }
+
+.review-opt .opt-marker { font-family: "Courier New", monospace; font-weight: 700; flex-shrink: 0; width: 20px; }
+
+.review-opt .opt-tag { margin-left: auto; font-size: 11px; color: #666; flex-shrink: 0; }
+
+.review-expl {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border-left: 3px solid #4a6fa5;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.8;
+}
+
+.review-expl .expl-label { font-weight: 700; color: #2c4870; margin-right: 6px; }
+
+.result-actions {
+  padding: 24px 40px;
+  background: #f5f7fa;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 720px) {
+  .app-window { margin: 0; border: none; }
+  .score-card { flex-direction: column; }
+  .stats-summary { flex-wrap: wrap; gap: 20px; }
+  .overview-grid { grid-template-columns: repeat(5, 1fr); }
+  .overview-box { width: 95vw; }
+  .category-row { flex-wrap: wrap; }
+  .category-row .cat-name { min-width: 160px; }
+  .review-section, .score-card, .stats-summary, .result-header, .result-actions { padding-left: 16px; padding-right: 16px; }
+  .question-area { padding: 16px; }
+  .exam-toolbar { gap: 3px; padding: 5px; }
+  .exam-toolbar .win-btn { min-width: 64px; padding: 3px 8px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+<div class="app-window">
+  <div class="app-titlebar">
+    <span>資訊安全模擬測驗系統（ISMP）- 個人練習版 v2.1</span>
+    <div class="controls">
+      <span class="ctrl-btn">_</span>
+      <span class="ctrl-btn">□</span>
+      <span class="ctrl-btn">×</span>
+    </div>
+  </div>
+  <div class="app-header">
+    <div class="ipas-logo">IS<span class="check">✓</span>MP</div>
+    <div class="ipas-subtitle">
+      <div>資訊安全模擬測驗系統</div>
+      <div class="en">Information Security Mock Practice — For Self-Study Only</div>
+    </div>
+  </div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="modal-overlay" id="endConfirmModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span>模擬測驗系統</span>
+      <span>×</span>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">!</div>
+      <div class="modal-text">
+        以下是您學科測驗作答情況，<br>
+        正確請按'是'結束學科測驗，<br>
+        錯誤請按'否'回到學科測驗。
+        <div class="stats" id="endStats"></div>
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button class="win-btn primary" onclick="finalizeExam()">是(Y)</button>
+      <button class="win-btn" onclick="closeEndModal()">否(N)</button>
+    </div>
+  </div>
+</div>
+
+<div class="overview-modal" id="overviewModal">
+  <div class="overview-box">
+    <div class="overview-title">
+      <span>試題總覽</span>
+      <span class="close" onclick="closeOverview()">×</span>
+    </div>
+    <div class="overview-body">
+      <div class="overview-legend">
+        <span><span class="legend-dot g"></span>綠：有作答</span>
+        <span><span class="legend-dot y"></span>黃：有註記</span>
+        <span><span class="legend-dot r"></span>紅：未作答</span>
+      </div>
+      <div class="overview-grid" id="overviewGrid"></div>
+    </div>
+    <div class="overview-footer">選擇任意一題作答或瀏覽</div>
+  </div>
+</div>
+
+<script>
+// 題目資料接續注入
+
+</script>
+<script>
+window.QUESTIONS = [
+  {
+    id: 1, cat: "E",
+    stem: "依 OSI 七層模型由下而上之正確排序為下列何者？",
+    opts: [
+      "資料連結層 → 實體層 → 網路層 → 傳輸層 → 會議層 → 表達層 → 應用層",
+      "實體層 → 網路層 → 資料連結層 → 傳輸層 → 表達層 → 會議層 → 應用層",
+      "實體層 → 資料連結層 → 網路層 → 傳輸層 → 會議層 → 表達層 → 應用層",
+      "實體層 → 資料連結層 → 網路層 → 會議層 → 傳輸層 → 表達層 → 應用層",
+    ],
+    ans: 2,
+    expl: "OSI 七層由下而上為：實體（Physical）→ 資料連結（Data Link）→ 網路（Network）→ 傳輸（Transport）→ 會議（Session）→ 表達（Presentation）→ 應用（Application）。常見背誦口訣為「實資網傳會表應」。其餘三項皆有層次錯位。[難度: 簡單]"
+  },
+  {
+    id: 2, cat: "E",
+    stem: "關於 TCP/IP 四層模型與 OSI 七層模型之對應，下列敘述何者「不」正確？",
+    opts: [
+      "TCP/IP 之網路存取層大致對應 OSI 之實體層與資料連結層",
+      "TCP/IP 之網際網路層（Internet Layer）大致對應 OSI 之網路層",
+      "TCP/IP 之應用層大致對應 OSI 之會議層、表達層與應用層",
+      "TCP/IP 之網際網路層大致對應 OSI 之傳輸層",
+    ],
+    ans: 3,
+    expl: "TCP/IP 之網際網路層（IP 所在）對應 OSI 之網路層（負責路由），而非傳輸層；OSI 傳輸層對應的是 TCP/IP 之傳輸層（TCP/UDP）。其他三項對應關係皆正確。[難度: 簡單]"
+  },
+  {
+    id: 3, cat: "E",
+    stem: "關於 TCP 與 UDP 之比較，下列敘述何者最為正確？",
+    opts: [
+      "TCP 與 UDP 皆為連線導向（connection-oriented）協定",
+      "TCP 為連線導向、提供可靠傳輸與流量控制；UDP 為非連線導向、低延遲、無內建可靠性，可由應用層自行補強",
+      "UDP 必為不可靠協定，應用層亦無法補強",
+      "TCP 與 UDP 皆無封包遺失重傳機制",
+    ],
+    ans: 1,
+    expl: "TCP 透過三向交握建立連線，提供確認、重傳、流量與壅塞控制；UDP 不建立連線、不重傳，但延遲低、開銷小，許多協定（如 QUIC、DNS-over-UDP 應用層重傳）會在 UDP 之上自行補強可靠性，故不可逕稱 UDP 必不可靠。[難度: 簡單]"
+  },
+  {
+    id: 4, cat: "E",
+    stem: "某網段為 192.168.10.0/24，欲均等切割為 4 個子網路，每個子網路可分配給主機之 IP 數（扣除網路位址與廣播位址）為下列何者？",
+    opts: [
+      "62 個",
+      "64 個",
+      "30 個",
+      "126 個",
+    ],
+    ans: 0,
+    expl: "/24 切 4 個子網路即每個子網路 /26（共 64 個 IP），扣除網路位址（.0、.64、.128、.192）與廣播位址（.63、.127、.191、.255）後，每子網路可用主機數為 64 − 2 = 62 個。誤填 64 是漏扣兩個保留位址；30 是 /27、126 是 /25。[難度: 困難]"
+  },
+  {
+    id: 5, cat: "E",
+    stem: "關於 TCP 三向交握（Three-way Handshake）與 SYN Flood 攻擊之關係，下列敘述何者最為正確？",
+    opts: [
+      "SYN Flood 為應用層攻擊，攻擊者大量上傳 HTTP 大檔耗盡頻寬",
+      "TCP 三向交握為 SYN → ACK → SYN-ACK 三步驟",
+      "攻擊者大量送出 SYN 但不回應 SYN-ACK，造成伺服器半連線佇列耗盡，常見緩解為 SYN Cookies、SYN Proxy",
+      "SYN Flood 屬第七層攻擊，可透過 WAF 內容過濾完全杜絕",
+    ],
+    ans: 2,
+    expl: "TCP 三向交握順序為 SYN → SYN-ACK → ACK；SYN Flood 利用半連線佇列耗盡屬第四層（傳輸層）攻擊，常見緩解為 SYN Cookies、SYN Proxy、降低 SYN-ACK 重試次數等。WAF 屬應用層工具對 SYN Flood 效用有限。[難度: 簡單]"
+  },
+  {
+    id: 6, cat: "E",
+    stem: "關於 ARP 欺騙（ARP Spoofing）攻擊與防護，下列敘述何者「不」正確？",
+    opts: [
+      "攻擊者偽造 ARP 回應，使受害者將其 MAC 對應至錯誤 IP，達成中間人攻擊",
+      "Dynamic ARP Inspection（DAI）可搭配 DHCP Snooping 過濾偽造 ARP 封包",
+      "於受害主機綁定閘道之 Static ARP 在小規模網段可作為防護手段",
+      "Static ARP 對所有大型企業網段皆為最佳實務，可完全取代動態 ARP 機制",
+    ],
+    ans: 3,
+    expl: "Static ARP 雖能阻擋 ARP 欺騙，但維護成本極高，僅適合小規模或特定關鍵主機；大型網段應改採 DHCP Snooping + DAI、802.1X 認證、L2 隔離等綜合機制。逕稱「全網靜態 ARP 為最佳實務」會造成維運災難。[難度: 簡單]"
+  },
+  {
+    id: 7, cat: "E",
+    stem: "關於 DNS 投毒（DNS Cache Poisoning）攻擊與 DNSSEC 防護，下列敘述何者「不」正確？",
+    opts: [
+      "DNS 投毒可使受害者解析至攻擊者控制之 IP，後續流量遭中間人攻擊",
+      "DNSSEC 透過數位簽章鏈（RRSIG、DNSKEY、DS）提供 DNS 查詢來源鑑別與資料完整性，亦提供 DNS 查詢內容之機密性加密",
+      "DNS over HTTPS（DoH）與 DNS over TLS（DoT）才是針對 DNS 查詢內容之機密性加密機制",
+      "DNSSEC 部署需 TLD 與權威 DNS 同步支援，且驗證之計算成本較傳統 DNS 高",
+    ],
+    ans: 1,
+    expl: "DNSSEC 之設計目標為「資料來源鑑別與完整性」，並未對 DNS 查詢內容加密；查詢內容之機密性需以 DoH/DoT 提供。誤把機密性歸入 DNSSEC 是常見錯誤理解。[難度: 困難]"
+  },
+  {
+    id: 8, cat: "E",
+    stem: "關於非武裝區（DMZ, Demilitarized Zone）之設計目的，下列敘述何者最為正確？",
+    opts: [
+      "將需對外提供服務之伺服器（如 Web、Mail）置於 DMZ，以雙層防火牆隔離內部網路與網際網路，限制外部攻擊一旦突破對外服務後直接擴散至內網",
+      "DMZ 主機須與內網保持完整信任關係，得自由發起連線存取核心資料庫",
+      "DMZ 取代內網防火牆，可一併承擔內部存取控制職責",
+      "DMZ 僅供內部高階主管使用，與一般員工網路完全隔離",
+    ],
+    ans: 0,
+    expl: "DMZ 是放置「對外服務、不完全可信」主機之中介區，邊界以雙層防火牆（外部 + 內部）分離；DMZ 主機不應自由發起連線進入內網，否則喪失隔離意義。DMZ 也不取代內網防火牆，而是與其互補。[難度: 普通]"
+  },
+  {
+    id: 9, cat: "E",
+    stem: "關於 VLAN（依 IEEE 802.1Q）之隔離特性，下列敘述何者「不」正確？",
+    opts: [
+      "802.1Q 於乙太網路訊框加入 4 byte 之 VLAN Tag，支援多 VLAN 共用同一實體鏈路",
+      "不同 VLAN 之主機預設無法直接於 L2 互通，需透過具路由能力之 L3 設備轉送",
+      "VLAN 完全杜絕第二層攻擊，無須再考慮 VLAN Hopping、Double Tagging 等威脅",
+      "VLAN 設定可用於部門隔離、語音資料分流等情境",
+    ],
+    ans: 2,
+    expl: "VLAN Hopping（如 Switch Spoofing、Double Tagging）仍可能突破 VLAN 隔離；正確做法為禁用 DTP 自動協商、明確設定 trunk port 與 native VLAN、避免 VLAN 1 等。逕稱 VLAN 完全杜絕 L2 攻擊會留下盲點。[難度: 普通]"
+  },
+  {
+    id: 10, cat: "E",
+    stem: "關於防火牆類型（封包過濾、狀態檢查、應用代理、新世代防火牆 NGFW）之比較，下列敘述何者「不」正確？",
+    opts: [
+      "封包過濾防火牆依五元組（來源 IP、目的 IP、來源 Port、目的 Port、通訊協定）做靜態判斷，不維護連線狀態",
+      "應用代理防火牆於應用層代為轉發，可深度檢視應用協定內容但效能負荷較高",
+      "新世代防火牆（NGFW）整合應用識別、入侵防護、威脅情資、SSL 解密等功能",
+      "狀態檢查防火牆（Stateful Inspection）無須維護連線狀態表，逐封包獨立判斷",
+    ],
+    ans: 3,
+    expl: "狀態檢查防火牆之核心特徵正是「維護連線狀態表」，可記錄連線建立後雙向往返之合法封包並接受對應回應，逐封包獨立判斷則退化為封包過濾。其他三項描述皆正確。[難度: 簡單]"
+  },
+  {
+    id: 11, cat: "E",
+    stem: "關於 IDS（Intrusion Detection System）與 IPS（Intrusion Prevention System）之差異，下列敘述何者最為正確？",
+    opts: [
+      "IDS 與 IPS 皆主動阻擋流量，差別僅在部署位置",
+      "IDS 採側錄式（如 SPAN、TAP）部署、偵測異常並產生告警但不阻擋流量；IPS 採串接式（in-line）部署、可即時阻擋符合攻擊特徵之流量",
+      "IPS 僅能偵測但不能阻擋，需另外部署防火牆才能阻擋",
+      "IDS 與 IPS 為同一產品的不同名稱，技術上無區別",
+    ],
+    ans: 1,
+    expl: "IDS 為被動偵測（監聽複製流量）、IPS 為主動阻擋（串接於流量路徑）。兩者部署模式與行為皆不同，常見產品支援可切換模式。逕稱「IPS 不能阻擋」或「IDS = IPS」皆為混淆。[難度: 簡單]"
+  },
+  {
+    id: 12, cat: "E",
+    stem: "關於 IPSec 之 ESP、AH 與 Tunnel／Transport mode，下列敘述何者「不」正確？",
+    opts: [
+      "AH（Authentication Header）提供原始資料之機密性加密保護",
+      "ESP（Encapsulating Security Payload）可提供機密性、完整性與來源鑑別",
+      "Tunnel mode 將原始 IP 封包整體封裝於新 IP 標頭內，常用於閘道對閘道 VPN",
+      "Transport mode 僅加密上層 payload，原始 IP 標頭保留可見，常用於主機對主機",
+    ],
+    ans: 0,
+    expl: "AH 僅提供完整性與來源鑑別，不提供機密性；機密性需由 ESP 提供。實務上若需機密性常單獨採用 ESP，因 NAT 環境亦較相容。其他三項對 ESP 與兩種模式之描述皆正確。[難度: 普通]"
+  },
+  {
+    id: 13, cat: "E",
+    stem: "關於 TLS 1.3 之安全演進，下列敘述何者「不」正確？",
+    opts: [
+      "TLS 1.3 移除 RSA 金鑰交換，改採（EC）DHE 強制前向保密（PFS）",
+      "TLS 1.3 將握手簡化為 1-RTT，常見支援 0-RTT 早期資料",
+      "TLS 1.3 移除 SHA-1、MD5、CBC mode、export-grade 等弱套件",
+      "TLS 1.3 支援回退至 SSL 3.0 相容模式以維護舊裝置連線",
+    ],
+    ans: 3,
+    expl: "TLS 1.3 明確移除對 SSL 3.0、TLS 1.0/1.1 之相容性回退，避免降級攻擊（如 POODLE、BEAST）。其他三項描述皆為 TLS 1.3 設計重點，包含強制前向保密、簡化握手、淘汰弱套件。[難度: 困難]"
+  },
+  {
+    id: 14, cat: "E",
+    stem: "關於 SSH 與 Telnet 之安全差異，下列敘述何者最為正確？",
+    opts: [
+      "兩者皆採 TLS 加密通道",
+      "Telnet 以加密通道傳輸帳密、SSH 反而為明文",
+      "SSH 採加密通道並支援公鑰認證；Telnet 為明文傳輸，帳號、密碼、命令皆可被竊聽",
+      "Telnet 預設使用 TLS 1.3 提供端到端加密",
+    ],
+    ans: 2,
+    expl: "SSH（Secure Shell）採非對稱與對稱加密混合機制提供加密通道、伺服器鑑別與用戶端公鑰認證；Telnet 為純明文協定，於現代網路上應全面禁用。Telnet 並未內建任何 TLS 機制。[難度: 簡單]"
+  },
+  {
+    id: 15, cat: "E",
+    stem: "依無線網路安全標準演進，下列何者依「弱 → 強」之順序排列最為正確？",
+    opts: [
+      "WEP < WPA < WPA2 < WPA3",
+      "WPA < WEP < WPA3 < WPA2",
+      "WPA3 < WPA2 < WPA < WEP",
+      "WPA2 < WEP < WPA < WPA3",
+    ],
+    ans: 0,
+    expl: "WEP（1999，RC4 弱、IV 短）已被破解；WPA（2003）為過渡方案；WPA2（2004，CCMP/AES）為長期主流但 KRACK 攻擊揭露弱點；WPA3（2018）採 SAE 取代 PSK 並強制管理訊框保護。安全強度由弱至強為 WEP < WPA < WPA2 < WPA3。[難度: 簡單]"
+  },
+  {
+    id: 16, cat: "E",
+    stem: "某電商網站週年慶突遭大規模 DDoS 攻擊，網路頻寬與應用伺服器同時受影響。下列何者為較合宜之緩解組合？",
+    opts: [
+      "向資安小組報告後等待攻擊結束，無須採取任何技術措施",
+      "結合 CDN 與 Anycast 分散全球流量、向 ISP 啟動上游清洗（Scrubbing）、於 WAF 啟用速率限制與行為分析",
+      "立即將機房對外頻寬升級至原來的 10 倍，無須其他措施",
+      "將網站上所有頁面轉為靜態首頁並僅保留聯絡電話",
+    ],
+    ans: 1,
+    expl: "DDoS 來源分散且頻寬攻擊量常超過單一機房處理能力，正確緩解需多層次：CDN/Anycast 把流量分散到全球節點、上游 ISP 的清洗中心過濾異常流量、WAF/L7 防護處理應用層 DDoS。單純升級頻寬成本不可行（攻擊可再放大）；轉靜態頁等同自我中斷服務、放棄業務。[難度: 困難]"
+  },
+  {
+    id: 17, cat: "F",
+    stem: "關於 Windows NTFS 檔案系統之 ACL 繼承與權限優先順序，下列敘述何者最為正確？",
+    opts: [
+      "子物件無條件繼承父物件權限，即使顯式拒絕亦會被覆蓋",
+      "權限僅依群組成員身分判斷，不支援個別使用者授權",
+      "顯式拒絕（Explicit Deny）優於顯式允許（Explicit Allow），顯式優於繼承；繼承可由子物件以「停止繼承」覆寫",
+      "NTFS 不支援拒絕（Deny）權限，僅能設定允許",
+    ],
+    ans: 2,
+    expl: "NTFS ACL 之優先順序為：顯式拒絕 > 顯式允許 > 繼承拒絕 > 繼承允許；子物件可選擇停止繼承並改設自身 ACL。常見管理錯誤是「以為允許優於拒絕」，造成意外存取。[難度: 簡單]"
+  },
+  {
+    id: 18, cat: "F",
+    stem: "在 Linux 系統下，執行「chmod 755 file.sh」後，file.sh 之權限模式應為下列何者？",
+    opts: [
+      "rwxr-xr-x（擁有者可讀寫執行；同群組與其他人可讀與執行）",
+      "rw-r--r--（擁有者可讀寫；其他人僅可讀）",
+      "rwxrwxrwx（任何人皆可讀寫執行）",
+      "rwxr-x---（擁有者可讀寫執行；同群組可讀執行；其他人無權限）",
+    ],
+    ans: 0,
+    expl: "chmod 數值權限以八進位表示三組（擁有者、群組、其他人）：7 = rwx、5 = r-x、4 = r--、0 = ---。755 = rwx r-x r-x。其他選項對應之數值分別為 644（rw-r--r--）、777（rwxrwxrwx）、750（rwxr-x---）。[難度: 簡單]"
+  },
+  {
+    id: 19, cat: "F",
+    stem: "關於緩衝區溢位（Buffer Overflow）與 DEP / NX、ASLR、Stack Canary 等記憶體保護機制，下列敘述何者「不」正確？",
+    opts: [
+      "DEP / NX 將特定記憶體區段標示為不可執行，阻擋 shellcode 直接執行",
+      "ASLR 隨機化載入位址，增加攻擊者預測函式或返回位址之難度",
+      "Stack Canary 於返回位址前放置魔術值，函式返回前比對其是否被竄改以偵測溢位",
+      "ASLR 可徹底杜絕緩衝區溢位攻擊，啟用後即無須其他防護",
+    ],
+    ans: 3,
+    expl: "ASLR 僅提高攻擊難度，並未消除溢位漏洞本身；攻擊者仍可透過資訊洩漏、暴力猜測（32 位元熵不足）、ROP 等技巧繞過。完整防禦需 DEP/NX、ASLR、Stack Canary、CFI、安全程式設計與漏洞修補多層搭配。[難度: 普通]"
+  },
+  {
+    id: 20, cat: "F",
+    stem: "關於 OWASP Top 10:2021 之排行調整，下列敘述何者最為正確？",
+    opts: [
+      "OWASP Top 10:2021 仍以注入攻擊（Injection）為 A01 第一名",
+      "OWASP Top 10:2021 將「失效存取控制（Broken Access Control）」列為 A01 第一名，較 2017 版的第 5 名上升",
+      "OWASP Top 10:2021 移除了不安全的反序列化議題，且不再涵蓋失效存取控制",
+      "OWASP Top 10 自 2017 起未再更新，業界仍沿用 2017 版",
+    ],
+    ans: 1,
+    expl: "OWASP Top 10:2021 將「失效存取控制」由 2017 版的第 5 名升為 A01 第一名，反映此類漏洞於應用程式中比例最高且影響最大。OWASP 已於 2025 年 11 月發布 2025 版，但 iPAS 仍考 2021 版故本題以 2021 版為準。[難度: 普通]"
+  },
+  {
+    id: 21, cat: "F",
+    stem: "關於 OWASP API Security Top 10:2023 之 API1 第一名，下列敘述何者最為正確？",
+    opts: [
+      "API1:2023 為「不安全的反序列化」",
+      "API1:2023 為「使用含已知漏洞之元件」",
+      "API1:2023 為「跨站腳本攻擊（XSS）」",
+      "API1:2023 為「Broken Object Level Authorization（BOLA，物件層級授權失效）」",
+    ],
+    ans: 3,
+    expl: "OWASP API Security Top 10:2023 將 BOLA（物件層級授權失效）列為第一名 API1，肇因常為 API 端點僅驗證使用者已登入而未驗證請求物件是否屬於該使用者，例如「/api/orders/{orderId}」未檢查該 orderId 是否屬於登入者。其他選項屬於 OWASP Web Top 10 之項目。[難度: 普通]"
+  },
+  {
+    id: 22, cat: "F",
+    stem: "關於 SQL Injection（SQL 注入）之根本緩解措施，下列敘述何者最為正確？",
+    opts: [
+      "採用參數化查詢（Parameterized Query）/ Prepared Statement，將 SQL 結構與資料明確分離；輸入驗證、最小權限、WAF 為輔助層",
+      "於應用程式中過濾單引號即可完全杜絕 SQL Injection",
+      "改用 NoSQL 資料庫即可天然免疫於所有注入攻擊",
+      "僅於前端 JavaScript 進行欄位長度檢查即可",
+    ],
+    ans: 0,
+    expl: "Prepared Statement / 參數化查詢將指令樣板與參數分離，從根本上避免使用者輸入被解譯為 SQL 結構；單純字串過濾易遭繞過、NoSQL 仍可能受 NoSQL Injection 攻擊、僅前端檢查可被繞過。深度防禦下可再輔以輸入驗證、最小權限與 WAF。[難度: 普通]"
+  },
+  {
+    id: 23, cat: "F",
+    stem: "關於跨站腳本攻擊（XSS）之三種類型，下列敘述何者「不」正確？",
+    opts: [
+      "反射型 XSS：惡意內容於請求中夾帶，伺服器即時回應寫回頁面",
+      "儲存型 XSS：惡意內容寫入資料庫，後續使用者瀏覽時遭受攻擊",
+      "DOM 型 XSS 必經由伺服器回應才能觸發，無法純粹於用戶端發生",
+      "三種類型之根本緩解皆需依輸出情境（HTML、JS、URL）進行對應之輸出編碼，並結合 CSP（Content Security Policy）",
+    ],
+    ans: 2,
+    expl: "DOM 型 XSS 之注入與觸發完全發生於用戶端 JavaScript（如 document.write、innerHTML 處理 location.hash），伺服器可能完全未參與；逕稱「必經伺服器」會導致防護盲點。輸出編碼與 CSP 為三類 XSS 共通之有效防護。[難度: 困難]"
+  },
+  {
+    id: 24, cat: "F",
+    stem: "關於跨站請求偽造（CSRF）之防禦，下列敘述何者最為正確？",
+    opts: [
+      "啟用 HTTPS 即可完全防禦 CSRF",
+      "結合 CSRF Token（Synchronizer Token Pattern）與 SameSite Cookie（Strict 或 Lax）為實務有效之雙層防禦",
+      "僅依 HTTP Referer 標頭判斷請求來源即足夠，無需其他機制",
+      "CSRF 與 XSS 為同一攻擊，緩解措施完全相同",
+    ],
+    ans: 1,
+    expl: "CSRF 利用「使用者已登入」之有效 Cookie 自動隨跨站請求送出。CSRF Token 由伺服器發行並要求請求中夾帶以驗證來源、SameSite Cookie 阻止 Cookie 隨跨站請求送出，兩者結合是 OWASP 建議之最佳實務。HTTPS 僅保護機密性、Referer 易被去除、CSRF 與 XSS 為不同攻擊面。[難度: 普通]"
+  },
+  {
+    id: 25, cat: "F",
+    stem: "某網站需安全儲存使用者密碼以對抗離線暴力破解與彩虹表攻擊，下列何者為最合宜之做法？",
+    opts: [
+      "採用專為密碼設計之自適應雜湊演算法（如 bcrypt、scrypt 或 Argon2）並對每位使用者加上獨立 Salt，視硬體效能調整 work factor / memory cost",
+      "以 MD5 或 SHA-1 對密碼計算雜湊後直接儲存",
+      "以 Base64 編碼後儲存，因為 Base64 屬於常見密碼學編碼",
+      "以 AES 對稱加密儲存，並將金鑰寫入應用程式原始碼",
+    ],
+    ans: 0,
+    expl: "bcrypt、scrypt、Argon2 為「自適應」雜湊：可隨硬體進步調整 work factor 與記憶體成本以維持破解難度；獨立 Salt 使彩虹表失效。MD5/SHA-1 速度太快易被 GPU 暴力破解；Base64 為編碼非加密；AES 加密與金鑰硬編碼有金鑰外洩風險，且密碼通常不需可逆解密。[難度: 普通]"
+  },
+  {
+    id: 26, cat: "F",
+    stem: "關於 JSON Web Token（JWT）之安全議題，下列敘述何者「不」正確？",
+    opts: [
+      "JWT 之 alg 標頭若允許 \"none\" 而後端未明確拒絕，將導致無簽章驗證之偽造風險",
+      "後端若以「先取得 alg、再依此選擇驗證」之模式處理，可能被攻擊者以 HS256 偽簽繞過 RS256 驗證",
+      "JWT 預設加密 payload，可直接在用戶端儲存敏感個資",
+      "JWT 撤銷較困難，常需搭配短效 access token 與後端 token 黑名單機制",
+    ],
+    ans: 2,
+    expl: "JWS（簽章型 JWT）之 payload 僅以 Base64URL 編碼非加密，任何人皆可解碼閱讀內容；若需加密 payload 須使用 JWE。將敏感個資直接放入 JWS payload 是常見錯誤。其他三項皆為 JWT 已知風險。[難度: 普通]"
+  },
+  {
+    id: 27, cat: "F",
+    stem: "關於 SAST（Static Application Security Testing）與 DAST（Dynamic Application Security Testing）之比較，下列敘述何者最為正確？",
+    opts: [
+      "SAST 與 DAST 皆需於正式環境上線後執行",
+      "SAST 屬黑箱測試，DAST 屬白箱測試",
+      "DAST 可發現所有設計缺陷與業務邏輯漏洞，無須再進行人工程式碼審查",
+      "SAST 為白箱、靜態分析原始碼可早期介入；DAST 為黑箱、運行中掃描真實行為；兩者互補，搭配 IAST、SCA 形成完整應用程式安全測試組合",
+    ],
+    ans: 3,
+    expl: "SAST 於開發階段檢視原始碼可早期發現漏洞但易誤報、難測動態行為；DAST 於執行階段測試真實 HTTP 行為可發現組態問題但較晚介入。兩者互補，搭配 IAST（混合）、SCA（第三方元件）、人工 Code Review、滲透測試形成 DevSecOps 完整測試矩陣。[難度: 普通]"
+  },
+  {
+    id: 28, cat: "F",
+    stem: "關於惡意程式（Malware）之分類，下列敘述何者「不」正確？",
+    opts: [
+      "病毒（Virus）通常需附著於宿主檔案並依使用者操作觸發以擴散",
+      "蠕蟲（Worm）必須附著於宿主檔案才能擴散，無法獨立傳播",
+      "木馬（Trojan）偽裝為正常程式以誘騙使用者執行，常作為其他攻擊之載體",
+      "Rootkit 會修改作業系統核心或使用者層級工具，使惡意行為對防毒軟體與管理員隱形",
+    ],
+    ans: 1,
+    expl: "蠕蟲與病毒之關鍵差異即在於「能否獨立傳播」：蠕蟲可自我複製並透過網路漏洞、共享資料夾自行擴散，無須宿主檔案；病毒則需要宿主。混淆兩者會錯估擴散速度與緩解策略。[難度: 普通]"
+  },
+  {
+    id: 29, cat: "F",
+    stem: "關於勒索軟體（Ransomware）之事前防護最佳實務，下列何者最為合宜？",
+    opts: [
+      "落實 3-2-1 備份原則（3 份備份、2 種媒體、1 份異地離線），並定期演練還原；同步部署 EDR、最小權限、修補管理、釣魚演練",
+      "將備份放置於同網段之雲端同步資料夾，方便存取",
+      "於 USB 隨身碟保留唯一副本並隨身攜帶",
+      "事先準備充足比特幣以便事故發生時立即支付贖金",
+    ],
+    ans: 0,
+    expl: "3-2-1 原則使勒索軟體即使加密線上資料、同網段裝置與雲端同步，仍有「離線且異地」一份可還原。雲端同步資料夾與線上備份會被一併加密；USB 唯一副本毀損即無資料；支付贖金不僅違反多國反洗錢規範，且解密成功率與後續勒索風險皆難以保證。[難度: 簡單]"
+  },
+  {
+    id: 30, cat: "F",
+    stem: "關於釣魚（Phishing）與社交工程之辨識，下列敘述何者「不」正確？",
+    opts: [
+      "通用釣魚（Phishing）：大量寄送相似訊息以期低成功率仍有總體收益",
+      "魚叉式釣魚（Spear Phishing）：針對特定對象客製化訊息，成功率較高",
+      "魚叉式釣魚（Spear Phishing）泛指針對所有員工的大量釣魚",
+      "鯨魚釣魚（Whaling）：針對高階主管之客製化釣魚",
+    ],
+    ans: 2,
+    expl: "魚叉式釣魚之關鍵特徵正是「針對特定個人或小群體」客製化（如冒名 IT 主管寄信給特定財務人員），與大量寄送之通用釣魚相反。其他三項分類為標準資安術語。[難度: 普通]"
+  },
+  {
+    id: 31, cat: "G",
+    stem: "關於 SIEM（Security Information and Event Management）之主要功能，下列敘述何者「不」正確？",
+    opts: [
+      "集中收集、正規化、儲存來自網路設備、主機、雲端等多源之事件記錄",
+      "提供事件關聯規則（Correlation Rule）以從多源事件中辨識可疑模式",
+      "支援儀表板、即時告警與合規報告產出",
+      "可自動修補弱點，無須其他弱點管理工具",
+    ],
+    ans: 3,
+    expl: "SIEM 著重「日誌集中、關聯分析、告警與合規」，本身不執行弱點修補；修補需依賴弱點管理（VM）、組態管理（CMDB）、修補管理（Patch Management）等工具配合 SOAR 自動化。[難度: 簡單]"
+  },
+  {
+    id: 32, cat: "G",
+    stem: "關於弱點掃描（Vulnerability Scanning）與滲透測試（Penetration Testing）之差異，下列敘述何者最為正確？",
+    opts: [
+      "兩者目的相同，差別僅在工具品牌不同",
+      "弱點掃描必為人工執行，滲透測試必為自動化執行",
+      "弱點掃描以自動化工具大量檢測已知弱點，著重廣度；滲透測試以人工為主，模擬真實攻擊路徑驗證可被利用之程度，著重深度",
+      "滲透測試僅針對外部網站，不涉及內部網路",
+    ],
+    ans: 2,
+    expl: "弱點掃描適合定期執行以涵蓋廣泛資產，常見工具如 Nessus、Qualys；滲透測試由具經驗之測試人員以社交工程、漏洞鏈組合、橫向移動等方式驗證真實風險。兩者互補：先掃描縮小範圍、再滲透驗證可被利用之高風險弱點。[難度: 簡單]"
+  },
+  {
+    id: 33, cat: "G",
+    stem: "關於 CVSS（Common Vulnerability Scoring System）3.1 與 4.0 版，下列敘述何者「不」正確？",
+    opts: [
+      "CVSS 3.1 採基本（Base）、時間（Temporal）、環境（Environmental）三組指標",
+      "CVSS 4.0 完全淘汰 CVSS 3.1，所有 NVD 評分立即重新發布",
+      "CVSS 4.0 引入 Threat、Environmental、Supplemental 等補充維度，提升對 OT/IoT 等情境之適用性",
+      "CVSS 評分區分為 Low（0.1-3.9）、Medium（4.0-6.9）、High（7.0-8.9）、Critical（9.0-10.0）",
+    ],
+    ans: 1,
+    expl: "CVSS 4.0 於 2023 年 11 月發布，與 3.1 並存使用一段時間，弱點資料庫（如 NVD）逐步補上 4.0 評分但 3.1 不立即廢止。其他三項描述皆正確。[難度: 普通]"
+  },
+  {
+    id: 34, cat: "G",
+    stem: "關於密碼學金鑰管理生命週期（產生、儲存、分發、使用、輪替、撤銷、銷毀），下列敘述何者「不」正確？",
+    opts: [
+      "對稱金鑰應依風險與用量定期輪替，例如資料加密金鑰可每年輪替一次，根金鑰可每 10 年輪替一次以維持加密一致性",
+      "金鑰應儲存於 HSM、KMS 或受保護之 keystore，不得寫入原始碼或設定檔",
+      "金鑰之分發應透過安全通道並記錄存取軌跡",
+      "金鑰銷毀應依介質採用安全清除（cryptographic erasure、物理銷毀）",
+    ],
+    ans: 0,
+    expl: "對稱金鑰若多年不輪替，已產生之密文若未來金鑰外洩則全部歷史資料受害（無前向保密）；NIST SP 800-57 建議資料加密金鑰之 cryptoperiod 為 1 至 2 年（依用量），根金鑰較長但仍非「永遠不輪替」。其他三項描述皆為正確金鑰管理實務。[難度: 困難]"
+  },
+  {
+    id: 35, cat: "G",
+    stem: "關於 NIST SP 800-207 零信任架構（Zero Trust Architecture, ZTA）之核心原則，下列敘述何者最為正確？",
+    opts: [
+      "ZTA 完全取代 VPN，且無須加密任何流量",
+      "ZTA 主張內部網路天然可信，僅需強化邊界",
+      "ZTA 為單一產品，安裝後即可一鍵實現零信任",
+      "ZTA 主張「永不信任、持續驗證」，每次資源存取皆依身分、裝置態勢、行為等屬性動態評估，並無預設信任邊界",
+    ],
+    ans: 3,
+    expl: "NIST SP 800-207 ZTA 之核心為持續驗證、最小授權、依資源逐次評估，並非取消加密或邊界內天然可信，亦非單一產品；常見落實包含 ZTNA、IAM、MFA、裝置態勢評估、微分段、SDP、加密通道等元件之組合。[難度: 簡單]"
+  },
+  {
+    id: 36, cat: "G",
+    stem: "關於 SOAR（Security Orchestration, Automation and Response）與 SIEM 之互補關係，下列敘述何者最為正確？",
+    opts: [
+      "SOAR 取代 SIEM，組織可二者擇一即可",
+      "SIEM 著重事件偵測與告警；SOAR 著重事件回應之編排與自動化（Playbook、Case Management、整合多元工具），可大幅縮短 MTTR",
+      "SOAR 為硬體型防火牆，與 SIEM 軟體無關",
+      "SOAR 僅支援雲端環境，無法處理地端事件",
+    ],
+    ans: 1,
+    expl: "SIEM 與 SOAR 為互補：SIEM 偵測告警 → SOAR 依 Playbook 自動執行 IP 封鎖、隔離主機、開單、通知等動作。實務常見整合架構為 SIEM + SOAR + EDR + TIP（威脅情資平台）。[難度: 普通]"
+  },
+  {
+    id: 37, cat: "G",
+    stem: "關於 DLP（Data Loss Prevention）之部署模式，下列敘述何者「不」正確？",
+    opts: [
+      "Network DLP：於閘道側檢查網路流量，識別敏感資料外傳",
+      "Network DLP 可解密所有 TLS 流量，無需任何代理或憑證設定",
+      "Endpoint DLP：於終端裝置代理程式控管 USB、列印、剪貼簿、應用程式等通道",
+      "Storage / Cloud DLP：掃描檔案伺服器、雲端儲存以發現敏感資料並分類",
+    ],
+    ans: 1,
+    expl: "Network DLP 若需檢視 TLS 加密內容，必須部署 SSL/TLS 解密代理（如反向代理、出站 SSL 解密）並在客戶端信任企業憑證；逕稱「無須任何配置」會誤導環境設計。其他三項描述皆正確。[難度: 普通]"
+  },
+  {
+    id: 38, cat: "G",
+    stem: "關於 SBOM（Software Bill of Materials）與軟體供應鏈安全，下列敘述何者最為正確？",
+    opts: [
+      "SBOM 列出軟體之所有元件、版本、授權與依賴關係，使組織得以快速比對 CVE 公告找出受影響之軟體",
+      "SBOM 為原始碼壓縮包，與 CVE 比對無關",
+      "SBOM 僅適用於開源軟體，商用軟體無法產出",
+      "SBOM 取代滲透測試與 SAST，組織只要有 SBOM 即可不必再做應用程式安全測試",
+    ],
+    ans: 0,
+    expl: "SBOM 常見格式包含 SPDX、CycloneDX，列出元件、版本、授權、雜湊、依賴等資訊，可在 Log4Shell、xz 後門等供應鏈事件爆發時快速定位受影響系統。SBOM 為輔助工具，並不取代 SAST、DAST、滲透測試等多層測試。[難度: 普通]"
+  },
+  {
+    id: 39, cat: "G",
+    stem: "關於數位鑑識（Digital Forensics）之證據鏈（Chain of Custody），下列敘述何者「不」正確？",
+    opts: [
+      "證據鏈紀錄須包含「誰、何時、做了什麼、移交給誰」",
+      "證據鏡像（image）應計算雜湊值（如 SHA-256）並於後續每次比對中驗證一致性",
+      "鑑識作業應於原始裝置之複本上進行，原始裝置妥善封存",
+      "鑑識完成後，原始證據與所有副本可立即丟棄以節省儲存空間",
+    ],
+    ans: 3,
+    expl: "原始證據與副本須妥善保存至司法程序終結，且符合相關保存期限要求，否則證據能力將受質疑。其他三項皆為證據鏈之標準作業：書面紀錄、雜湊驗證、不直接操作原始裝置。[難度: 普通]"
+  },
+  {
+    id: 40, cat: "G",
+    stem: "關於 EDR、XDR、MDR 之差異，下列敘述何者「不」正確？",
+    opts: [
+      "EDR（Endpoint Detection and Response）聚焦於端點偵測與回應",
+      "XDR（Extended Detection and Response）跨端點、網路、雲端、身分等多面向整合分析",
+      "MDR 為硬體型端點防護裝置，安裝於每台主機之機殼上",
+      "MDR（Managed Detection and Response）為由第三方代管之偵測與回應託管服務，搭配 24/7 SOC 人力",
+    ],
+    ans: 2,
+    expl: "MDR 為「Managed」管理型服務，由第三方安全業者派遣 SOC 分析師代為監控、調查與處置，並非硬體裝置。其他三項描述皆正確。EDR 為基礎、XDR 為平台擴展、MDR 為服務化交付。[難度: 困難]"
+  },
+  {
+    id: 41, cat: "G",
+    stem: "關於 SOC（Security Operations Center）之 L1、L2、L3 等級分工，下列敘述何者最為正確？",
+    opts: [
+      "L1 為威脅獵捕與深度鑑識專家、L3 為新進監控人員",
+      "L1 為告警初篩與基礎調查；L2 為事件分析、處置與升級判斷；L3 為威脅獵捕、進階鑑識與規則調校",
+      "L1 即可直接決策事件升級至國家級資安通報機關",
+      "L1、L2、L3 皆執行相同工作，僅薪資等級不同",
+    ],
+    ans: 1,
+    expl: "SOC 採分層架構提升處理效率：L1 處理大量低階告警（含誤報排除）；L2 處理確認事件並展開分析與處置；L3 為資深團隊負責進階威脅獵捕、客製化偵測規則與重大事件鑑識。各層職責不可顛倒或合併，且國家級通報需依法定流程經高階主管授權，非由 L1 自行決定。[難度: 普通]"
+  },
+  {
+    id: 42, cat: "H",
+    stem: "關於 IoT 安全弱點（OWASP IoT Top 10），下列敘述何者「不」正確？",
+    opts: [
+      "弱密碼或可猜測之預設密碼為 IoT 常見高風險弱點",
+      "不安全之網路服務暴露（如 Telnet、未加密 MQTT）為常見問題",
+      "韌體更新機制不安全（無簽章驗證、無回滾保護）易遭植入後門",
+      "IoT 裝置因運算受限故無需考量任何加密機制",
+    ],
+    ans: 3,
+    expl: "IoT 雖受運算與電力限制，仍應依風險導入合宜之輕量加密（如 TLS、DTLS、ChaCha20、AES-CCM）；逕稱「無需加密」會嚴重忽視機密性與完整性風險。其他三項皆為 OWASP IoT Top 10 列舉之常見弱點。[難度: 普通]"
+  },
+  {
+    id: 43, cat: "H",
+    stem: "關於雲端共擔責任模型（Shared Responsibility Model）於 IaaS、PaaS、SaaS 之差異，下列敘述何者最為正確？",
+    opts: [
+      "IaaS 客戶責任最大（含作業系統、執行環境、資料）；PaaS 客戶責任中等（不含作業系統與執行環境）；SaaS 客戶責任最小（主要為資料分類、身分與存取管理、組態設定）",
+      "無論服務模式，CSP 全責、客戶無責",
+      "無論服務模式，客戶全責、CSP 無責",
+      "IaaS、PaaS、SaaS 三種模式之責任分工完全相同",
+    ],
+    ans: 0,
+    expl: "共擔責任模型的核心是「服務抽象越高、客戶責任越少」：IaaS 客戶需自行管理作業系統及以上；PaaS 由 CSP 管理執行環境；SaaS 客戶主要負責資料分類、身分管理與組態。「資料、身分、存取、組態」始終是客戶責任，CSP 不可能完全代客戶承擔。[難度: 普通]"
+  },
+  {
+    id: 44, cat: "H",
+    stem: "關於容器與 Kubernetes 安全（參考 NIST SP 800-190），下列敘述何者「不」正確？",
+    opts: [
+      "容器映像檔應於建置階段進行漏洞掃描與簽章",
+      "K8s 應採最小權限 RBAC、禁用預設 ServiceAccount 自動掛載、限制特權容器",
+      "容器映像檔來源若可信即無需任何掃描，亦無須持續監控",
+      "Pod Security Standards、NetworkPolicy 與 admission controllers 為常見強化機制",
+    ],
+    ans: 2,
+    expl: "即使來源可信，映像檔仍可能包含過時依賴、未修補漏洞或被污染之上游元件（供應鏈攻擊），故須於建置與部署階段持續掃描，並監控執行階段行為。其他三項皆為 NIST SP 800-190 與 K8s 安全強化建議。[難度: 困難]"
+  },
+  {
+    id: 45, cat: "H",
+    stem: "關於 AI／ML 系統之對抗性攻擊（Adversarial Attack）類別，下列敘述何者最為正確？",
+    opts: [
+      "AI 模型一旦訓練完成即無法被攻擊",
+      "資料投毒（Data Poisoning）於訓練階段污染資料；對抗範例（Adversarial Example）於推論階段以微小擾動誘騙模型；模型萃取（Model Extraction）透過大量查詢還原模型結構或參數",
+      "對抗性攻擊僅影響影像辨識，與自然語言處理、語音辨識無關",
+      "對抗範例為傳統的緩衝區溢位攻擊，與 AI 演算法無關",
+    ],
+    ans: 1,
+    expl: "AI/ML 安全議題日趨重要，常見威脅包含資料投毒、對抗範例、模型萃取、模型反演（Model Inversion）、成員推論（Membership Inference）等。各類攻擊所處階段、技術手法、影響面皆不同，需配合 NIST AI RMF 與 MITRE ATLAS 等框架管理。[難度: 普通]"
+  },
+  {
+    id: 46, cat: "H",
+    stem: "關於 API 安全之最佳實務（速率限制、OAuth 2.0、mTLS），下列敘述何者最為正確？",
+    opts: [
+      "OAuth 2.0 為授權框架，搭配 OpenID Connect 提供身分驗證；API Key 不應內嵌於前端或公開儲存庫；高敏感 API 可採 mTLS 進行雙向憑證驗證；速率限制與配額用以對抗濫用與 DDoS",
+      "API Key 內嵌於行動應用程式之原始碼中為最佳實務",
+      "OAuth 2.0 為加密協定，可取代 TLS 提供傳輸層加密",
+      "速率限制會降低使用者體驗，正式環境應全面停用",
+    ],
+    ans: 0,
+    expl: "OAuth 2.0 是授權框架（誰可以做什麼），驗證身分需 OpenID Connect 等延伸；OAuth 2.0 不取代 TLS。API Key 若內嵌於前端或行動程式可被反編譯取得；速率限制是對抗暴力攻擊與配額濫用之關鍵手段不可全面關閉。[難度: 普通]"
+  },
+  {
+    id: 47, cat: "H",
+    stem: "關於 MDM／UEM（Mobile Device Management / Unified Endpoint Management）與 BYOD 之安全控制，下列敘述何者「不」正確？",
+    opts: [
+      "可透過容器化（Container）將企業資料與個人資料分離儲存",
+      "可遠端抹除（Remote Wipe）僅限企業容器，避免抹除員工個人資料",
+      "可強制套用密碼複雜度、螢幕鎖定、加密、修補等基線政策",
+      "BYOD 應允許員工關閉所有 MDM 控制，以保障個人隱私與裝置自主",
+    ],
+    ans: 3,
+    expl: "BYOD 若允許員工關閉 MDM 控制，企業資料即失去基本保護；正確做法是於使用條款中說明 MDM 涵蓋範圍（僅限企業容器）並保留員工個人資料隱私，由員工同意後加入 BYOD。其他三項皆為 MDM/UEM 之常見最佳實務。[難度: 普通]"
+  },
+  {
+    id: 48, cat: "H",
+    stem: "某公司於凌晨 3 時偵測到 AD 網域內多台端點同時遭加密，疑似勒索軟體橫向擴散中。依 NIST SP 800-61 Rev. 2 之事件回應流程，下列何者為當下首要處置？",
+    opts: [
+      "立即將全廠所有電力切斷，避免任何進一步擴散",
+      "依事件回應 Playbook 啟動「遏制（Containment）」程序：隔離受感染主機與網段、暫停可疑帳號、保留揮發性證據（記憶體、網路連線快照）後再進行根除與復原",
+      "立即支付加密貨幣贖金以爭取最快復原",
+      "靜待管理階層上班後再行決策，避免半夜驚動高層",
+    ],
+    ans: 1,
+    expl: "依 NIST SP 800-61 Rev. 2 第 3.3 節，偵測與分析後應進入遏制階段，依預先制定之策略隔離受影響範圍以阻止擴散，並同時保留證據以利後續鑑識；NIST 已於 2025 年發布 Rev. 3 取代 Rev. 2，但 iPAS 仍考 Rev. 2 故本題以 Rev. 2 為準。全廠斷電影響業務持續、支付贖金不保證解密、延遲處置會擴大損害。[難度: 困難]"
+  },
+  {
+    id: 49, cat: "H",
+    stem: "關於 ICS／SCADA／OT 系統與 IT 系統在安全要求上之差異，下列敘述何者「不」正確？",
+    opts: [
+      "OT 系統可隨時重啟以即時套用安全更新，與 IT 完全相同",
+      "OT 系統強調可用性（Availability）優先，許多現場設備需 7×24 連續運轉",
+      "OT 通訊協定（如 Modbus、DNP3）多為原生明文，部署需考量補償性控制",
+      "IEC 62443 為工控系統資安專屬標準，提供區段（Zone）與通道（Conduit）等架構",
+    ],
+    ans: 0,
+    expl: "OT 系統重視業務可用性與物理安全，重啟與停機需經嚴謹排程窗口（甚至以年為單位），不可隨意修補，常需以網路分段、單向閘道、補償性控制取代頻繁修補。其他三項皆為 OT 安全之正確認知。[難度: 困難]"
+  },
+  {
+    id: 50, cat: "H",
+    stem: "某 SOC 偵測到內部主機異常外連可疑 C2（Command and Control）位址，下列何者最符合「SIEM → SOAR → 分析師」之 SOC 端到端流程？",
+    opts: [
+      "偵測到即無條件全網斷網，避免任何進一步通訊",
+      "由 L1 直接決策報請國家級通報機關，不經過任何分析",
+      "SIEM 比對威脅情資後產生告警 → SOAR Playbook 自動於 EDR 隔離該主機、阻擋 C2 IP、開立 Case → SOC L2 分析師確認後進入完整事件回應與後續鑑識",
+      "由 SOAR 自動將該主機格式化並重新加入網域，以最快速度恢復",
+    ],
+    ans: 2,
+    expl: "成熟 SOC 流程中，SIEM 提供集中告警、SOAR 依 Playbook 自動執行可重複動作（隔離、阻擋、開單）、分析師再進行人工調查與決策；全網斷網過度反應、L1 越權通報違反程序、自動格式化會破壞鑑識證據。[難度: 普通]"
+  }
+];
+</script>
+<script>
+// ============================================================
+// 資訊安全模擬測驗系統 - 狀態機與邏輯
+// ============================================================
+const TOTAL_TIME_SEC = 75 * 60;   // 75 分鐘
+const EXAM_TITLE = "[模擬測驗] 資訊安全技術概論";
+const SUBJECT_CODE = "IST-01-v2.1";
+const CAT_NAMES = {
+  E: "網路與通訊安全",
+  F: "作業系統與應用程式安全",
+  G: "資安維運技術",
+  H: "新興科技安全"
+};
+
+const state = {
+  stage: "login",
+  userId: "",
+  currentIdx: 0,
+  answers: {},      // {qid: 0-3}
+  marked: {},       // {qid: true}
+  zoomLevel: 1,
+  startTime: null,
+  remaining: TOTAL_TIME_SEC,
+  timerId: null,
+  submitted: false,
+  filter: "all"     // all / wrong / blank / correct
+};
+
+const $stage = document.getElementById("stage");
+
+// ============================================================
+// 隨機洗牌（題目順序 + 每題選項順序）
+// ============================================================
+// 保留一份原始題庫深複製，每次洗牌都從原始版重新生成，避免累積污染
+const ORIGINAL_QUESTIONS = QUESTIONS.map(q => ({
+  id: q.id,
+  cat: q.cat,
+  stem: q.stem,
+  opts: [...q.opts],
+  ans: q.ans,
+  expl: q.expl
+}));
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function shuffleExam() {
+  // 從原始題庫深複製一份
+  const fresh = ORIGINAL_QUESTIONS.map(q => ({
+    id: q.id,
+    cat: q.cat,
+    stem: q.stem,
+    opts: [...q.opts],
+    ans: q.ans,
+    expl: q.expl
+  }));
+  // 1. 打散題目順序
+  const shuffled = shuffleArray(fresh);
+  // 2. 每題內部打散選項順序，並更新 ans 指標
+  shuffled.forEach(q => {
+    const correctText = q.opts[q.ans];
+    q.opts = shuffleArray(q.opts);
+    q.ans = q.opts.indexOf(correctText);
+  });
+  // 3. 替換執行時題庫
+  QUESTIONS.length = 0;
+  QUESTIONS.push(...shuffled);
+}
+
+// ============================================================
+// 畫面渲染函式
+// ============================================================
+function renderLogin() {
+  state.stage = "login";
+  $stage.innerHTML = `
+    <div style="padding-top: 20px;">
+      <div class="disclaimer-box">
+        <div class="dc-title">重要聲明 — 請於開始練習前詳讀</div>
+        <ul>
+          <li>本系統為<b>社群志工自製之個人學習練習工具</b>，與任何政府機關、能力鑑定推動辦公室、官方發證單位均<b>無任何關聯、合作或授權關係</b>。</li>
+          <li>系統介面僅為模仿一般電腦化測驗之操作風格，<b>並非任何官方考試系統之實際畫面</b>。</li>
+          <li>題目內容為社群成員參考公開學習資源自行撰寫，<b>非官方歷屆試題</b>，僅作為讀書會學員熟悉題型與觀念之用。</li>
+          <li>本系統<b>不得用於任何商業用途或對外發證</b>，亦不保證與任何正式鑑定測驗之內容一致。</li>
+        </ul>
+        <div class="dc-ack">點擊「登錄」即表示您已知悉上述聲明，並同意僅將本系統用於個人學習。</div>
+      </div>
+      <div class="login-box">
+        <div class="login-title">
+          <h2>資訊安全模擬測驗系統</h2>
+          <span class="ver">Practice Edition v2.1 / 非官方練習用</span>
+        </div>
+        <div class="login-body">
+          <div class="login-field">
+            <label>練習者名稱：</label>
+            <input type="text" id="userIdInput" maxlength="20" placeholder="可輸入暱稱，留空亦可" autocomplete="off">
+          </div>
+          <div class="login-buttons">
+            <button class="win-btn primary" onclick="doLogin()">登 錄</button>
+            <button class="win-btn" onclick="doCancel()">取 消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  setTimeout(() => {
+    const inp = document.getElementById("userIdInput");
+    if (inp) inp.focus();
+  }, 100);
+}
+
+function doCancel() {
+  const inp = document.getElementById("userIdInput");
+  if (inp) inp.value = "";
+}
+
+function doLogin() {
+  const inp = document.getElementById("userIdInput");
+  const val = (inp.value || "").trim();
+  if (!val) {
+    state.userId = "練習者";
+  } else {
+    state.userId = val;
+  }
+  renderInfo();
+}
+
+function renderInfo() {
+  state.stage = "info";
+  $stage.innerHTML = `
+    <div class="info-panel">
+      <div class="info-panel-header">
+        <div>
+          <span class="tab">${EXAM_TITLE}</span>
+          <span class="tab-inactive">測驗注意事項</span>
+        </div>
+      </div>
+      <div class="info-identity">
+        <span>練習者名稱：${state.userId}</span>
+        <span>模式：個人練習</span>
+      </div>
+      <div class="info-content">
+        <ol>
+          <li>一、本試卷為<b>模擬練習題</b>，全部為<b>單選題</b>，共 <b>50 題</b>，每題 2 分（答錯不倒扣），總分共計 100 分，測驗時間 <b>75 分鐘</b>。</li>
+          <li>二、<b>每次進入本測驗，題目順序與選項順序皆會重新隨機排列</b>，避免記憶題號而非觀念。</li>
+          <li>三、本試題 0 為阿拉伯數字，O 為英文字母，作答時請先確認。</li>
+          <li>四、作答完畢請點選右上方「結束測驗」結束本次練習，系統將顯示成績與逐題解析。</li>
+          <li>五、本測驗達 <b>70 分</b> 為合格參考線（僅供自我檢核）。</li>
+          <li>六、<b style="color:#a04040;">本系統為非官方個人練習工具，題目與結果僅供學習參考，不代表任何正式鑑定之結果。</b></li>
+        </ol>
+      </div>
+      <div class="info-footer">
+        <button class="win-btn primary" onclick="startExam()" style="min-width: 100px; padding: 6px 28px;">開 始</button>
+      </div>
+      <div class="info-statusbar">試卷資料已載入完成，請點擊「開始」按鈕進行計時練習。</div>
+    </div>
+  `;
+}
+
+function startExam() {
+  state.stage = "exam";
+  shuffleExam();              // 每次進入考試都重新洗牌（題目 + 選項）
+  state.startTime = Date.now();
+  state.remaining = TOTAL_TIME_SEC;
+  startTimer();
+  renderExam();
+}
+
+function startTimer() {
+  if (state.timerId) clearInterval(state.timerId);
+  state.timerId = setInterval(() => {
+    state.remaining--;
+    if (state.remaining <= 0) {
+      state.remaining = 0;
+      clearInterval(state.timerId);
+      // 時間到自動交卷
+      finalizeExam();
+      return;
+    }
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, "0");
+  const s = (sec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById("timerDisplay");
+  if (!el) return;
+  el.textContent = `${formatTime(state.remaining)} / ${formatTime(TOTAL_TIME_SEC)}`;
+  if (state.remaining <= 300) {
+    el.classList.add("warning");
+  }
+}
+
+function renderExam() {
+  const q = QUESTIONS[state.currentIdx];
+  const total = QUESTIONS.length;
+  const isMarked = !!state.marked[q.id];
+  const userAns = state.answers[q.id];
+
+  $stage.innerHTML = `
+    <div class="exam-frame">
+      <div class="exam-topbar">
+        <div class="tab-active">學科測驗</div>
+      </div>
+      <div class="exam-identity-bar">
+        <span>${EXAM_TITLE}</span>
+        <span class="progress" id="progressDisplay">A${(state.currentIdx+1).toString().padStart(3,"0")} / A${total.toString().padStart(3,"0")}</span>
+        <span class="timer" id="timerDisplay">${formatTime(state.remaining)} / ${formatTime(TOTAL_TIME_SEC)}</span>
+        <button class="end-btn" onclick="confirmEndExam()">結束測驗</button>
+      </div>
+      <div class="exam-toolbar">
+        <button class="win-btn" onclick="prevQuestion()" ${state.currentIdx === 0 ? 'disabled' : ''}>◁ 上一題</button>
+        <button class="win-btn" onclick="nextQuestion()" ${state.currentIdx === total - 1 ? 'disabled' : ''}>下一題 ▷</button>
+        <button class="win-btn" onclick="clearAnswer()">不作答</button>
+        <button class="win-btn ${isMarked ? 'marked' : ''}" onclick="toggleMark()">${isMarked ? '★ 已標記' : '試題標記'}</button>
+        <button class="win-btn" onclick="openOverview()">試題總覽</button>
+        <button class="win-btn zoom-btn" onclick="zoomIn()" title="放大">🔍＋</button>
+        <button class="win-btn zoom-btn" onclick="zoomOut()" title="縮小" style="margin-left:0;">🔍－</button>
+      </div>
+      <div class="question-area zoom-${state.zoomLevel}" id="questionArea">
+        <div class="question-stem">
+          <span class="qnum">${state.currentIdx + 1}.</span>${escapeHtml(q.stem)}
+        </div>
+        <div class="options">
+          ${q.opts.map((opt, i) => `
+            <label class="option-row">
+              <input type="radio" name="opt" value="${i}" ${userAns === i ? 'checked' : ''} onchange="selectAnswer(${i})">
+              <span class="option-label">(${String.fromCharCode(65+i)})</span>
+              <span>${escapeHtml(opt)}</span>
+            </label>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function selectAnswer(i) {
+  const q = QUESTIONS[state.currentIdx];
+  state.answers[q.id] = i;
+}
+
+function clearAnswer() {
+  const q = QUESTIONS[state.currentIdx];
+  delete state.answers[q.id];
+  renderExam();
+}
+
+function toggleMark() {
+  const q = QUESTIONS[state.currentIdx];
+  if (state.marked[q.id]) {
+    delete state.marked[q.id];
+  } else {
+    state.marked[q.id] = true;
+  }
+  renderExam();
+}
+
+function prevQuestion() {
+  if (state.currentIdx > 0) {
+    state.currentIdx--;
+    renderExam();
+  }
+}
+
+function nextQuestion() {
+  if (state.currentIdx < QUESTIONS.length - 1) {
+    state.currentIdx++;
+    renderExam();
+  }
+}
+
+function zoomIn() {
+  if (state.zoomLevel < 3) {
+    state.zoomLevel++;
+    renderExam();
+  }
+}
+
+function zoomOut() {
+  if (state.zoomLevel > 0) {
+    state.zoomLevel--;
+    renderExam();
+  }
+}
+
+// ============================================================
+// 試題總覽
+// ============================================================
+function openOverview() {
+  const grid = document.getElementById("overviewGrid");
+  grid.innerHTML = QUESTIONS.map((q, i) => {
+    const answered = state.answers[q.id] !== undefined;
+    const marked = state.marked[q.id];
+    let cls = "qnum-cell";
+    if (marked) cls += " marked";
+    else if (answered) cls += " answered";
+    return `<div class="${cls}" onclick="jumpTo(${i})">${i+1}</div>`;
+  }).join("");
+  document.getElementById("overviewModal").classList.add("show");
+}
+
+function closeOverview() {
+  document.getElementById("overviewModal").classList.remove("show");
+}
+
+function jumpTo(idx) {
+  state.currentIdx = idx;
+  closeOverview();
+  renderExam();
+}
+
+// ============================================================
+// 結束測驗
+// ============================================================
+function confirmEndExam() {
+  const total = QUESTIONS.length;
+  const answered = Object.keys(state.answers).length;
+  const unanswered = total - answered;
+  document.getElementById("endStats").innerHTML = `
+    學科總題數 : ${total}<br>
+    已作答題數 : ${answered}<br>
+    未作答題數 : ${unanswered}
+  `;
+  document.getElementById("endConfirmModal").classList.add("show");
+}
+
+function closeEndModal() {
+  document.getElementById("endConfirmModal").classList.remove("show");
+}
+
+function finalizeExam() {
+  closeEndModal();
+  state.submitted = true;
+  if (state.timerId) clearInterval(state.timerId);
+  renderEndScreen();
+}
+
+function renderEndScreen() {
+  state.stage = "end";
+  $stage.innerHTML = `
+    <div class="end-screen">
+      <h1>本次練習已結束</h1>
+      <p>感謝您的作答，點擊下方按鈕查看成績與逐題解析。</p>
+      <button class="win-btn primary" onclick="renderResult()" style="min-width: 140px; padding: 8px 24px;">查看模擬成績與解析</button>
+    </div>
+  `;
+}
+
+// ============================================================
+// 成績與逐題解析
+// ============================================================
+function calcResult() {
+  const byCat = { E:{n:0,c:0}, F:{n:0,c:0}, G:{n:0,c:0}, H:{n:0,c:0} };
+  let correct = 0, wrong = 0, blank = 0;
+  QUESTIONS.forEach(q => {
+    byCat[q.cat].n++;
+    const a = state.answers[q.id];
+    if (a === undefined) {
+      blank++;
+    } else if (a === q.ans) {
+      correct++;
+      byCat[q.cat].c++;
+    } else {
+      wrong++;
+    }
+  });
+  const score = Math.round((correct / QUESTIONS.length) * 100);
+  return { byCat, correct, wrong, blank, score, pass: score >= 70 };
+}
+
+function renderResult() {
+  state.stage = "result";
+  const r = calcResult();
+  const scoreCls = r.pass ? "pass" : "fail";
+
+  const catRows = ["E","F","G","H"].map(cat => {
+    const info = r.byCat[cat];
+    const pct = info.n > 0 ? Math.round((info.c / info.n) * 100) : 0;
+    let barCls = "";
+    if (pct < 60) barCls = "low";
+    else if (pct < 75) barCls = "mid";
+    return `
+      <div class="category-row">
+        <span class="cat-name">${cat}. ${CAT_NAMES[cat]}</span>
+        <span class="cat-bar-wrap"><span class="cat-bar ${barCls}" style="width: ${pct}%;"></span></span>
+        <span class="cat-score">${info.c}/${info.n} (${pct}%)</span>
+      </div>
+    `;
+  }).join("");
+
+  const usedMin = Math.floor((TOTAL_TIME_SEC - state.remaining) / 60);
+  const usedSec = (TOTAL_TIME_SEC - state.remaining) % 60;
+
+  $stage.innerHTML = `
+    <div class="result-screen">
+      <div class="result-header">
+        <div class="result-subtitle">資訊安全模擬測驗 — 非官方個人練習版</div>
+        <div class="result-title">${SUBJECT_CODE} ${EXAM_TITLE.replace("[模擬測驗] ","")}</div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-main">
+          <div class="score-number ${scoreCls}">${r.score}</div>
+          <div class="score-label">總 分（滿分 100）</div>
+          <div class="score-verdict ${scoreCls}">${r.pass ? "✓ 合 格" : "✗ 不合格"}</div>
+        </div>
+        <div class="score-breakdown">
+          <h3>各評鑑主題表現</h3>
+          ${catRows}
+        </div>
+      </div>
+
+      <div class="stats-summary">
+        <div class="stats-item correct">
+          <span class="num">${r.correct}</span>
+          <span class="lab">答對題數</span>
+        </div>
+        <div class="stats-item wrong">
+          <span class="num">${r.wrong}</span>
+          <span class="lab">答錯題數</span>
+        </div>
+        <div class="stats-item blank">
+          <span class="num">${r.blank}</span>
+          <span class="lab">未作答</span>
+        </div>
+        <div class="stats-item">
+          <span class="num">${usedMin}:${usedSec.toString().padStart(2,"0")}</span>
+          <span class="lab">實際作答時間</span>
+        </div>
+        <div class="stats-item">
+          <span class="num">${Object.keys(state.marked).length}</span>
+          <span class="lab">曾標記題數</span>
+        </div>
+      </div>
+
+      <div class="review-section">
+        <h2>
+          <span>逐題檢視與解析</span>
+          <div class="filter-buttons">
+            <button class="filter-btn ${state.filter==='all'?'active':''}" onclick="setFilter('all')">全部 (${QUESTIONS.length})</button>
+            <button class="filter-btn ${state.filter==='wrong'?'active':''}" onclick="setFilter('wrong')">錯題 (${r.wrong})</button>
+            <button class="filter-btn ${state.filter==='blank'?'active':''}" onclick="setFilter('blank')">未作答 (${r.blank})</button>
+            <button class="filter-btn ${state.filter==='correct'?'active':''}" onclick="setFilter('correct')">答對 (${r.correct})</button>
+          </div>
+        </h2>
+        <div id="reviewList">${renderReviewList()}</div>
+      </div>
+
+      <div class="result-actions">
+        <button class="win-btn" onclick="retakeExam()">重新挑戰</button>
+        <button class="win-btn primary" onclick="window.print()">列印成績單</button>
+      </div>
+    </div>
+  `;
+}
+
+function setFilter(f) {
+  state.filter = f;
+  // 重新渲染整個結果頁以更新篩選按鈕 active 狀態
+  renderResult();
+}
+
+function renderReviewList() {
+  return QUESTIONS.map((q, idx) => {
+    const userAns = state.answers[q.id];
+    const isBlank = userAns === undefined;
+    const isCorrect = !isBlank && userAns === q.ans;
+    const isWrong = !isBlank && !isCorrect;
+
+    if (state.filter === "wrong" && !isWrong) return "";
+    if (state.filter === "blank" && !isBlank) return "";
+    if (state.filter === "correct" && !isCorrect) return "";
+
+    let itemCls = "review-item";
+    let badgeCls, badgeText;
+    if (isCorrect) { badgeCls = "correct"; badgeText = "✓ 答對"; }
+    else if (isBlank) { itemCls += " blank"; badgeCls = "blank"; badgeText = "— 未作答"; }
+    else { itemCls += " wrong"; badgeCls = "wrong"; badgeText = "✗ 答錯"; }
+
+    const opts = q.opts.map((opt, i) => {
+      let optCls = "review-opt";
+      let tag = "";
+      if (i === q.ans && i === userAns) {
+        optCls += " user-correct";
+        tag = "← 您的答案 ✓";
+      } else if (i === q.ans) {
+        optCls += " correct-ans";
+        tag = "← 正解";
+      } else if (i === userAns) {
+        optCls += " user-wrong";
+        tag = "← 您的答案 ✗";
+      }
+      return `
+        <div class="${optCls}">
+          <span class="opt-marker">(${String.fromCharCode(65+i)})</span>
+          <span>${escapeHtml(opt)}</span>
+          ${tag ? `<span class="opt-tag">${tag}</span>` : ""}
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="${itemCls}">
+        <div class="review-header">
+          <span class="rq-num">Q${(idx+1).toString().padStart(2,"0")}</span>
+          <span class="rq-cat">${q.cat}. ${CAT_NAMES[q.cat]}</span>
+          <span class="rq-badge ${badgeCls}">${badgeText}</span>
+          ${state.marked[q.id] ? '<span class="rq-badge" style="background:#fff4d0;color:#a08020;">★ 曾標記</span>' : ''}
+        </div>
+        <div class="review-stem">${escapeHtml(q.stem)}</div>
+        <div class="review-opts">${opts}</div>
+        <div class="review-expl">
+          <span class="expl-label">解析：</span>${escapeHtml(q.expl)}
+        </div>
+      </div>
+    `;
+  }).join("") || `<div style="padding:40px;text-align:center;color:#888;">此分類目前沒有題目</div>`;
+}
+
+function retakeExam() {
+  state.currentIdx = 0;
+  state.answers = {};
+  state.marked = {};
+  state.zoomLevel = 1;
+  state.startTime = null;
+  state.remaining = TOTAL_TIME_SEC;
+  state.submitted = false;
+  state.filter = "all";
+  if (state.timerId) clearInterval(state.timerId);
+  renderLogin();
+}
+
+// ============================================================
+// 鍵盤快捷鍵
+// ============================================================
+document.addEventListener("keydown", (e) => {
+  if (state.stage !== "exam") return;
+  // 1-4 或 A-D 選答
+  const keyMap = { "1":0,"2":1,"3":2,"4":3,"a":0,"b":1,"c":2,"d":3,"A":0,"B":1,"C":2,"D":3 };
+  if (keyMap[e.key] !== undefined) {
+    selectAnswer(keyMap[e.key]);
+    renderExam();
+    return;
+  }
+  if (e.key === "ArrowLeft") prevQuestion();
+  else if (e.key === "ArrowRight") nextQuestion();
+});
+
+// 啟動
+renderLogin();
+</script>
+
+</body>
+</html>
