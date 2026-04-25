@@ -1924,6 +1924,7 @@ const state = {
   remaining: TOTAL_TIME_SEC,
   timerId: null,
   submitted: false,
+  leaderboardSubmitted: false,  // 避免結果頁重新渲染時重複上傳成績 / 統計
   filter: "all"     // all / wrong / blank / correct
 };
 
@@ -1959,15 +1960,20 @@ function shuffleExam() {
     stem: q.stem,
     opts: [...q.opts],
     ans: q.ans,
-    expl: q.expl
+    expl: q.expl,
+    // optOriginalIdx[i] = 畫面上第 i 個選項，原本是原始題庫的第幾個選項。
+    // 這能避免「選項文字重複」或「統計資料以原始 A/B/C/D 儲存」時發生對應錯位。
+    optOriginalIdx: q.opts.map((_, i) => i)
   }));
   // 1. 打散題目順序
   const shuffled = shuffleArray(fresh);
-  // 2. 每題內部打散選項順序，並更新 ans 指標
+  // 2. 每題內部打散選項順序，並同步保留原始選項索引
   shuffled.forEach(q => {
-    const correctText = q.opts[q.ans];
-    q.opts = shuffleArray(q.opts);
-    q.ans = q.opts.indexOf(correctText);
+    const optionPool = q.opts.map((text, originalIdx) => ({ text, originalIdx }));
+    const shuffledOpts = shuffleArray(optionPool);
+    q.opts = shuffledOpts.map(o => o.text);
+    q.optOriginalIdx = shuffledOpts.map(o => o.originalIdx);
+    q.ans = q.optOriginalIdx.indexOf(q.ans);
   });
   // 3. 替換執行時題庫
   QUESTIONS.length = 0;
@@ -2174,6 +2180,27 @@ function escapeHtml(s) {
   return (s || "").replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[c]));
+}
+
+function getOriginalOptionIndex(q, displayIndex) {
+  // displayIndex 是目前畫面 A/B/C/D 的位置；qstats 則是用原始題庫 A/B/C/D 儲存。
+  if (Array.isArray(q.optOriginalIdx) && q.optOriginalIdx[displayIndex] !== undefined) {
+    return q.optOriginalIdx[displayIndex];
+  }
+  // 舊資料或未洗牌狀況的 fallback。
+  const originalQ = ORIGINAL_QUESTIONS.find(o => o.id === q.id);
+  if (!originalQ) return displayIndex;
+  const originalIdx = originalQ.opts.indexOf(q.opts[displayIndex]);
+  return originalIdx >= 0 ? originalIdx : displayIndex;
+}
+
+function getDisplayStats(q, qstat) {
+  // 將 API 回來的「原始選項統計」轉成「目前畫面選項順序」的統計。
+  if (!qstat) return null;
+  return q.opts.map((_, displayIndex) => {
+    const originalIdx = getOriginalOptionIndex(q, displayIndex);
+    return Number(qstat[originalIdx] || 0);
+  });
 }
 
 function selectAnswer(i) {
@@ -2668,17 +2695,20 @@ async function submitToLeaderboard() {
     return;
   }
 
+  if (state.leaderboardSubmitted) {
+    // 結果頁可能因切換「全部 / 錯題 / 未作答 / 答對」而重新渲染；避免同一份答案重複灌入排行榜與題目統計。
+    await renderLeaderboard();
+    await loadAndRenderQStats();
+    return;
+  }
+
   // 準備上傳資料：把「洗牌後位置」還原成「原始題庫位置」
   // 否則 qstats 統計會被洗牌污染（學員看到的 A 可能是原始的 B/C/D）
   const answers = {};
   QUESTIONS.forEach(q => {
     const ans = state.answers[q.id];
     if (ans === undefined) return;
-    // 從原始題庫找回這個選項對應的原始位置
-    const originalQ = ORIGINAL_QUESTIONS.find(o => o.id === q.id);
-    const chosenText = q.opts[ans];
-    const originalIdx = originalQ.opts.indexOf(chosenText);
-    answers[q.id] = originalIdx;
+    answers[q.id] = getOriginalOptionIndex(q, ans);
   });
 
   const payload = {
@@ -2695,6 +2725,7 @@ async function submitToLeaderboard() {
 
   try {
     await apiPost(payload);
+    state.leaderboardSubmitted = true;
     await renderLeaderboard();
     await loadAndRenderQStats();
   } catch (e) {
@@ -2913,9 +2944,11 @@ function renderReviewList() {
     else if (isBlank) { itemCls += " blank"; badgeCls = "blank"; badgeText = "— 未作答"; }
     else { itemCls += " wrong"; badgeCls = "wrong"; badgeText = "✗ 答錯"; }
 
-    // 取得本題社群統計
+    // 取得本題社群統計。API 以「原始題庫 A/B/C/D」儲存；畫面選項已洗牌，所以要先轉成目前顯示順序。
     const qstat = (window._qstatsCache && window._qstatsCache["q" + q.id]) || null;
-    const qstatTotal = qstat ? (qstat[0] + qstat[1] + qstat[2] + qstat[3]) : 0;
+    const displayStats = getDisplayStats(q, qstat);
+    const qstatTotal = displayStats ? displayStats.reduce((sum, n) => sum + n, 0) : 0;
+    const maxWrongCount = displayStats ? Math.max(...displayStats.map((n, idx) => idx === q.ans ? -1 : n)) : 0;
 
     const opts = q.opts.map((opt, i) => {
       let optCls = "review-opt";
@@ -2931,10 +2964,10 @@ function renderReviewList() {
         tag = "← 您的答案 ✗";
       }
       let statBar = "";
-      if (qstat && qstatTotal > 0) {
-        const cnt = qstat[i];
+      if (displayStats && qstatTotal > 0) {
+        const cnt = displayStats[i];
         const pct = Math.round(cnt / qstatTotal * 100);
-        const barCls = i === q.ans ? "stat-correct" : (cnt === Math.max(...qstat) && cnt > 0 && i !== q.ans ? "stat-top-wrong" : "stat-normal");
+        const barCls = i === q.ans ? "stat-correct" : (cnt === maxWrongCount && cnt > 0 ? "stat-top-wrong" : "stat-normal");
         statBar = `<span class="opt-stat ${barCls}">${cnt} 人 / ${pct}%</span>`;
       }
       return `
@@ -2948,8 +2981,8 @@ function renderReviewList() {
     }).join("");
 
     let qstatHeader = "";
-    if (qstat && qstatTotal > 0) {
-      const correctCnt = qstat[q.ans];
+    if (displayStats && qstatTotal > 0) {
+      const correctCnt = displayStats[q.ans];
       const correctPct = Math.round(correctCnt / qstatTotal * 100);
       qstatHeader = `<div class="review-qstat">📊 社群作答：共 ${qstatTotal} 人 ｜ 答對率 ${correctPct}%</div>`;
     }
@@ -2981,6 +3014,7 @@ function retakeExam() {
   state.startTime = null;
   state.remaining = TOTAL_TIME_SEC;
   state.submitted = false;
+  state.leaderboardSubmitted = false;
   state.filter = "all";
   if (state.timerId) clearInterval(state.timerId);
   renderLogin();
