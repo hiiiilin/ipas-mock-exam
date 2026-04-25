@@ -1494,21 +1494,21 @@ window.QUESTIONS = [
     stem: "關於 Windows NTFS 檔案系統之存取控制清單（ACL），下列敘述何者最正確？",
     opts: [
       "NTFS 僅支援簡單 rwx 九位元權限，無法針對個別使用者設定",
-      "NTFS ACL 由多筆 ACE 組成，可對使用者或群組指定允許／拒絕之權限（讀取、寫入、修改、完全控制等），並支援繼承機制；Deny 通常優先於 Allow",
+      "NTFS ACL 由多筆 ACE 組成，可對使用者或群組指定允許、拒絕之權限（讀取、寫入、修改、完全控制等），並支援繼承機制；Deny 通常優先於 Allow",
       "NTFS 權限僅適用於網路分享，不適用於本機檔案",
       "NTFS ACL 無法用於系統管理員設定之稽核目的"
     ],
     ans: 1,
-    expl: "正解 B：NTFS 的 ACL 由多筆存取控制項目（ACE）組成，可以針對個別使用者或群組設定允許／拒絕之細粒度權限，並支援由上層資料夾繼承；處理順序上「明確 Deny > 明確 Allow > 繼承 Deny > 繼承 Allow」。"
+    expl: "正解 B：NTFS 的 ACL 由多筆存取控制項目（ACE）組成，可以針對個別使用者或群組設定允許、拒絕之細粒度權限，並支援由上層資料夾繼承；處理順序上「明確 Deny > 明確 Allow > 繼承 Deny > 繼承 Allow」。"
   },
   {
     id: 18, cat: "F",
     stem: "Linux 檔案權限設定 chmod 755 file 代表下列何者？",
     opts: [
-      "擁有者：讀／寫／執行；同群組：讀／執行；其他人：讀／執行",
-      "擁有者：讀／寫；同群組：寫／執行；其他人：讀",
-      "擁有者：讀；同群組：讀／寫；其他人：讀／寫／執行",
-      "擁有者：無權限；同群組：讀／寫／執行；其他人：讀"
+      "擁有者：讀、寫、執行；同群組：讀、執行；其他人：讀、執行",
+      "擁有者：讀、寫；同群組：寫、執行；其他人：讀",
+      "擁有者：讀；同群組：讀、寫；其他人：讀、寫、執行",
+      "擁有者：無權限；同群組：讀、寫、執行；其他人：讀"
     ],
     ans: 0,
     expl: "正解 A：755 對應 rwx r-x r-x。第一位 7=rwx（擁有者讀寫執行），第二位 5=r-x（同群組讀與執行），第三位 5=r-x（其他人讀與執行）。"
@@ -1655,7 +1655,7 @@ window.QUESTIONS = [
       "Vishing 為語音（電話）形式之社交工程，Smishing 則為簡訊形式"
     ],
     ans: 2,
-    expl: "正解 C：社交工程手法持續演進且加入 AI 語音／影像偽造，員工意識易隨時間衰退，需「定期」辦理教育訓練與演練（如社交工程郵件演練）。一次性訓練並無法永久免疫，選項 C 之敘述違反實務與法規要求，故為錯誤敘述。"
+    expl: "正解 C：社交工程手法持續演進且加入 AI 語音、影像偽造，員工意識易隨時間衰退，需「定期」辦理教育訓練與演練（如社交工程郵件演練）。一次性訓練並無法永久免疫，選項 C 之敘述違反實務與法規要求，故為錯誤敘述。"
   },
   {
     id: 31, cat: "G",
@@ -1841,7 +1841,7 @@ window.QUESTIONS = [
     id: 46, cat: "H",
     stem: "關於 API 安全之正確實務，下列敘述何者最為恰當？",
     opts: [
-      "落實 OWASP API Top 10（2023）關注之控制面：物件層級授權（BOLA）、物件屬性層級授權、認證、過度資料暴露、不安全設定等；實施速率限制、輸入驗證、最小資料原則、授權與稽核，並針對 GraphQL 額外注意查詢深度／複雜度限制",
+      "落實 OWASP API Top 10（2023）關注之控制面：物件層級授權（BOLA）、物件屬性層級授權、認證、過度資料暴露、不安全設定等；實施速率限制、輸入驗證、最小資料原則、授權與稽核，並針對 GraphQL 額外注意查詢深度、複雜度限制",
       "API 只要走 HTTPS 即可視為安全，無需其他控制",
       "API 授權只要檢查使用者登入狀態即可，無需檢查物件擁有權",
       "GraphQL 天然安全，無需限制查詢深度與複雜度"
@@ -1868,10 +1868,10 @@ window.QUESTIONS = [
       "準備（Preparation）：補齊平時教育訓練與演練",
       "偵測與分析（Detection & Analysis）：才剛開始收集告警",
       "事件後活動（Post-Incident Activity）：撰寫事件回顧報告",
-      "遏制、根除與復原（Containment, Eradication & Recovery）：立即隔離受害主機／網段（Containment）、關閉高權限受駭帳號、封鎖 C2 與橫向通道，再進行根除與復原"
+      "遏制、根除與復原（Containment, Eradication & Recovery）：立即隔離受害主機、網段（Containment）、關閉高權限受駭帳號、封鎖 C2 與橫向通道，再進行根除與復原"
     ],
     ans: 3,
-    expl: "正解 D：依 NIST SP 800-61 Rev. 2 四階段（Preparation → Detection & Analysis → Containment, Eradication & Recovery → Post-Incident Activity），發現勒索軟體橫向擴散時，最緊急之動作為「遏制」以阻止擴散（短期 Containment：網段隔離／斷網、關閉受駭帳號、封鎖 C2），再進入根除（移除惡意程式與持久化機制）與復原（從清潔備份還原）。"
+    expl: "正解 D：依 NIST SP 800-61 Rev. 2 四階段（Preparation → Detection & Analysis → Containment, Eradication & Recovery → Post-Incident Activity），發現勒索軟體橫向擴散時，最緊急之動作為「遏制」以阻止擴散（短期 Containment：網段隔離、斷網、關閉受駭帳號、封鎖 C2），再進入根除（移除惡意程式與持久化機制）與復原（從清潔備份還原）。"
   },
   {
     id: 49, cat: "H",
@@ -1883,7 +1883,7 @@ window.QUESTIONS = [
       "私鑰遺失可由區塊鏈自動恢復，無任何風險"
     ],
     ans: 2,
-    expl: "正解 C：區塊鏈之「難以竄改」源自雜湊鏈結與共識機制，但並非絕對安全。實務上 Smart Contract 漏洞（如 DAO 重入攻擊）、51% 算力攻擊、跨鏈橋接協定漏洞、私鑰保管不當（冷／熱錢包）、釣魚簽章授權等皆為常見風險。私鑰遺失一般無法恢復（除非另有恢復機制）。"
+    expl: "正解 C：區塊鏈之「難以竄改」源自雜湊鏈結與共識機制，但並非絕對安全。實務上 Smart Contract 漏洞（如 DAO 重入攻擊）、51% 算力攻擊、跨鏈橋接協定漏洞、私鑰保管不當（冷、熱錢包）、釣魚簽章授權等皆為常見風險。私鑰遺失一般無法恢復（除非另有恢復機制）。"
   },
   {
     id: 50, cat: "H",
@@ -1924,7 +1924,7 @@ const state = {
   remaining: TOTAL_TIME_SEC,
   timerId: null,
   submitted: false,
-  leaderboardSubmitted: false,  // 避免結果頁重新渲染時重複上傳成績 / 統計
+  leaderboardSubmitted: false,  // 避免結果頁重新渲染時重複上傳成績、統計
   filter: "all"     // all / wrong / blank / correct
 };
 
@@ -2072,7 +2072,7 @@ function renderInfo() {
               <span class="key-hint-desc">：選擇答案</span>
               <br>
               <span class="kbd">←</span> <span class="kbd">→</span>
-              <span class="key-hint-desc">：上一題 / 下一題</span>
+              <span class="key-hint-desc">：上一題、下一題</span>
             </div>
           </li>
         </ol>
@@ -2696,7 +2696,7 @@ async function submitToLeaderboard() {
   }
 
   if (state.leaderboardSubmitted) {
-    // 結果頁可能因切換「全部 / 錯題 / 未作答 / 答對」而重新渲染；避免同一份答案重複灌入排行榜與題目統計。
+    // 結果頁可能因切換「全部、錯題、未作答、答對」而重新渲染；避免同一份答案重複灌入排行榜與題目統計。
     await renderLeaderboard();
     await loadAndRenderQStats();
     return;

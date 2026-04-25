@@ -1374,7 +1374,7 @@ window.QUESTIONS = [
     stem: "關於資訊分類（Information Classification），下列敘述何者「不」正確？",
     opts: [
       "分類應依資訊之機密性、重要性等屬性訂定不同層級",
-      "常見分類層級如「公開／內部使用／機密／極機密」",
+      "常見分類層級如「公開、內部使用、機密、極機密」",
       "分類後應對不同層級資訊採差異化之保護與存取控制",
       "資訊分類完成後即為永久屬性，無須定期檢視或重新分類"
     ],
@@ -1391,7 +1391,7 @@ window.QUESTIONS = [
       "稽核主管應隸屬於資安長之下，以確保審查獨立性"
     ],
     ans: 1,
-    expl: "正解 B：CISO 與 CIO 職責不同（CIO 側重資訊服務提供、CISO 側重資安風險管控）；DPO 為個資／隱私之專責角色；稽核應獨立於被稽核單位之外，不可隸屬 CISO 之下。"
+    expl: "正解 B：CISO 與 CIO 職責不同（CIO 側重資訊服務提供、CISO 側重資安風險管控）；DPO 為個資、隱私之專責角色；稽核應獨立於被稽核單位之外，不可隸屬 CISO 之下。"
   },
   {
     id: 9, cat: "A",
@@ -1443,15 +1443,15 @@ window.QUESTIONS = [
   },
   {
     id: 13, cat: "A",
-    stem: "關於 ISO/IEC 27000 系列之雲端與隱私相關標準，下列敘述何者「不」正確？",
+    stem: "關於 ISO/IEC 27000 系列之雲端與隱私相關標準（依 ISO/IEC 27701:2019 版規範），下列敘述何者「不」正確？",
     opts: [
       "ISO/IEC 27017 提供雲端服務之資訊安全控制實務指引",
       "ISO/IEC 27018 聚焦於公有雲中個人可識別資訊（PII）之保護",
-      "ISO/IEC 27701 為可取代 ISO 27001 之獨立認證標準",
-      "ISO/IEC 27701 以 ISO 27001 為基礎，擴展建立隱私資訊管理系統（PIMS）"
+      "ISO/IEC 27701:2019 規定組織須先具備 ISO/IEC 27001 ISMS 驗證基礎，方能延伸進行 PIMS 驗證",
+      "ISO/IEC 27701:2019 為可取代 ISO/IEC 27001 之獨立認證標準"
     ],
-    ans: 2,
-    expl: "正解 C：ISO/IEC 27701 為 ISO/IEC 27001 / 27002 之延伸標準，組織須先具備 ISMS 驗證基礎，再疊加 PIMS；其不「取代」27001，而係在其之上擴展隱私管理要求。"
+    ans: 3,
+    expl: "正解 D：依 ISO/IEC 27701:2019 副標題「Extension to ISO/IEC 27001 and ISO/IEC 27002」，該版本為延伸標準，組織須先具備 ISMS 驗證基礎，再疊加 PIMS；其並非取代 27001 之獨立標準。注意：ISO/IEC 27701:2025（2025 年 8 月發布）已調整為可獨立驗證之 PIMS 標準，不再強制綁定 27001，故新版下此選項敘述將反向變為正確；本題以 2019 版為命題依據。"
   },
   {
     id: 14, cat: "A",
@@ -1481,13 +1481,13 @@ window.QUESTIONS = [
     id: 16, cat: "A",
     stem: "關於資訊安全治理（Governance）與資訊安全管理（Management）之區別，下列敘述何者最正確？",
     opts: [
-      "治理由董事會／高階主管負責設定方向、監督與課責；管理由執行層負責規劃、執行與營運資安工作",
+      "治理由董事會、高階主管負責設定方向、監督與課責；管理由執行層負責規劃、執行與營運資安工作",
       "治理與管理係同一概念，僅用詞不同",
       "治理僅為資安稽核之代稱",
       "管理層級高於治理層級"
     ],
     ans: 0,
-    expl: "正解 A：資安治理（Govern）由董事會／高階主管層負責，聚焦於策略方向、風險胃納、合規要求與績效監督；資安管理（Manage）由執行層負責，涵蓋規劃、執行、監測與改進。ISO 27014 對二者有明確區分。"
+    expl: "正解 A：資安治理（Govern）由董事會、高階主管層負責，聚焦於策略方向、風險胃納、合規要求與績效監督；資安管理（Manage）由執行層負責，涵蓋規劃、執行、監測與改進。ISO 27014 對二者有明確區分。"
   },
   {
     id: 17, cat: "B",
@@ -1566,7 +1566,7 @@ window.QUESTIONS = [
     stem: "關於定量（Quantitative）與定性（Qualitative）風險評鑑方法之比較，下列敘述何者「不」正確？",
     opts: [
       "定量評鑑以數值量化（如 ALE、SLE），結果易於與財務指標連結",
-      "定性評鑑以高／中／低等級表示，執行快速且易於溝通",
+      "定性評鑑以高、中、低等級表示，執行快速且易於溝通",
       "定性評鑑需大量精確統計資料支撐，通常較定量評鑑更耗時與昂貴",
       "實務上常採定量與定性混合（半定量）評鑑"
     ],
@@ -1587,7 +1587,7 @@ window.QUESTIONS = [
   },
   {
     id: 25, cat: "B",
-    stem: "依 ISO 31000 / 27005 所定義之風險處理策略，下列何者「不」屬於其中？",
+    stem: "依 ISO 31000:2018 與 ISO/IEC 27005:2022 所定義之風險處理策略，下列何者「不」屬於其中？",
     opts: [
       "接受（Accept）",
       "降低（Mitigate / Modify）",
@@ -1595,7 +1595,7 @@ window.QUESTIONS = [
       "消弭（Eliminate）"
     ],
     ans: 3,
-    expl: "正解 D：ISO 31000 / 27005 四種風險處理策略為「接受／降低／轉移／避免（Avoid）」。並無「消弭（Eliminate）」策略；「避免」僅係不從事該項可能導致風險之活動，而非消滅風險本身。"
+    expl: "正解 D：ISO 31000:2018 與 ISO/IEC 27005:2022 之風險處理策略為「接受、降低、轉移、避免（Avoid）」四種。其中 ISO 31000 與 ISO 27005 對相同概念使用不同英文（如 Modify vs Mitigate、Share vs Transfer），故兩個標準並列。並無「消弭（Eliminate）」策略；「避免」僅係不從事該項可能導致風險之活動，而非消滅風險本身。"
   },
   {
     id: 26, cat: "B",
@@ -1715,7 +1715,7 @@ window.QUESTIONS = [
       "可以政策語言（如 XACML）表達存取規則"
     ],
     ans: 1,
-    expl: "正解 B：ABAC 之決策因子為多面向屬性（主體／客體／環境／動作），非僅限使用者身分。其彈性遠高於 RBAC，是實現零信任與細緻授權之重要基礎。"
+    expl: "正解 B：ABAC 之決策因子為多面向屬性（主體、客體、環境、動作），非僅限使用者身分。其彈性遠高於 RBAC，是實現零信任與細緻授權之重要基礎。"
   },
   {
     id: 36, cat: "C",
@@ -1727,7 +1727,7 @@ window.QUESTIONS = [
       "Diffie-Hellman、ECDH、X25519"
     ],
     ans: 0,
-    expl: "正解 A：對稱式加密以同一把金鑰進行加解密，代表演算法為 AES、DES、3DES、ChaCha20 等。選項 B 為非對稱加密／簽章；C 為雜湊／訊息鑑別碼；D 為金鑰交換。"
+    expl: "正解 A：對稱式加密以同一把金鑰進行加解密，代表演算法為 AES、DES、3DES、ChaCha20 等。選項 B 為非對稱加密、簽章；C 為雜湊、訊息鑑別碼；D 為金鑰交換。"
   },
   {
     id: 37, cat: "C",
@@ -1793,9 +1793,9 @@ window.QUESTIONS = [
     id: 42, cat: "D",
     stem: "依 NIST SP 800-61 Rev. 2 之資安事件處理生命週期四階段，其正確順序為下列何者？",
     opts: [
-      "偵測與分析 → 準備 → 遏制／根除／復原 → 事件後活動",
-      "準備 → 遏制／根除／復原 → 偵測與分析 → 事件後活動",
-      "遏制／根除／復原 → 準備 → 偵測與分析 → 事件後活動",
+      "偵測與分析 → 準備 → 遏制、根除、復原 → 事件後活動",
+      "準備 → 遏制、根除、復原 → 偵測與分析 → 事件後活動",
+      "遏制、根除、復原 → 準備 → 偵測與分析 → 事件後活動",
       "準備（Preparation）→ 偵測與分析（Detection & Analysis）→ 遏制、根除與復原（Containment, Eradication & Recovery）→ 事件後活動（Post-Incident Activity）"
     ],
     ans: 3,
@@ -1924,7 +1924,7 @@ const state = {
   remaining: TOTAL_TIME_SEC,
   timerId: null,
   submitted: false,
-  leaderboardSubmitted: false,  // 避免結果頁重新渲染時重複上傳成績 / 統計
+  leaderboardSubmitted: false,  // 避免結果頁重新渲染時重複上傳成績、統計
   filter: "all"     // all / wrong / blank / correct
 };
 
@@ -2072,7 +2072,7 @@ function renderInfo() {
               <span class="key-hint-desc">：選擇答案</span>
               <br>
               <span class="kbd">←</span> <span class="kbd">→</span>
-              <span class="key-hint-desc">：上一題 / 下一題</span>
+              <span class="key-hint-desc">：上一題、下一題</span>
             </div>
           </li>
         </ol>
@@ -2696,7 +2696,7 @@ async function submitToLeaderboard() {
   }
 
   if (state.leaderboardSubmitted) {
-    // 結果頁可能因切換「全部 / 錯題 / 未作答 / 答對」而重新渲染；避免同一份答案重複灌入排行榜與題目統計。
+    // 結果頁可能因切換「全部、錯題、未作答、答對」而重新渲染；避免同一份答案重複灌入排行榜與題目統計。
     await renderLeaderboard();
     await loadAndRenderQStats();
     return;
