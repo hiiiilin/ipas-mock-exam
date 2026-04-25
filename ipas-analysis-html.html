@@ -425,14 +425,18 @@ const Hero = ({ level, setLevel }) => (
         ，這份名為「資訊安全工程師」的能力鑑定，正在成為臺灣本土資安人才市場的<span className="font-serif-tc not-italic" style={{color: 'var(--crimson-deep)'}}>第一道入門線</span>。
       </p>
 
-      <div className="mt-8 flex items-end gap-6 md:gap-10 rule-top pt-6">
+      <div className="mt-8 flex items-end gap-6 md:gap-10 rule-top pt-6" role="tablist" aria-label="認證等級">
         <button
+          role="tab"
+          aria-pressed={level === '初級'}
           className={`level-tab text-2xl md:text-3xl font-medium pb-1 ${level === '初級' ? 'active' : ''}`}
           onClick={() => setLevel('初級')}
         >
           初級&nbsp;Associate
         </button>
         <button
+          role="tab"
+          aria-pressed={level === '中級'}
           className={`level-tab text-2xl md:text-3xl font-medium pb-1 ${level === '中級' ? 'active' : ''}`}
           onClick={() => setLevel('中級')}
         >
@@ -743,13 +747,12 @@ const PassRateSection = ({ data, level, stats, subjects }) => {
                 content={<CustomTooltip valueFormatter={(v) => `${fmt2(v)}%`} />}
               />
               <Legend
-                iconType="square"
                 wrapperStyle={{ paddingTop: 16 }}
                 formatter={(value) => <span style={{ marginRight: 12, color: 'var(--ink)' }}>{value}</span>}
               />
-              <Bar dataKey={subjects[0]} fill={C.navy} radius={[2, 2, 0, 0]} barSize={14} />
-              <Bar dataKey={subjects[1]} fill={C.rust} radius={[2, 2, 0, 0]} barSize={14} />
-              <Line type="monotone" dataKey="獲證率" stroke={C.crimson} strokeWidth={2.5} dot={{ r: 4, fill: C.crimson, stroke: C.paper, strokeWidth: 1.5 }} activeDot={{ r: 6 }} />
+              <Bar dataKey={subjects[0]} fill={C.navy} radius={[2, 2, 0, 0]} barSize={14} legendType="square" />
+              <Bar dataKey={subjects[1]} fill={C.rust} radius={[2, 2, 0, 0]} barSize={14} legendType="square" />
+              <Line type="monotone" dataKey="獲證率" stroke={C.crimson} strokeWidth={2.5} dot={{ r: 4, fill: C.crimson, stroke: C.paper, strokeWidth: 1.5 }} activeDot={{ r: 6 }} legendType="plainline" />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
