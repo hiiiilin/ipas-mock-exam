@@ -405,8 +405,8 @@ const Masthead = ({ level, setLevel }) => (
   </header>
 );
 
-const Hero = ({ level, setLevel, stats, latest }) => (
-  <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 pt-12 md:pt-20 pb-12 fade-up">
+const Hero = ({ level, setLevel }) => (
+  <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 pt-12 md:pt-20 pb-8 fade-up">
     <div className="section-num mb-6">FEATURE — DATA REPORT</div>
 
     <h1 className="font-serif-tc font-light text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8" style={{color: 'var(--ink)'}}>
@@ -415,50 +415,131 @@ const Hero = ({ level, setLevel, stats, latest }) => (
       <span className="font-serif-tc">數據解讀</span>
     </h1>
 
-    <div className="grid md:grid-cols-12 gap-8 md:gap-12 mt-10">
-      <div className="md:col-span-7">
-        <p className="font-display italic text-xl md:text-2xl leading-relaxed font-light" style={{color: 'var(--ink-soft)'}}>
-          From&nbsp;
-          <span className="font-serif-tc not-italic">108 年首度開辦</span>
-          &nbsp;to&nbsp;
-          <span className="font-serif-tc not-italic">115 年第一次中級</span>
-          ，這份名為「資訊安全工程師」的能力鑑定，正在成為臺灣本土資安人才市場的<span className="font-serif-tc not-italic" style={{color: 'var(--crimson-deep)'}}>第一道入門線</span>。
-        </p>
+    <div className="max-w-3xl">
+      <p className="font-display italic text-xl md:text-2xl leading-relaxed font-light" style={{color: 'var(--ink-soft)'}}>
+        自開辦至&nbsp;
+        <span className="font-serif-tc not-italic">115 年第一次中級</span>
+        ，這份名為「資訊安全工程師」的能力鑑定，正在成為臺灣本土資安人才市場的<span className="font-serif-tc not-italic" style={{color: 'var(--crimson-deep)'}}>第一道入門線</span>。
+      </p>
 
-        <div className="mt-8 flex items-end gap-6 md:gap-10 rule-top pt-6">
-          <button
-            className={`level-tab text-2xl md:text-3xl font-medium pb-1 ${level === '初級' ? 'active' : ''}`}
-            onClick={() => setLevel('初級')}
-          >
-            初級&nbsp;Associate
-          </button>
-          <button
-            className={`level-tab text-2xl md:text-3xl font-medium pb-1 ${level === '中級' ? 'active' : ''}`}
-            onClick={() => setLevel('中級')}
-          >
-            中級&nbsp;Specialist
-          </button>
-        </div>
+      <div className="mt-8 flex items-end gap-6 md:gap-10 rule-top pt-6">
+        <button
+          className={`level-tab text-2xl md:text-3xl font-medium pb-1 ${level === '初級' ? 'active' : ''}`}
+          onClick={() => setLevel('初級')}
+        >
+          初級&nbsp;Associate
+        </button>
+        <button
+          className={`level-tab text-2xl md:text-3xl font-medium pb-1 ${level === '中級' ? 'active' : ''}`}
+          onClick={() => setLevel('中級')}
+        >
+          中級&nbsp;Specialist
+        </button>
       </div>
-
-      <aside className="md:col-span-5 md:border-l md:pl-8" style={{borderColor: 'var(--rule)'}}>
-        <div className="section-num mb-3">最近一次成績</div>
-        <div className="font-mono text-xs mb-2" style={{color: 'var(--ink-mute)'}}>
-          {latest.year}&nbsp;年&nbsp;第&nbsp;{latest.session}&nbsp;次　/　報考&nbsp;{fmtInt(latest.registrants)}&nbsp;人
-        </div>
-        <div className="flex items-baseline gap-2 mt-4">
-          <span className="font-display font-light text-7xl md:text-8xl leading-none num-tnum" style={{color: 'var(--ink)'}}>
-            {fmt1(latest.certRate)}
-          </span>
-          <span className="font-display text-3xl" style={{color: 'var(--crimson-deep)'}}>%</span>
-        </div>
-        <div className="font-serif-tc text-sm mt-2 tracking-wide" style={{color: 'var(--ink-soft)'}}>
-          整體獲證率
-        </div>
-      </aside>
     </div>
   </section>
 );
+
+const LatestSnapshot = ({ latest, stats, subjects }) => {
+  const subj1Diff = latest.subjects[0].passRate - stats.subj1;
+  const subj2Diff = latest.subjects[1].passRate - stats.subj2;
+  const certDiff = latest.certRate - stats.cert;
+  const POS = '#1f6b3e';
+  const NEG = 'var(--crimson)';
+
+  const Delta = ({ v, suffix = 'pp' }) => (
+    <span className="font-mono text-[11px] tracking-wide" style={{color: v >= 0 ? POS : NEG}}>
+      {v >= 0 ? '▲' : '▼'} {Math.abs(v).toFixed(2)}{suffix}
+    </span>
+  );
+
+  return (
+    <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 pt-6 md:pt-8 pb-4 fade-up">
+      <div className="rule-double-top pt-8 md:pt-10">
+
+        <div className="flex items-baseline justify-between mb-8 flex-wrap gap-2">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-base font-bold tracking-widest" style={{color: 'var(--crimson-deep)'}}>
+              ▸ LATEST
+            </span>
+            <span className="section-num">最近一次成績</span>
+          </div>
+          <span className="font-display italic text-base md:text-lg" style={{color: 'var(--ink)'}}>
+            {latest.year} 年第 {latest.session} 次　·　報考 {fmtInt(latest.registrants)} 人
+          </span>
+        </div>
+
+        <div className="grid md:grid-cols-12 gap-y-8 md:gap-x-10">
+
+          {/* 主要：獲證率大字 */}
+          <div className="md:col-span-6 md:border-r md:pr-10" style={{borderColor: 'var(--rule)'}}>
+            <div className="section-num mb-4">整體獲證率</div>
+            <div className="flex items-baseline gap-3">
+              <span className="font-display font-light leading-none num-tnum"
+                    style={{color: 'var(--crimson-deep)', fontSize: 'clamp(5rem, 14vw, 9rem)'}}>
+                {fmt2(latest.certRate)}
+              </span>
+              <span className="font-display font-light" style={{color: 'var(--crimson-deep)', fontSize: 'clamp(2rem, 5vw, 3rem)'}}>
+                %
+              </span>
+            </div>
+            <div className="mt-4 flex items-baseline gap-3 flex-wrap">
+              <Delta v={certDiff} />
+              <span className="font-serif-tc text-xs" style={{color: 'var(--ink-mute)'}}>
+                vs 歷年平均&nbsp;{fmt2(stats.cert)}%
+              </span>
+            </div>
+          </div>
+
+          {/* 兩科通過率 */}
+          <div className="md:col-span-6 grid grid-cols-2 gap-x-6 md:gap-x-10">
+
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="inline-block w-3 h-3" style={{background: C.navy}}></span>
+                <span className="section-num">{subjects[0]}</span>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="font-display font-light leading-none num-tnum" style={{color: 'var(--ink)', fontSize: 'clamp(2.5rem, 6vw, 4rem)'}}>
+                  {fmt2(latest.subjects[0].passRate)}
+                </span>
+                <span className="font-display text-xl md:text-2xl" style={{color: 'var(--ink)'}}>%</span>
+              </div>
+              <div className="mt-3">
+                <Delta v={subj1Diff} />
+              </div>
+              <div className="font-serif-tc text-xs mt-1" style={{color: 'var(--ink-mute)'}}>
+                通過率 vs 歷年 {fmt1(stats.subj1)}%
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="inline-block w-3 h-3" style={{background: C.rust}}></span>
+                <span className="section-num">{subjects[1]}</span>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="font-display font-light leading-none num-tnum" style={{color: 'var(--ink)', fontSize: 'clamp(2.5rem, 6vw, 4rem)'}}>
+                  {fmt2(latest.subjects[1].passRate)}
+                </span>
+                <span className="font-display text-xl md:text-2xl" style={{color: 'var(--ink)'}}>%</span>
+              </div>
+              <div className="mt-3">
+                <Delta v={subj2Diff} />
+              </div>
+              <div className="font-serif-tc text-xs mt-1" style={{color: 'var(--ink-mute)'}}>
+                通過率 vs 歷年 {fmt1(stats.subj2)}%
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+};
 
 const ExamSpec = ({ level }) => {
   const spec = EXAM_SPECS[level];
@@ -807,7 +888,8 @@ const App = () => {
   return (
     <div className="relative">
       <Masthead level={level} setLevel={setLevel} />
-      <Hero level={level} setLevel={setLevel} stats={stats} latest={stats.latest} />
+      <Hero level={level} setLevel={setLevel} />
+      <LatestSnapshot latest={stats.latest} stats={stats} subjects={subjects} />
       <ExamSpec level={level} />
       <LeadStats stats={stats} level={level} subjects={subjects} />
       <RegistrantsSection data={data} level={level} stats={stats} />
