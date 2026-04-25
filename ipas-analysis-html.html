@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPAS 資訊安全工程師認證考試分析</title>
+<title>iPAS 資訊安全工程師．能力鑑定數據解讀</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Serif+TC:wght@300;400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script type="importmap">
 {
   "imports": {
@@ -18,390 +21,760 @@
 </script>
 <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
-  #error-box { display:none; background:#fee; color:#900; padding:1rem; margin:1rem; border:1px solid #c00; border-radius:8px; font-family:monospace; white-space:pre-wrap; }
+  :root {
+    --paper: #faf6ee;
+    --paper-deep: #f0e9d9;
+    --rule: #d9cfb8;
+    --ink: #1a1612;
+    --ink-soft: #4a4540;
+    --ink-mute: #8a8378;
+    --navy: #0f2944;
+    --navy-soft: #2a4a6a;
+    --rust: #a35c2a;
+    --crimson: #9e2a2b;
+    --crimson-deep: #6e1f1f;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Spectral', 'Noto Sans TC', serif;
+    font-feature-settings: "kern", "liga", "onum";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Subtle paper texture */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(139, 115, 85, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(139, 115, 85, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .font-display { font-family: 'Fraunces', 'Noto Serif TC', serif; font-feature-settings: "ss01","ss02"; }
+  .font-serif-tc { font-family: 'Noto Serif TC', 'Fraunces', serif; }
+  .font-sans-tc { font-family: 'Noto Sans TC', sans-serif; }
+  .font-mono { font-family: 'IBM Plex Mono', monospace; font-feature-settings: "tnum"; }
+  .font-body { font-family: 'Spectral', 'Noto Sans TC', serif; }
+
+  .num-tnum { font-variant-numeric: tabular-nums; }
+
+  /* Drop cap for editorial feel */
+  .dropcap::first-letter {
+    font-family: 'Fraunces', 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: 4.5rem;
+    line-height: 0.9;
+    float: left;
+    margin: 0.4rem 0.6rem 0 0;
+    color: var(--crimson-deep);
+  }
+
+  .rule-top {
+    border-top: 1px solid var(--rule);
+  }
+  .rule-bottom {
+    border-bottom: 1px solid var(--rule);
+  }
+  .rule-double-top {
+    border-top: 3px double var(--ink);
+  }
+
+  /* Pull quote */
+  .pullquote {
+    border-left: 3px solid var(--crimson-deep);
+    padding-left: 1.5rem;
+    font-family: 'Fraunces', 'Noto Serif TC', serif;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* Section number badge */
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+
+  /* Tab styles */
+  .level-tab {
+    font-family: 'Fraunces', 'Noto Serif TC', serif;
+    transition: all 200ms ease;
+    position: relative;
+  }
+  .level-tab.active {
+    color: var(--ink);
+  }
+  .level-tab.active::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -8px;
+    height: 2px;
+    background: var(--crimson-deep);
+  }
+  .level-tab:not(.active) {
+    color: var(--ink-mute);
+  }
+  .level-tab:not(.active):hover {
+    color: var(--ink-soft);
+  }
+
+  /* Recharts overrides */
+  .recharts-cartesian-grid-horizontal line,
+  .recharts-cartesian-grid-vertical line {
+    stroke: var(--rule) !important;
+    stroke-dasharray: 0 !important;
+  }
+  .recharts-text {
+    font-family: 'IBM Plex Mono', 'Noto Sans TC', sans-serif !important;
+    font-size: 11px !important;
+    fill: var(--ink-soft) !important;
+  }
+  .recharts-tooltip-wrapper {
+    outline: none !important;
+  }
+  .recharts-default-tooltip {
+    background: var(--paper) !important;
+    border: 1px solid var(--ink) !important;
+    border-radius: 0 !important;
+    padding: 12px 14px !important;
+    box-shadow: 4px 4px 0 var(--rule) !important;
+    font-family: 'Spectral', 'Noto Sans TC', serif !important;
+  }
+  .recharts-tooltip-label {
+    font-family: 'Fraunces', 'Noto Serif TC', serif !important;
+    font-weight: 600 !important;
+    color: var(--ink) !important;
+    margin-bottom: 6px !important;
+    font-size: 13px !important;
+  }
+  .recharts-tooltip-item {
+    font-family: 'IBM Plex Mono', monospace !important;
+    font-size: 12px !important;
+    color: var(--ink-soft) !important;
+    padding: 2px 0 !important;
+  }
+  .recharts-legend-item-text {
+    font-family: 'Spectral', 'Noto Sans TC', serif !important;
+    color: var(--ink) !important;
+    font-size: 13px !important;
+  }
+
+  /* Fade-in stagger on load */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up {
+    animation: fadeUp 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  /* Error box */
+  #error-box {
+    display: none;
+    background: #2a0a0a; color: #ffb4b4;
+    padding: 1rem; margin: 1rem;
+    border: 1px solid #c00; border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: pre-wrap;
+    font-size: 13px;
+  }
 </style>
 </head>
 <body>
 <div id="error-box"></div>
-<div id="root"><div style="padding:2rem;text-align:center;color:#888;">載入中 (首次載入約需 3-5 秒)...</div></div>
+<div id="root"><div style="padding:6rem 2rem;text-align:center;color:var(--ink-mute);font-family:'Fraunces','Noto Serif TC',serif;font-style:italic;">付印中⋯⋯</div></div>
 <script>
   window.addEventListener('error', function(e) {
     var box = document.getElementById('error-box');
     box.style.display = 'block';
-    box.textContent = '錯誤: ' + (e.message || e.error) + '\n\n' + (e.filename || '') + ':' + (e.lineno || '');
+    box.textContent = 'Error: ' + (e.message || e.error) + '\n\n' + (e.filename || '') + ':' + (e.lineno || '');
   });
   window.addEventListener('unhandledrejection', function(e) {
     var box = document.getElementById('error-box');
     box.style.display = 'block';
-    box.textContent = 'Promise 錯誤: ' + (e.reason && e.reason.message ? e.reason.message : e.reason);
+    box.textContent = 'Promise: ' + (e.reason && e.reason.message ? e.reason.message : e.reason);
   });
 </script>
 
 <script type="text/babel" data-type="module" data-presets="react">
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, Legend, ResponsiveContainer, ComposedChart
+  Tooltip, Legend, ResponsiveContainer, ComposedChart, Cell
 } from 'recharts';
 
-const IPASComparison = () => {
-  const data = {
-    '初級': [
-      { year: 114, session: 2, registrants: 1245, subjects: [
-        { name: "管理概論", passRate: 59.74 },
-        { name: "技術概論", passRate: 62.62 }
-      ], certRate: 63.22 },
-      { year: 114, session: 1, registrants: 1318, subjects: [
-        { name: "管理概論", passRate: 76.94 },
-        { name: "技術概論", passRate: 71.01 }
-      ], certRate: 67.81 },
-      { year: 113, session: 2, registrants: 1318, subjects: [
-        { name: "管理概論", passRate: 31.18 },
-        { name: "技術概論", passRate: 43.83 }
-      ], certRate: 33.50 },
-      { year: 113, session: 1, registrants: 1638, subjects: [
-        { name: "管理概論", passRate: 68.68 },
-        { name: "技術概論", passRate: 61.60 }
-      ], certRate: 61.50 },
-      { year: 112, session: 2, registrants: 1256, subjects: [
-        { name: "管理概論", passRate: 60.21 },
-        { name: "技術概論", passRate: 30.14 }
-      ], certRate: 31.56 },
-      { year: 112, session: 1, registrants: 807, subjects: [
-        { name: "管理概論", passRate: 74.89 },
-        { name: "技術概論", passRate: 51.06 }
-      ], certRate: 60.46 },
-      { year: 111, session: 2, registrants: 875, subjects: [
-        { name: "管理概論", passRate: 60.16 },
-        { name: "技術概論", passRate: 20.65 }
-      ], certRate: 33.92 },
-      { year: 111, session: 1, registrants: 661, subjects: [
-        { name: "管理概論", passRate: 45.65 },
-        { name: "技術概論", passRate: 20.49 }
-      ], certRate: 29.98 },
-      { year: 110, session: 2, registrants: 682, subjects: [
-        { name: "管理概論", passRate: 31.58 },
-        { name: "技術概論", passRate: 31.50 }
-      ], certRate: 33.01 },
-      { year: 110, session: 1, registrants: 315, subjects: [
-        { name: "管理概論", passRate: 71.89 },
-        { name: "技術概論", passRate: 38.07 }
-      ], certRate: 48.21 },
-      { year: 109, session: 2, registrants: 648, subjects: [
-        { name: "管理概論", passRate: 57.86 },
-        { name: "技術概論", passRate: 17.92 }
-      ], certRate: 30.71 },
-      { year: 109, session: 1, registrants: 329, subjects: [
-        { name: "管理概論", passRate: 69.15 },
-        { name: "技術概論", passRate: 46.67 }
-      ], certRate: 55.48 }
+// =============== DATA ===============
+// ────────────────────────────────────────────────────────────────────
+//  MAINTENANCE NOTE — 新場次成績公告後的更新流程
+// ────────────────────────────────────────────────────────────────────
+//  資料來源：iPAS 官網「各考科通過人數統計」PDF
+//
+//  STEP 1 — 在對應 level 陣列「最上方」插入一筆新物件：
+//    { year: <民國年>, session: <第幾次>, registrants: <每科報考人數>,
+//      subjects: [
+//        { name: "<科目1>", passRate: <通過率%> },
+//        { name: "<科目2>", passRate: <通過率%> }
+//      ],
+//      certRate: <整體獲證率%> }
+//
+//  STEP 2 — 更新 TOTAL_CERTS：加上該場次「本次證書共核發（當次+跨次）」
+//
+//  STEP 3 — 更新底部 Colophon 的「Methodology / 取樣說明」文字範圍
+// ────────────────────────────────────────────────────────────────────
+const DATA = {
+  '初級': [
+    { year: 114, session: 2, registrants: 1245, subjects: [{ name: "管理概論", passRate: 59.74 }, { name: "技術概論", passRate: 62.62 }], certRate: 63.22 },
+    { year: 114, session: 1, registrants: 1318, subjects: [{ name: "管理概論", passRate: 76.94 }, { name: "技術概論", passRate: 71.01 }], certRate: 67.81 },
+    { year: 113, session: 2, registrants: 1318, subjects: [{ name: "管理概論", passRate: 31.18 }, { name: "技術概論", passRate: 43.83 }], certRate: 33.50 },
+    { year: 113, session: 1, registrants: 1638, subjects: [{ name: "管理概論", passRate: 68.68 }, { name: "技術概論", passRate: 61.60 }], certRate: 61.50 },
+    { year: 112, session: 2, registrants: 1256, subjects: [{ name: "管理概論", passRate: 60.21 }, { name: "技術概論", passRate: 30.14 }], certRate: 31.56 },
+    { year: 112, session: 1, registrants: 807, subjects: [{ name: "管理概論", passRate: 74.89 }, { name: "技術概論", passRate: 51.06 }], certRate: 60.46 },
+    { year: 111, session: 2, registrants: 875, subjects: [{ name: "管理概論", passRate: 60.16 }, { name: "技術概論", passRate: 20.65 }], certRate: 33.92 },
+    { year: 111, session: 1, registrants: 661, subjects: [{ name: "管理概論", passRate: 45.65 }, { name: "技術概論", passRate: 20.49 }], certRate: 29.98 },
+    { year: 110, session: 2, registrants: 682, subjects: [{ name: "管理概論", passRate: 31.58 }, { name: "技術概論", passRate: 31.50 }], certRate: 33.01 },
+    { year: 110, session: 1, registrants: 315, subjects: [{ name: "管理概論", passRate: 71.89 }, { name: "技術概論", passRate: 38.07 }], certRate: 48.21 },
+    { year: 109, session: 2, registrants: 648, subjects: [{ name: "管理概論", passRate: 57.86 }, { name: "技術概論", passRate: 17.92 }], certRate: 30.71 },
+    { year: 109, session: 1, registrants: 329, subjects: [{ name: "管理概論", passRate: 69.15 }, { name: "技術概論", passRate: 46.67 }], certRate: 55.48 },
+    { year: 108, session: 2, registrants: 493, subjects: [{ name: "管理概論", passRate: 42.69 }, { name: "技術概論", passRate: 31.27 }], certRate: 32.51 },
+    { year: 108, session: 1, registrants: 326, subjects: [{ name: "管理概論", passRate: 30.39 }, { name: "技術概論", passRate: 40.69 }], certRate: 33.45 },
+    { year: 107, session: 1, registrants: 317, subjects: [{ name: "管理概論", passRate: 72.32 }, { name: "技術概論", passRate: 21.35 }], certRate: 42.11 }
+  ],
+  '中級': [
+    { year: 115, session: 1, registrants: 904, subjects: [{ name: "規劃實務", passRate: 61.52 }, { name: "防護實務", passRate: 69.77 }], certRate: 63.56 },
+    { year: 114, session: 2, registrants: 923, subjects: [{ name: "規劃實務", passRate: 80.50 }, { name: "防護實務", passRate: 36.56 }], certRate: 44.72 },
+    { year: 114, session: 1, registrants: 641, subjects: [{ name: "規劃實務", passRate: 61.79 }, { name: "防護實務", passRate: 28.14 }], certRate: 27.20 },
+    { year: 113, session: 2, registrants: 853, subjects: [{ name: "規劃實務", passRate: 51.53 }, { name: "防護實務", passRate: 26.32 }], certRate: 22.61 },
+    { year: 113, session: 1, registrants: 721, subjects: [{ name: "規劃實務", passRate: 73.55 }, { name: "防護實務", passRate: 39.38 }], certRate: 37.71 },
+    { year: 112, session: 2, registrants: 742, subjects: [{ name: "規劃實務", passRate: 58.63 }, { name: "防護實務", passRate: 36.32 }], certRate: 30.60 },
+    { year: 112, session: 1, registrants: 476, subjects: [{ name: "規劃實務", passRate: 21.33 }, { name: "防護實務", passRate: 17.41 }], certRate: 13.87 },
+    { year: 111, session: 1, registrants: 478, subjects: [{ name: "規劃實務", passRate: 37.17 }, { name: "防護實務", passRate: 29.09 }], certRate: 21.61 },
+    { year: 110, session: 1, registrants: 292, subjects: [{ name: "規劃實務", passRate: 47.15 }, { name: "防護實務", passRate: 37.79 }], certRate: 32.20 },
+    { year: 109, session: 1, registrants: 167, subjects: [{ name: "規劃實務", passRate: 65.69 }, { name: "防護實務", passRate: 41.50 }], certRate: 37.09 },
+    { year: 108, session: 1, registrants: 79, subjects: [{ name: "規劃實務", passRate: 56.52 }, { name: "防護實務", passRate: 33.82 }], certRate: 25.37 }
+  ]
+};
+
+const TOTAL_CERTS = { '初級': 5458, '中級': 1878 };
+
+const EXAM_SPECS = {
+  '初級': {
+    items: [
+      { label: '題型',   value: '單選',  unit: '',      en: 'Single' },
+      { label: '題數',   value: '50',    unit: '題/科', en: 'Items' },
+      { label: '時間',   value: '75',    unit: '分鐘',  en: 'Min.' },
+      { label: '配分',   value: '2',     unit: '分/題', en: 'Pts' },
+      { label: '合格',   value: '70',    unit: '分/科', en: 'Pass' },
+      { label: '授證',   value: '兩科',  unit: '皆通過',en: 'Both' },
     ],
-    '中級': [
-      { year: 115, session: 1, registrants: 904, subjects: [
-        { name: "規劃實務", passRate: 61.52 },
-        { name: "防護實務", passRate: 69.77 }
-      ], certRate: 63.56 },
-      { year: 114, session: 2, registrants: 923, subjects: [
-        { name: "規劃實務", passRate: 80.50 },
-        { name: "防護實務", passRate: 36.56 }
-      ], certRate: 44.72 },
-      { year: 114, session: 1, registrants: 641, subjects: [
-        { name: "規劃實務", passRate: 61.79 },
-        { name: "防護實務", passRate: 28.14 }
-      ], certRate: 27.20 },
-      { year: 113, session: 2, registrants: 853, subjects: [
-        { name: "規劃實務", passRate: 51.53 },
-        { name: "防護實務", passRate: 26.32 }
-      ], certRate: 22.61 },
-      { year: 113, session: 1, registrants: 721, subjects: [
-        { name: "規劃實務", passRate: 73.55 },
-        { name: "防護實務", passRate: 39.38 }
-      ], certRate: 37.71 },
-      { year: 112, session: 2, registrants: 742, subjects: [
-        { name: "規劃實務", passRate: 58.63 },
-        { name: "防護實務", passRate: 36.32 }
-      ], certRate: 30.60 },
-      { year: 112, session: 1, registrants: 476, subjects: [
-        { name: "規劃實務", passRate: 21.33 },
-        { name: "防護實務", passRate: 17.41 }
-      ], certRate: 13.87 },
-      { year: 111, session: 1, registrants: 478, subjects: [
-        { name: "規劃實務", passRate: 37.17 },
-        { name: "防護實務", passRate: 29.09 }
-      ], certRate: 21.61 },
-      { year: 110, session: 1, registrants: 292, subjects: [
-        { name: "規劃實務", passRate: 47.15 },
-        { name: "防護實務", passRate: 37.79 }
-      ], certRate: 32.20 },
-      { year: 109, session: 1, registrants: 167, subjects: [
-        { name: "規劃實務", passRate: 65.69 },
-        { name: "防護實務", passRate: 41.50 }
-      ], certRate: 37.09 },
-      { year: 108, session: 1, registrants: 79, subjects: [
-        { name: "規劃實務", passRate: 56.52 },
-        { name: "防護實務", passRate: 33.82 }
-      ], certRate: 25.37 }
-    ]
-  };
+    note: '採無倒扣設計。各科獨立計分、兩科皆達合格門檻方授證。'
+  },
+  '中級': {
+    items: [
+      { label: '題型',   value: '單選＋複選', unit: '',      en: 'Mixed' },
+      { label: '題數',   value: '40',         unit: '題/科', en: 'Items' },
+      { label: '時間',   value: '90',         unit: '分鐘',  en: 'Min.' },
+      { label: '配分',   value: '2.5',        unit: '分/題', en: 'Pts' },
+      { label: '合格',   value: '70',         unit: '分/科', en: 'Pass' },
+      { label: '授證',   value: '兩科',       unit: '皆通過',en: 'Both' },
+    ],
+    note: '複選題須完全答對方得分、部分對亦不計分。各科獨立計分、兩科皆達合格門檻方授證。'
+  }
+};
 
-  const [activeLevel, setActiveLevel] = useState('初級');
+// Color palette
+const C = {
+  navy: '#0f2944',
+  rust: '#a35c2a',
+  crimson: '#9e2a2b',
+  ink: '#1a1612',
+  paper: '#faf6ee',
+  rule: '#d9cfb8',
+  mute: '#8a8378',
+};
 
-  const getSortedData = (levelData) => {
-    return [...levelData].sort((a, b) => a.year - b.year || a.session - b.session);
-  };
+// =============== HELPERS ===============
+const fmt1 = (n) => n.toFixed(1);
+const fmt2 = (n) => n.toFixed(2);
+const fmtInt = (n) => Math.round(n).toLocaleString();
 
-  const sortedData = getSortedData(data[activeLevel]);
+const sortAsc = (arr) => [...arr].sort((a, b) => a.year - b.year || a.session - b.session);
 
-  const registrantsTrend = sortedData.map(item => ({
-    label: `${item.year}年第${item.session}次`,
-    報考人數: item.registrants
-  }));
-
-  const passRateTrend = sortedData.map(item => {
-    const subject1 = item.subjects[0];
-    const subject2 = item.subjects[1];
-    return {
-      label: `${item.year}年第${item.session}次`,
-      [subject1.name]: subject1.passRate,
-      [subject2.name]: subject2.passRate,
-      獲證率: item.certRate
-    };
+const getStats = (rows) => {
+  const subj1 = rows.reduce((s, r) => s + r.subjects[0].passRate, 0) / rows.length;
+  const subj2 = rows.reduce((s, r) => s + r.subjects[1].passRate, 0) / rows.length;
+  const cert = rows.reduce((s, r) => s + r.certRate, 0) / rows.length;
+  const totalReg = rows.reduce((s, r) => s + r.registrants, 0);
+  const avgReg = totalReg / rows.length;
+  const latest = rows.reduce((a, b) =>
+    (b.year > a.year || (b.year === a.year && b.session > a.session)) ? b : a, rows[0]);
+  let minCert = rows[0], maxCert = rows[0];
+  rows.forEach(r => {
+    if (r.certRate < minCert.certRate) minCert = r;
+    if (r.certRate > maxCert.certRate) maxCert = r;
   });
+  return { subj1, subj2, cert, totalReg, avgReg, latest, minCert, maxCert };
+};
 
-  const getSubjectNames = () => {
-    if (activeLevel === '初級') {
-      return ["管理概論", "技術概論"];
-    } else {
-      return ["規劃實務", "防護實務"];
-    }
-  };
+// =============== COMPONENTS ===============
 
-  const subjectNames = getSubjectNames();
+const Masthead = ({ level, setLevel }) => (
+  <header className="relative z-10">
+    <div className="max-w-6xl mx-auto px-6 md:px-10 pt-8 pb-4 flex items-center justify-between rule-bottom">
+      <div className="flex items-center gap-3">
+        <div className="font-display text-xl md:text-2xl font-semibold tracking-tight" style={{color: 'var(--ink)'}}>
+          iPAS <span style={{color: 'var(--crimson-deep)'}}>·</span> Cyber Security Quarterly
+        </div>
+      </div>
+      <div className="font-mono text-[10px] md:text-xs tracking-widest uppercase" style={{color: 'var(--ink-mute)'}}>
+        Vol.&nbsp;115 / Issue 01 &nbsp;·&nbsp; 經濟部能力鑑定
+      </div>
+    </div>
+  </header>
+);
 
-  const calculateAverages = () => {
-    const avgSubject1PassRate = data[activeLevel].reduce((sum, item) => sum + item.subjects[0].passRate, 0) / data[activeLevel].length;
-    const avgSubject2PassRate = data[activeLevel].reduce((sum, item) => sum + item.subjects[1].passRate, 0) / data[activeLevel].length;
-    const avgCertRate = data[activeLevel].reduce((sum, item) => sum + item.certRate, 0) / data[activeLevel].length;
-    return [
-      {
-        name: "平均通過率與獲證率",
-        [subjectNames[0]]: avgSubject1PassRate,
-        [subjectNames[1]]: avgSubject2PassRate,
-        獲證率: avgCertRate
-      }
-    ];
-  };
+const Hero = ({ level, setLevel, stats, latest }) => (
+  <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 pt-12 md:pt-20 pb-12 fade-up">
+    <div className="section-num mb-6">FEATURE — DATA REPORT</div>
 
-  const averageData = calculateAverages();
+    <h1 className="font-serif-tc font-light text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8" style={{color: 'var(--ink)'}}>
+      資訊安全工程師<br/>
+      <span className="font-display italic font-light" style={{color: 'var(--crimson-deep)'}}>能力鑑定</span>．
+      <span className="font-serif-tc">數據解讀</span>
+    </h1>
+
+    <div className="grid md:grid-cols-12 gap-8 md:gap-12 mt-10">
+      <div className="md:col-span-7">
+        <p className="font-display italic text-xl md:text-2xl leading-relaxed font-light" style={{color: 'var(--ink-soft)'}}>
+          From&nbsp;
+          <span className="font-serif-tc not-italic">108 年首度開辦</span>
+          &nbsp;to&nbsp;
+          <span className="font-serif-tc not-italic">115 年第一次中級</span>
+          ，這份名為「資訊安全工程師」的能力鑑定，正在成為臺灣本土資安人才市場的<span className="font-serif-tc not-italic" style={{color: 'var(--crimson-deep)'}}>第一道入門線</span>。
+        </p>
+
+        <div className="mt-8 flex items-end gap-6 md:gap-10 rule-top pt-6">
+          <button
+            className={`level-tab text-2xl md:text-3xl font-medium pb-1 ${level === '初級' ? 'active' : ''}`}
+            onClick={() => setLevel('初級')}
+          >
+            初級&nbsp;Associate
+          </button>
+          <button
+            className={`level-tab text-2xl md:text-3xl font-medium pb-1 ${level === '中級' ? 'active' : ''}`}
+            onClick={() => setLevel('中級')}
+          >
+            中級&nbsp;Specialist
+          </button>
+        </div>
+      </div>
+
+      <aside className="md:col-span-5 md:border-l md:pl-8" style={{borderColor: 'var(--rule)'}}>
+        <div className="section-num mb-3">最近一次成績</div>
+        <div className="font-mono text-xs mb-2" style={{color: 'var(--ink-mute)'}}>
+          {latest.year}&nbsp;年&nbsp;第&nbsp;{latest.session}&nbsp;次　/　報考&nbsp;{fmtInt(latest.registrants)}&nbsp;人
+        </div>
+        <div className="flex items-baseline gap-2 mt-4">
+          <span className="font-display font-light text-7xl md:text-8xl leading-none num-tnum" style={{color: 'var(--ink)'}}>
+            {fmt1(latest.certRate)}
+          </span>
+          <span className="font-display text-3xl" style={{color: 'var(--crimson-deep)'}}>%</span>
+        </div>
+        <div className="font-serif-tc text-sm mt-2 tracking-wide" style={{color: 'var(--ink-soft)'}}>
+          整體獲證率
+        </div>
+      </aside>
+    </div>
+  </section>
+);
+
+const ExamSpec = ({ level }) => {
+  const spec = EXAM_SPECS[level];
+  return (
+    <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 pt-8 md:pt-10 pb-2 fade-up">
+      <div className="rule-top pt-8">
+        <div className="flex items-baseline justify-between mb-6 flex-wrap gap-2">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-base font-medium" style={{color: 'var(--crimson-deep)'}}>00</span>
+            <span className="section-num">SPEC SHEET — 考試規格</span>
+          </div>
+          <span className="font-display italic text-sm" style={{color: 'var(--ink-mute)'}}>
+            At a glance — {level === '初級' ? 'Associate level' : 'Specialist level'}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-3 md:grid-cols-6 border-l border-t" style={{borderColor: 'var(--rule)'}}>
+          {spec.items.map((it, i) => (
+            <div key={i}
+                 className="px-4 md:px-5 py-5 md:py-6 border-r border-b"
+                 style={{borderColor: 'var(--rule)'}}>
+              <div className="flex items-baseline justify-between mb-3">
+                <span className="font-serif-tc text-xs font-medium" style={{color: 'var(--ink-soft)'}}>
+                  {it.label}
+                </span>
+                <span className="font-mono text-[9px] tracking-widest uppercase" style={{color: 'var(--ink-mute)'}}>
+                  {it.en}
+                </span>
+              </div>
+              <div className="font-display font-light leading-none num-tnum" style={{color: 'var(--ink)', fontSize: it.value.length > 3 ? '1.6rem' : '2.25rem'}}>
+                {it.value}
+              </div>
+              {it.unit && (
+                <div className="font-serif-tc text-xs mt-2" style={{color: 'var(--ink-mute)'}}>
+                  {it.unit}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 flex items-start gap-3">
+          <span className="font-mono text-[10px] tracking-widest uppercase mt-1 shrink-0" style={{color: 'var(--crimson-deep)'}}>
+            Note
+          </span>
+          <p className="font-body text-sm md:text-base leading-relaxed" style={{color: 'var(--ink-soft)'}}>
+            {spec.note}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const LeadStats = ({ stats, level, subjects }) => {
+  const cells = [
+    { label: '累計核發證書', value: TOTAL_CERTS[level].toLocaleString(), unit: '張', emphasis: true },
+    { label: '平均報考人數', value: fmtInt(stats.avgReg), unit: '人 / 場' },
+    { label: '平均獲證率', value: fmt1(stats.cert), unit: '%' },
+    { label: `${subjects[0]}平均通過`, value: fmt1(stats.subj1), unit: '%' },
+    { label: `${subjects[1]}平均通過`, value: fmt1(stats.subj2), unit: '%' },
+  ];
 
   return (
-    <div className="flex flex-col gap-4 p-4 bg-gray-50 min-h-screen">
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-4">iPAS {activeLevel}認證考試分析</h1>
-
-        <div className="flex justify-center mb-6">
-          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
-            <button
-              className={`px-4 py-2 ${activeLevel === '初級' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'}`}
-              onClick={() => setActiveLevel('初級')}
-            >
-              初級認證
-            </button>
-            <button
-              className={`px-4 py-2 ${activeLevel === '中級' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'}`}
-              onClick={() => setActiveLevel('中級')}
-            >
-              中級認證
-            </button>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <div className="bg-blue-50 p-4 rounded-lg shadow max-w-5xl mx-auto">
-            <h3 className="text-lg font-medium text-blue-800 mb-4 text-center">認證概況</h3>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
-              <div className="text-center">
-                <p className="text-sm text-gray-600">總發出證照</p>
-                <p className="text-xl font-bold mt-2 text-red-600">{activeLevel === "初級" ? "5,127" : "1,878"} 張</p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">平均報考人數</p>
-                <p className="text-xl font-bold mt-2">{Math.round(data[activeLevel].reduce((sum, item) => sum + item.registrants, 0) / data[activeLevel].length)}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">{subjectNames[0]}平均</p>
-                <p className="text-xl font-bold mt-2 text-purple-600">{averageData[0][subjectNames[0]].toFixed(2)}%</p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">{subjectNames[1]}平均</p>
-                <p className="text-xl font-bold mt-2 text-green-600">{averageData[0][subjectNames[1]].toFixed(2)}%</p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">平均獲證率</p>
-                <p className="text-xl font-bold mt-2 text-orange-500">{averageData[0].獲證率.toFixed(2)}%</p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">最近一次獲證率</p>
-                <p className="text-xl font-bold mt-2">{data[activeLevel].reduce((latest, item) =>
-                  (item.year > latest.year || (item.year === latest.year && item.session > latest.session)) ? item : latest,
-                  data[activeLevel][0]).certRate.toFixed(2)}%</p>
-              </div>
+    <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-16">
+      <div className="rule-double-top pt-10 grid grid-cols-2 md:grid-cols-5 gap-y-10 gap-x-6">
+        {cells.map((c, i) => (
+          <div key={i} className={i === 0 ? 'col-span-2 md:col-span-1' : ''}>
+            <div className="section-num mb-3 text-[10px]">{String(i + 1).padStart(2, '0')}</div>
+            <div className="font-display font-light leading-none num-tnum"
+                 style={{
+                   color: c.emphasis ? 'var(--crimson-deep)' : 'var(--ink)',
+                   fontSize: c.emphasis ? '3.5rem' : '3rem'
+                 }}>
+              {c.value}
+            </div>
+            <div className="font-mono text-[11px] tracking-wider mt-2" style={{color: 'var(--ink-mute)'}}>
+              {c.unit}
+            </div>
+            <div className="font-serif-tc text-sm mt-2" style={{color: 'var(--ink-soft)'}}>
+              {c.label}
             </div>
           </div>
-        </div>
+        ))}
+      </div>
+    </section>
+  );
+};
 
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">1. 報名人數趨勢分析</h2>
-          <div className="h-64">
+const SectionHeader = ({ num, kicker, title, lead }) => (
+  <div className="mb-8 md:mb-12">
+    <div className="flex items-center gap-3 mb-4">
+      <span className="font-mono text-base font-medium" style={{color: 'var(--crimson-deep)'}}>{num}</span>
+      <span className="section-num" style={{color: 'var(--ink-soft)'}}>—— {kicker}</span>
+    </div>
+    <h2 className="font-serif-tc text-3xl md:text-5xl font-medium leading-tight mb-5" style={{color: 'var(--ink)'}}>
+      {title}
+    </h2>
+    {lead && (
+      <p className="font-body text-lg md:text-xl leading-relaxed max-w-3xl" style={{color: 'var(--ink-soft)'}}>
+        {lead}
+      </p>
+    )}
+  </div>
+);
+
+const RegistrantsSection = ({ data, level, stats }) => {
+  const sorted = sortAsc(data);
+  const chartData = sorted.map(r => ({
+    label: `${r.year}-${r.session}`,
+    full: `${r.year}年第${r.session}次`,
+    報考人數: r.registrants,
+  }));
+
+  const peak = chartData.reduce((a, b) => b.報考人數 > a.報考人數 ? b : a);
+  const trough = chartData.reduce((a, b) => b.報考人數 < a.報考人數 ? b : a);
+
+  return (
+    <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-20 fade-up">
+      <SectionHeader
+        num="01"
+        kicker="REGISTRANTS / 報考人數"
+        title="從個位數到千人規模"
+        lead={`${level}認證自開辦以來，報考人數呈長期上升趨勢。最低點${trough.full}僅 ${fmtInt(trough.報考人數)} 人，最高峰${peak.full}達 ${fmtInt(peak.報考人數)} 人，顯示資安人才需求被市場用「報名動作」明確投了一票。`}
+      />
+
+      <div className="md:grid md:grid-cols-12 md:gap-10 items-start">
+        <div className="md:col-span-8">
+          <div className="h-72 md:h-96 -mx-2">
             <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={registrantsTrend.map((item, index, array) => {
-                const avgRegistrants = Math.round(data[activeLevel].reduce((sum, d) => sum + d.registrants, 0) / data[activeLevel].length);
-                const diffFromAvg = item.報考人數 ? Math.round((item.報考人數 - avgRegistrants) / avgRegistrants * 100) : 0;
-                let diffFromPrev = 0;
-                if (index > 0 && array[index-1].報考人數 && item.報考人數) {
-                  diffFromPrev = Math.round((item.報考人數 - array[index-1].報考人數) / array[index-1].報考人數 * 100);
-                }
-                return { ...item, diffFromAvg, diffFromPrev, avgRegistrants };
-              })}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="label" />
-                <YAxis />
+              <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <CartesianGrid stroke={C.rule} vertical={false} />
+                <XAxis dataKey="label" tickLine={false} axisLine={{ stroke: C.ink }} interval={0} angle={-30} textAnchor="end" height={50} />
+                <YAxis tickLine={false} axisLine={false} />
                 <Tooltip
-                  formatter={(value, name, props) => {
-                    if (name === "報考人數") {
-                      return [
-                        `${value} 人 (${props.payload.diffFromAvg > 0 ? '+' : ''}${props.payload.diffFromAvg}% 於平均)`,
-                        "報考人數"
-                      ];
-                    }
-                    return [value, name];
-                  }}
+                  cursor={{ fill: 'rgba(158, 42, 43, 0.06)' }}
+                  formatter={(v) => [`${fmtInt(v)} 人`, '報考人數']}
+                  labelFormatter={(_, payload) => payload[0]?.payload?.full || ''}
                 />
-                <Legend />
-                <Bar dataKey="報考人數" fill="#8884d8" />
-                <Line type="monotone" dataKey="報考人數" stroke="#ff7300" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Bar dataKey="報考人數" fill={C.navy} radius={[2, 2, 0, 0]} barSize={28} />
+                <Line type="monotone" dataKey="報考人數" stroke={C.crimson} strokeWidth={1.5} dot={{ r: 3, fill: C.crimson, stroke: 'none' }} activeDot={{ r: 5 }} />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-sm text-gray-600 mt-2">
-            註: 此圖展示了各年度各場次的報考人數變化趨勢，滑鼠懸停可查看與平均值的比較。
-          </p>
+          <div className="font-mono text-[11px] uppercase tracking-widest mt-3" style={{color: 'var(--ink-mute)'}}>
+            Fig.&nbsp;1 — Registrants per session, sorted chronologically
+          </div>
         </div>
 
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">2. 通過率與獲證率比較</h2>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={passRateTrend.map((item, index, array) => {
-                const avgSubject1Rate = averageData[0][subjectNames[0]];
-                const avgSubject2Rate = averageData[0][subjectNames[1]];
-                const avgCertRate = averageData[0].獲證率;
-                const subject1Diff = Math.round((item[subjectNames[0]] - avgSubject1Rate) * 100) / 100;
-                const subject2Diff = Math.round((item[subjectNames[1]] - avgSubject2Rate) * 100) / 100;
-                const certRateDiff = Math.round((item.獲證率 - avgCertRate) * 100) / 100;
-                let prevCertRateDiff = 0;
-                if (index > 0 && array[index-1].獲證率) {
-                  prevCertRateDiff = Math.round((item.獲證率 - array[index-1].獲證率) * 100) / 100;
-                }
-                return { ...item, subject1Diff, subject2Diff, certRateDiff, prevCertRateDiff, avgSubject1Rate, avgSubject2Rate, avgCertRate };
-              })}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="label" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip
-                  formatter={(value, name, props) => {
-                    if (name === subjectNames[0]) {
-                      return [
-                        `${value.toFixed(2)}% (${props.payload.subject1Diff > 0 ? '+' : ''}${props.payload.subject1Diff.toFixed(2)}% 於平均)`,
-                        subjectNames[0]
-                      ];
-                    } else if (name === subjectNames[1]) {
-                      return [
-                        `${value.toFixed(2)}% (${props.payload.subject2Diff > 0 ? '+' : ''}${props.payload.subject2Diff.toFixed(2)}% 於平均)`,
-                        subjectNames[1]
-                      ];
-                    } else if (name === "獲證率") {
-                      return [
-                        `${value.toFixed(2)}% (${props.payload.certRateDiff > 0 ? '+' : ''}${props.payload.certRateDiff.toFixed(2)}% 於平均)`,
-                        "獲證率"
-                      ];
-                    }
-                    return [value, name];
-                  }}
-                />
-                <Legend />
-                <Bar dataKey={subjectNames[0]} fill="#8884d8" />
-                <Bar dataKey={subjectNames[1]} fill="#82ca9d" />
-                <Line type="monotone" dataKey="獲證率" stroke="#ff7300" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-              </ComposedChart>
-            </ResponsiveContainer>
+        <aside className="md:col-span-4 mt-10 md:mt-0">
+          <div className="pullquote text-xl md:text-2xl leading-relaxed">
+            <span className="font-serif-tc">「資安缺工」</span>不再只是<br/>
+            產業報告的標題，<br/>
+            而是&nbsp;
+            <span className="font-display not-italic font-medium" style={{color: 'var(--crimson-deep)'}}>{fmtInt(stats.totalReg)}</span>
+            &nbsp;個<br/>
+            真實的報名動作。
           </div>
-          <p className="text-sm text-gray-600 mt-2">
-            註: 此圖比較了各場次的兩科通過率與整體獲證率。
-          </p>
+          <div className="mt-8 grid grid-cols-2 gap-4 rule-top pt-6">
+            <div>
+              <div className="section-num text-[10px] mb-1">最高峰</div>
+              <div className="font-display text-2xl font-medium num-tnum" style={{color: 'var(--ink)'}}>{fmtInt(peak.報考人數)}</div>
+              <div className="font-serif-tc text-xs mt-1" style={{color: 'var(--ink-soft)'}}>{peak.full}</div>
+            </div>
+            <div>
+              <div className="section-num text-[10px] mb-1">最低谷</div>
+              <div className="font-display text-2xl font-medium num-tnum" style={{color: 'var(--ink-mute)'}}>{fmtInt(trough.報考人數)}</div>
+              <div className="font-serif-tc text-xs mt-1" style={{color: 'var(--ink-soft)'}}>{trough.full}</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  );
+};
+
+const PassRateSection = ({ data, level, stats, subjects }) => {
+  const sorted = sortAsc(data);
+  const chartData = sorted.map(r => ({
+    label: `${r.year}-${r.session}`,
+    full: `${r.year}年第${r.session}次`,
+    [subjects[0]]: r.subjects[0].passRate,
+    [subjects[1]]: r.subjects[1].passRate,
+    獲證率: r.certRate,
+  }));
+
+  const gap = stats.subj1 - stats.subj2;
+  const harderSubject = stats.subj1 < stats.subj2 ? subjects[0] : subjects[1];
+
+  return (
+    <section className="relative z-10 py-12 md:py-20 fade-up" style={{background: 'var(--paper-deep)'}}>
+      <div className="max-w-6xl mx-auto px-6 md:px-10">
+        <SectionHeader
+          num="02"
+          kicker="PASS RATE / 通過率與獲證率"
+          title={gap >= 0 ? `${subjects[0]}領先 ${subjects[1]}` : `${subjects[1]}領先 ${subjects[0]}`}
+          lead={`兩科的平均通過率差距 ${fmt1(Math.abs(gap))} 個百分點，獲證率（兩科皆過）始終低於任一科的通過率，這條曲線是「兩科同時過」的真實難度。`}
+        />
+
+        <div className="h-80 md:h-[28rem] -mx-2">
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+              <CartesianGrid stroke={C.rule} vertical={false} />
+              <XAxis dataKey="label" tickLine={false} axisLine={{ stroke: C.ink }} interval={0} angle={-30} textAnchor="end" height={50} />
+              <YAxis domain={[0, 100]} tickLine={false} axisLine={false} unit="%" />
+              <Tooltip
+                cursor={{ fill: 'rgba(158, 42, 43, 0.06)' }}
+                formatter={(v) => [`${fmt2(v)}%`]}
+                labelFormatter={(_, payload) => payload[0]?.payload?.full || ''}
+              />
+              <Legend
+                iconType="square"
+                wrapperStyle={{ paddingTop: 16 }}
+                formatter={(value) => <span style={{ marginRight: 12, color: 'var(--ink)' }}>{value}</span>}
+              />
+              <Bar dataKey={subjects[0]} fill={C.navy} radius={[2, 2, 0, 0]} barSize={14} />
+              <Bar dataKey={subjects[1]} fill={C.rust} radius={[2, 2, 0, 0]} barSize={14} />
+              <Line type="monotone" dataKey="獲證率" stroke={C.crimson} strokeWidth={2.5} dot={{ r: 4, fill: C.crimson, stroke: C.paper, strokeWidth: 1.5 }} activeDot={{ r: 6 }} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="font-mono text-[11px] uppercase tracking-widest mt-3" style={{color: 'var(--ink-mute)'}}>
+          Fig.&nbsp;2 — Pass rate per subject vs. overall certification rate
         </div>
 
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">3. 平均通過率與獲證率統計</h2>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={averageData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey={subjectNames[0]} fill="#8884d8" />
-                <Bar dataKey={subjectNames[1]} fill="#82ca9d" />
-                <Bar dataKey="獲證率" fill="#ff7300" />
-              </BarChart>
-            </ResponsiveContainer>
+        <div className="grid md:grid-cols-3 gap-6 md:gap-10 mt-12 rule-top pt-8">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-block w-3 h-3" style={{background: C.navy}}></span>
+              <span className="font-serif-tc text-sm" style={{color: 'var(--ink-soft)'}}>{subjects[0]}</span>
+            </div>
+            <div className="font-display text-4xl font-light num-tnum" style={{color: 'var(--ink)'}}>{fmt1(stats.subj1)}<span className="text-2xl">%</span></div>
+            <div className="font-serif-tc text-xs mt-2" style={{color: 'var(--ink-mute)'}}>歷年平均通過率</div>
           </div>
-          <p className="text-sm text-gray-600 mt-2">
-            註: {subjectNames[0]}平均通過率 {averageData[0][subjectNames[0]].toFixed(2)}%，
-            {subjectNames[1]}平均通過率 {averageData[0][subjectNames[1]].toFixed(2)}%，
-            整體獲證率 {averageData[0].獲證率.toFixed(2)}%。
-          </p>
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-block w-3 h-3" style={{background: C.rust}}></span>
+              <span className="font-serif-tc text-sm" style={{color: 'var(--ink-soft)'}}>{subjects[1]}</span>
+            </div>
+            <div className="font-display text-4xl font-light num-tnum" style={{color: 'var(--ink)'}}>{fmt1(stats.subj2)}<span className="text-2xl">%</span></div>
+            <div className="font-serif-tc text-xs mt-2" style={{color: 'var(--ink-mute)'}}>歷年平均通過率</div>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-block w-4 h-0.5" style={{background: C.crimson}}></span>
+              <span className="font-serif-tc text-sm" style={{color: 'var(--ink-soft)'}}>整體獲證率</span>
+            </div>
+            <div className="font-display text-4xl font-light num-tnum" style={{color: 'var(--crimson-deep)'}}>{fmt1(stats.cert)}<span className="text-2xl">%</span></div>
+            <div className="font-serif-tc text-xs mt-2" style={{color: 'var(--ink-mute)'}}>兩科皆通過比例</div>
+          </div>
         </div>
       </div>
+    </section>
+  );
+};
 
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-4">數據分析總結</h2>
-        <ul className="list-disc pl-5 space-y-2">
-          <li><strong>科目難度差異：</strong>{activeLevel === '初級' ? '管理概論' : '規劃實務'}的平均通過率({averageData[0][subjectNames[0]].toFixed(2)}%)高於{activeLevel === '初級' ? '技術概論' : '防護實務'}({averageData[0][subjectNames[1]].toFixed(2)}%)，顯示後者難度較高。</li>
-          <li><strong>獲證挑戰：</strong>平均獲證率({averageData[0].獲證率.toFixed(2)}%)明顯低於兩科的平均通過率({((averageData[0][subjectNames[0]] + averageData[0][subjectNames[1]]) / 2).toFixed(2)}%)，反映同時通過兩科考試的挑戰性。</li>
-          <li><strong>最具挑戰性：</strong>{(() => {
-            let minCertRate = 100;
-            let minCertInfo = '';
-            data[activeLevel].forEach(item => {
-              if (item.certRate < minCertRate) {
-                minCertRate = item.certRate;
-                minCertInfo = `${item.year}年第${item.session}次`;
-              }
-            });
-            return `${minCertInfo}的獲證率最低，僅為${minCertRate.toFixed(2)}%`;
-          })()}</li>
-          <li><strong>最高獲證率：</strong>{(() => {
-            let maxCertRate = 0;
-            let maxCertInfo = '';
-            data[activeLevel].forEach(item => {
-              if (item.certRate > maxCertRate) {
-                maxCertRate = item.certRate;
-                maxCertInfo = `${item.year}年第${item.session}次`;
-              }
-            });
-            return `${maxCertInfo}的獲證率最高，達到${maxCertRate.toFixed(2)}%`;
-          })()}</li>
-        </ul>
+const ObservationsSection = ({ data, level, stats, subjects }) => {
+  const harderSubject = stats.subj1 < stats.subj2 ? subjects[0] : subjects[1];
+  const easierSubject = stats.subj1 < stats.subj2 ? subjects[1] : subjects[0];
+  const harderRate = Math.min(stats.subj1, stats.subj2);
+  const easierRate = Math.max(stats.subj1, stats.subj2);
+  const avgPass = (stats.subj1 + stats.subj2) / 2;
+  const certGap = avgPass - stats.cert;
+
+  const observations = [
+    {
+      kicker: 'Subject difficulty',
+      title: `${harderSubject}始終是難關`,
+      body: `平均通過率僅 ${fmt1(harderRate)}%，比${easierSubject}的 ${fmt1(easierRate)}% 低了 ${fmt1(easierRate - harderRate)} 個百分點。${level === '初級' ? '從歷年資料看，技術概論的離散程度遠大於管理概論' : '中級兩科都偏實務，但防護實務的計算題與情境題比規劃實務更吃實作經驗'}。`
+    },
+    {
+      kicker: 'Certification gap',
+      title: '兩科皆過的隱形折扣',
+      body: `兩科平均通過率 ${fmt1(avgPass)}%，但平均獲證率只有 ${fmt1(stats.cert)}%——中間掉了 ${fmt1(certGap)} 個百分點。這個差距正是「同一場兩科都要過」的本質難度。`
+    },
+    {
+      kicker: 'Best & worst',
+      title: '高低之間，相差三倍以上',
+      body: `${stats.maxCert.year} 年第 ${stats.maxCert.session} 次獲證率達到歷史高點 ${fmt1(stats.maxCert.certRate)}%；最低谷則出現在 ${stats.minCert.year} 年第 ${stats.minCert.session} 次，僅 ${fmt1(stats.minCert.certRate)}%。命題穩定度仍是這份鑑定還能進化的方向。`
+    },
+    {
+      kicker: 'Strategy',
+      title: '70 分通過策略',
+      body: `每科 100 分制、70 分為合格。與其追求滿分，不如把火力集中在常考題型——${level === '初級' ? '管理概論的政策法規、技術概論的資安攻防基本盤' : '規劃實務的標準/流程、防護實務的工具與技術細節'}——拿穩 70 分，獲證率自然抬升。`
+    }
+  ];
+
+  return (
+    <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-20 fade-up">
+      <SectionHeader
+        num="03"
+        kicker="EDITOR'S NOTE / 編輯觀察"
+        title="四個值得記住的數字觀察"
+      />
+
+      <div className="grid md:grid-cols-2 gap-x-12 gap-y-10 md:gap-y-14">
+        {observations.map((o, i) => (
+          <article key={i} className="md:[&:nth-child(odd)]:rule-bottom md:[&:nth-child(odd)]:pb-10">
+            <div className="flex items-baseline gap-3 mb-3">
+              <span className="font-display text-3xl font-light num-tnum" style={{color: 'var(--crimson-deep)'}}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="section-num">{o.kicker}</span>
+            </div>
+            <h3 className="font-serif-tc text-2xl md:text-3xl font-medium leading-tight mb-4" style={{color: 'var(--ink)'}}>
+              {o.title}
+            </h3>
+            <p className="font-body leading-relaxed text-base md:text-lg" style={{color: 'var(--ink-soft)'}}>
+              {o.body}
+            </p>
+          </article>
+        ))}
       </div>
+    </section>
+  );
+};
+
+const Colophon = () => (
+  <footer className="relative z-10 mt-12 md:mt-20" style={{background: 'var(--ink)', color: 'var(--paper)'}}>
+    <div className="max-w-6xl mx-auto px-6 md:px-10 py-10 md:py-14">
+      <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-widest mb-4" style={{color: 'var(--rule)'}}>Source / 資料來源</div>
+          <div className="font-serif-tc text-base leading-relaxed">
+            經濟部產業人才能力鑑定推動網<br/>
+            <span style={{color: 'var(--rule)'}}>iPAS 資訊安全工程師專區</span>
+          </div>
+          <a href="https://www.ipas.org.tw/ISE" target="_blank" rel="noopener" className="font-mono text-xs mt-3 inline-block underline" style={{color: 'var(--paper)'}}>www.ipas.org.tw/ISE</a>
+        </div>
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-widest mb-4" style={{color: 'var(--rule)'}}>Methodology / 取樣說明</div>
+          <div className="font-serif-tc text-sm leading-relaxed" style={{color: 'var(--rule)'}}>
+            初級&nbsp;107 年第 1 次起至 114 年第 2 次<br/>
+            中級&nbsp;108 年起至 115 年第 1 次<br/>
+            通過率以四捨五入後百分比計算<br/>
+            <span className="font-display italic" style={{color: 'var(--ink-mute)'}}>※ 民間整理，非官方統計；如與官方數據出入以官方為準</span>
+          </div>
+        </div>
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-widest mb-4" style={{color: 'var(--rule)'}}>Note / 備註</div>
+          <div className="font-serif-tc text-sm leading-relaxed" style={{color: 'var(--rule)'}}>
+            獲證率＝該場次兩科皆通過人數 ÷ 該場次報考人數。<br/>
+            單科 70 分為合格、兩科皆過方授證。
+          </div>
+        </div>
+      </div>
+      <div className="rule-top mt-10 pt-6 flex items-center justify-between">
+        <div className="font-display italic text-sm" style={{color: 'var(--rule)'}}>— End of Report —</div>
+        <div className="font-mono text-[10px] uppercase tracking-widest" style={{color: 'var(--rule)'}}>
+          Issue / 115 · 01
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
+// =============== ROOT ===============
+const App = () => {
+  const [level, setLevel] = useState('初級');
+  const data = DATA[level];
+  const subjects = level === '初級' ? ['管理概論', '技術概論'] : ['規劃實務', '防護實務'];
+  const stats = useMemo(() => getStats(data), [level]);
+
+  return (
+    <div className="relative">
+      <Masthead level={level} setLevel={setLevel} />
+      <Hero level={level} setLevel={setLevel} stats={stats} latest={stats.latest} />
+      <ExamSpec level={level} />
+      <LeadStats stats={stats} level={level} subjects={subjects} />
+      <RegistrantsSection data={data} level={level} stats={stats} />
+      <PassRateSection data={data} level={level} stats={stats} subjects={subjects} />
+      <ObservationsSection data={data} level={level} stats={stats} subjects={subjects} />
+      <Colophon />
     </div>
   );
 };
 
 const root = createRoot(document.getElementById('root'));
-root.render(<IPASComparison />);
+root.render(<App />);
 </script>
 </body>
 </html>
