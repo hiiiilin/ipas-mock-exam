@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -82,6 +82,25 @@ body {
 .stage { flex: 1; padding: 24px; background: #fff; position: relative; }
 
 /* 登入畫面 */
+.mini-notice {
+  max-width: 680px;
+  margin: 0 auto 20px;
+  padding: 10px 16px;
+  background: #fff8e7;
+  border: 1px solid #e0b95e;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  color: #8b6914;
+}
+.mini-notice a {
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 8px;
+}
+.mini-notice a:hover {
+  text-decoration: underline;
+}
 .disclaimer-box {
   max-width: 540px;
   margin: 0 auto 20px;
@@ -221,6 +240,41 @@ body {
   background: linear-gradient(to bottom, #6a99cf 0%, #4a77ac 100%);
 }
 
+.key-hint-box {
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: #f5f8fc;
+  border: 1px solid #c8d4e0;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 2;
+}
+.kbd {
+  display: inline-block;
+  min-width: 24px;
+  padding: 2px 8px;
+  margin: 0 2px;
+  background: #fff;
+  border: 1px solid #aaa;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  font-family: "Consolas", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+.key-hint-sep {
+  margin: 0 8px;
+  color: #888;
+  font-size: 12px;
+}
+.key-hint-desc {
+  margin-left: 8px;
+  color: #555;
+  font-size: 12px;
+}
 .info-panel {
   border: 1px solid #7b8a9c;
   background: #fff;
@@ -600,6 +654,87 @@ body {
 .legend-dot.y { background: #f5c518; }
 .legend-dot.r { background: #d94040; }
 
+.view-toggle {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+  margin-right: 12px;
+}
+.view-btn {
+  width: 28px;
+  height: 22px;
+  border: 1px solid #7a92a8;
+  background: #ecf0f1;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 2px;
+  color: #555;
+}
+.view-btn.active {
+  background: #5a7ba5;
+  color: #fff;
+  border-color: #3a5a85;
+}
+.view-btn:hover:not(.active) {
+  background: #d7e0e8;
+}
+
+.overview-list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 0;
+  background: #fff;
+}
+.overview-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.overview-list-table thead th {
+  background: #2c3e50;
+  color: #fff;
+  padding: 6px 8px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  font-size: 13px;
+}
+.overview-list-table tbody tr {
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background 0.1s;
+}
+.overview-list-table tbody tr:hover {
+  background: #e8f2fa !important;
+}
+.list-num {
+  text-align: center;
+  font-weight: 700;
+  color: #fff;
+  width: 55px;
+  padding: 6px 0;
+  font-size: 13px;
+  vertical-align: middle;
+}
+.list-row.answered .list-num {
+  background: #27ae60;
+}
+.list-row.marked .list-num {
+  background: #f1c40f;
+  color: #5d4a00;
+}
+.list-row.unanswered .list-num {
+  background: #e74c3c;
+}
+.list-stem {
+  padding: 6px 12px;
+  color: #333;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
 .overview-grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -889,12 +1024,212 @@ body {
   .exam-toolbar { gap: 3px; padding: 5px; }
   .exam-toolbar .win-btn { min-width: 64px; padding: 3px 8px; font-size: 12px; }
 }
-</style>
+
+    /* ============== API 版排行榜 ============== */
+    .login-hint {
+      margin: -16px 0 24px 0;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #555;
+      background: #f0f4f8;
+      border-left: 3px solid #4a90e2;
+      border-radius: 3px;
+      line-height: 1.7;
+    }
+    .login-champion {
+      margin-top: 18px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #fff8e7 0%, #ffecb3 100%);
+      border: 1px solid #e0b95e;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 13px;
+      color: #5d4409;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-champion .champion-loading,
+    .login-champion .champion-empty {
+      color: #888;
+      font-size: 12px;
+    }
+    .login-champion .champion-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .login-champion .champion-title { font-weight: 600; color: #8b6914; }
+    .login-champion .champion-name { font-weight: 700; color: #c0392b; }
+    .login-champion .champion-score { font-weight: 700; color: #27ae60; }
+    .login-champion .champion-count {
+      font-size: 11px; color: #888; margin-top: 4px; width: 100%;
+    }
+    .login-preview-link { margin-top: 14px; text-align: center; font-size: 13px; }
+    .login-preview-link a {
+      color: #8b6914;
+      text-decoration: none;
+      padding: 4px 10px;
+      border-bottom: 1px dashed #c09a3a;
+    }
+    .login-preview-link a:hover { background: #fff3c4; color: #5d4409; }
+
+    .leaderboard-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #fff8e7 0%, #fef3d7 100%);
+      border: 1px solid #f0d27f;
+      border-radius: 8px;
+    }
+    .leaderboard-section h3 {
+      margin: 0 0 14px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0b95e;
+      color: #8b6914;
+      font-size: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .leaderboard-refresh {
+      margin-left: auto;
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #555;
+    }
+    .leaderboard-refresh:hover { background: #f5f5f5; }
+    .leaderboard-mode-notice {
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px dashed #bbb;
+      border-radius: 6px;
+      color: #666;
+      text-align: center;
+      font-size: 13px;
+    }
+    .leaderboard-mode-notice .big {
+      font-size: 14px; color: #333; margin-bottom: 4px; font-weight: 600;
+    }
+    .leaderboard-loading {
+      padding: 20px; text-align: center; color: #888; font-size: 13px;
+    }
+    .leaderboard-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .leaderboard-table th {
+      padding: 8px 12px; background: #e0b95e; color: #fff;
+      text-align: left; font-weight: 600;
+    }
+    .leaderboard-table th.num,
+    .leaderboard-table td.num { text-align: center; width: 50px; }
+    .leaderboard-table th.score,
+    .leaderboard-table td.score { text-align: center; width: 70px; }
+    .leaderboard-table th.time,
+    .leaderboard-table td.time { text-align: center; width: 80px; }
+    .leaderboard-table td {
+      padding: 8px 12px; border-bottom: 1px solid #f0d27f;
+    }
+    .leaderboard-table tr.me {
+      background: #fff3c4; font-weight: 600;
+    }
+    .leaderboard-table tr.me td { color: #8b6914; }
+    .leaderboard-table td.medal { font-size: 16px; }
+    .leaderboard-my-rank {
+      margin-top: 10px; padding: 10px 14px;
+      background: #fff3c4; border: 1px solid #e0b95e;
+      border-radius: 6px; font-size: 13px; color: #8b6914;
+      text-align: center;
+    }
+    .leaderboard-stats {
+      margin-top: 10px; padding: 8px 14px;
+      font-size: 12px; color: #888; text-align: right;
+    }
+    @media (max-width: 600px) {
+      .leaderboard-table th.time,
+      .leaderboard-table td.time { display: none; }
+    }
+
+    /* 排行榜預覽 Modal */
+    .lb-preview-mask {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .lb-preview-mask.show { display: flex; }
+    .lb-preview-box {
+      background: linear-gradient(135deg, #fff8e7 0%, #fef3d7 100%);
+      border: 2px solid #e0b95e;
+      border-radius: 10px;
+      padding: 20px 24px;
+      max-width: 520px; width: 92%;
+      max-height: 85vh; overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+    .lb-preview-box h3 {
+      margin: 0 0 14px 0; padding-bottom: 10px;
+      border-bottom: 2px solid #e0b95e;
+      color: #8b6914; font-size: 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+    }
+    .lb-preview-close {
+      background: transparent; border: 1px solid #8b6914;
+      color: #8b6914; font-size: 16px; cursor: pointer;
+      padding: 2px 10px; border-radius: 4px; line-height: 1;
+    }
+    .lb-preview-close:hover { background: #8b6914; color: #fff; }
+    .lb-preview-subtitle {
+      font-size: 12px; color: #666; margin-bottom: 10px;
+      text-align: center; font-style: italic;
+    }
+
+    /* 題目社群統計 */
+    .review-qstat {
+      margin: 6px 0 10px 0; padding: 6px 12px;
+      background: #f0f7ff; border-left: 3px solid #4a90e2;
+      border-radius: 3px; font-size: 12px; color: #2c5282;
+    }
+    .opt-stat {
+      margin-left: auto; padding: 2px 8px;
+      font-size: 11px; border-radius: 3px;
+      font-family: "Consolas", monospace; white-space: nowrap;
+    }
+    .opt-stat.stat-correct { background: #d4edda; color: #155724; font-weight: 600; }
+    .opt-stat.stat-top-wrong { background: #f8d7da; color: #721c24; font-weight: 600; }
+    .opt-stat.stat-normal { background: #e9ecef; color: #495057; }
+    .review-opt { display: flex; align-items: center; gap: 6px; }
+    .opt-text { flex: 1; }
+
+    /* 老師後台 */
+    .teacher-admin-panel {
+      margin: 20px 0; padding: 16px;
+      background: #2c3e50; color: #ecf0f1;
+      border-radius: 8px;
+      font-family: "Consolas", monospace; font-size: 12px;
+    }
+    .teacher-admin-panel h4 { margin: 0 0 10px 0; color: #f39c12; }
+    .teacher-admin-panel button {
+      padding: 4px 10px; margin: 2px;
+      background: #e74c3c; color: #fff;
+      border: none; border-radius: 4px; cursor: pointer;
+      font-size: 11px;
+    }
+    .teacher-admin-panel .admin-row {
+      padding: 4px 0; border-bottom: 1px solid #34495e;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+  </style>
 </head>
 <body>
 <div class="app-window">
   <div class="app-titlebar">
-    <span>資訊安全模擬測驗系統（ISMP）- 個人練習版 v2.1</span>
+    <span>資訊安全模擬測驗系統（ISMP）- 個人練習版</span>
     <div class="controls">
       <span class="ctrl-btn">_</span>
       <span class="ctrl-btn">□</span>
@@ -937,6 +1272,10 @@ body {
   <div class="overview-box">
     <div class="overview-title">
       <span>試題總覽</span>
+      <span class="view-toggle">
+        <button id="viewModeGrid" class="view-btn active" onclick="setOverviewMode('grid')" title="圖示模式">⊞</button>
+        <button id="viewModeList" class="view-btn" onclick="setOverviewMode('list')" title="列表模式">☰</button>
+      </span>
       <span class="close" onclick="closeOverview()">×</span>
     </div>
     <div class="overview-body">
@@ -946,6 +1285,7 @@ body {
         <span><span class="legend-dot r"></span>紅：未作答</span>
       </div>
       <div class="overview-grid" id="overviewGrid"></div>
+      <div class="overview-list" id="overviewList" style="display:none;"></div>
     </div>
     <div class="overview-footer">選擇任意一題作答或瀏覽</div>
   </div>
@@ -1557,7 +1897,7 @@ window.QUESTIONS = [
     ans: 3,
     expl: "GDPR 第 20 條明定資料可攜權，而我國個資法目前無此規定。GDPR 對非歐盟企業若處理歐盟居民個資仍適用（域外效力），故台灣企業若提供服務予歐盟居民仍可能受 GDPR 規範；兩者規範並不完全相同。[難度: 困難]"
   }
-];
+];;
 </script>
 <script>
 // ============================================================
@@ -1584,6 +1924,7 @@ const state = {
   remaining: TOTAL_TIME_SEC,
   timerId: null,
   submitted: false,
+  leaderboardSubmitted: false,  // 避免結果頁重新渲染時重複上傳成績、統計
   filter: "all"     // all / wrong / blank / correct
 };
 
@@ -1619,15 +1960,20 @@ function shuffleExam() {
     stem: q.stem,
     opts: [...q.opts],
     ans: q.ans,
-    expl: q.expl
+    expl: q.expl,
+    // optOriginalIdx[i] = 畫面上第 i 個選項，原本是原始題庫的第幾個選項。
+    // 這能避免「選項文字重複」或「統計資料以原始 A/B/C/D 儲存」時發生對應錯位。
+    optOriginalIdx: q.opts.map((_, i) => i)
   }));
   // 1. 打散題目順序
   const shuffled = shuffleArray(fresh);
-  // 2. 每題內部打散選項順序，並更新 ans 指標
+  // 2. 每題內部打散選項順序，並同步保留原始選項索引
   shuffled.forEach(q => {
-    const correctText = q.opts[q.ans];
-    q.opts = shuffleArray(q.opts);
-    q.ans = q.opts.indexOf(correctText);
+    const optionPool = q.opts.map((text, originalIdx) => ({ text, originalIdx }));
+    const shuffledOpts = shuffleArray(optionPool);
+    q.opts = shuffledOpts.map(o => o.text);
+    q.optOriginalIdx = shuffledOpts.map(o => o.originalIdx);
+    q.ans = q.optOriginalIdx.indexOf(q.ans);
   });
   // 3. 替換執行時題庫
   QUESTIONS.length = 0;
@@ -1641,29 +1987,32 @@ function renderLogin() {
   state.stage = "login";
   $stage.innerHTML = `
     <div style="padding-top: 20px;">
-      <div class="disclaimer-box">
-        <div class="dc-title">重要聲明 — 請於開始練習前詳讀</div>
-        <ul>
-          <li>本系統為<b>社群志工自製之個人學習練習工具</b>，與任何政府機關、能力鑑定推動辦公室、官方發證單位均<b>無任何關聯、合作或授權關係</b>。</li>
-          <li>系統介面僅為模仿一般電腦化測驗之操作風格，<b>並非任何官方考試系統之實際畫面</b>。</li>
-          <li>題目內容為社群成員參考公開學習資源自行撰寫，<b>非官方歷屆試題</b>，僅作為讀書會學員熟悉題型與觀念之用。</li>
-          <li>本系統<b>不得用於任何商業用途或對外發證</b>，亦不保證與任何正式鑑定測驗之內容一致。</li>
-        </ul>
-        <div class="dc-ack">點擊「登錄」即表示您已知悉上述聲明，並同意僅將本系統用於個人學習。</div>
+      <div class="mini-notice">
+        ℹ️ 本系統為社群志工自製練習工具，非官方試題。<a href="./" style="color:#8b6914;">詳閱完整聲明 →</a>
       </div>
       <div class="login-box">
         <div class="login-title">
           <h2>資訊安全模擬測驗系統</h2>
-          <span class="ver">Practice Edition v2.1 / 非官方練習用</span>
+          <span class="ver">Practice Edition v1.0 / 非官方練習用</span>
         </div>
         <div class="login-body">
           <div class="login-field">
             <label>練習者名稱：</label>
             <input type="text" id="userIdInput" maxlength="20" placeholder="可輸入暱稱，留空亦可" autocomplete="off">
           </div>
+          <div class="login-hint">
+            💡 填寫姓名：成績將上傳至社群排行榜<br>
+            📝 留空：個人練習模式，不上傳
+          </div>
           <div class="login-buttons">
             <button class="win-btn primary" onclick="doLogin()">登 錄</button>
             <button class="win-btn" onclick="doCancel()">取 消</button>
+          </div>
+          <div class="login-champion" id="loginChampion">
+            <div class="champion-loading">🏆 載入榜首中...</div>
+          </div>
+          <div class="login-preview-link">
+            <a href="javascript:void(0)" onclick="showLeaderboardPreview()">查看完整排行榜 →</a>
           </div>
         </div>
       </div>
@@ -1672,6 +2021,7 @@ function renderLogin() {
   setTimeout(() => {
     const inp = document.getElementById("userIdInput");
     if (inp) inp.focus();
+    loadChampionPreview();
   }, 100);
 }
 
@@ -1713,6 +2063,18 @@ function renderInfo() {
           <li>四、作答完畢請點選右上方「結束測驗」結束本次練習，系統將顯示成績與逐題解析。</li>
           <li>五、本測驗達 <b>70 分</b> 為合格參考線（僅供自我檢核）。</li>
           <li>六、<b style="color:#a04040;">本系統為非官方個人練習工具，題目與結果僅供學習參考，不代表任何正式鑑定之結果。</b></li>
+          <li>七、<b style="color:#a04040;">為防止作弊與洗榜，作答時間需至少 5 分鐘（300 秒），系統會自動驗證。</b></li>
+          <li>八、<b>鍵盤快捷鍵</b>（作答時可用）：
+            <div class="key-hint-box">
+              <span class="kbd">A</span> <span class="kbd">B</span> <span class="kbd">C</span> <span class="kbd">D</span>
+              <span class="key-hint-sep">或</span>
+              <span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span> <span class="kbd">4</span>
+              <span class="key-hint-desc">：選擇答案</span>
+              <br>
+              <span class="kbd">←</span> <span class="kbd">→</span>
+              <span class="key-hint-desc">：上一題、下一題</span>
+            </div>
+          </li>
         </ol>
       </div>
       <div class="info-footer">
@@ -1806,10 +2168,60 @@ function renderExam() {
   `;
 }
 
+// 洗牌後，解析裡的「正解 X」要改成真實正解字母
+function fixExplLetter(q) {
+  const correctLetter = "ABCD"[q.ans];
+  // 「正解 X」→ 動態替換成洗牌後的正解字母
+  let fixed = q.expl.replace(/正解\s*[A-D]/g, `正解 ${correctLetter}`);
+  // 「選項 X」→ 替換成洗牌後對應的字母（要從原始位置反推到畫面位置）
+  // q.optOriginalIdx[displayIndex] = originalIndex
+  // 反過來：若解析提到「選項 C」(原始 index 2)，要找出洗牌後它的畫面位置
+  if (Array.isArray(q.optOriginalIdx)) {
+    fixed = fixed.replace(/選項\s*([A-D])/g, (match, letter) => {
+      const originalIdx = letter.charCodeAt(0) - 65;
+      const displayIdx = q.optOriginalIdx.indexOf(originalIdx);
+      if (displayIdx === -1) return match;
+      return `選項 ${"ABCD"[displayIdx]}`;
+    });
+    // 「B/C/D」、「A/B」這種多選項組合也要處理
+    fixed = fixed.replace(/選項\s*([A-D](?:\/[A-D])+)/g, (match, group) => {
+      const letters = group.split("/");
+      const newLetters = letters.map(l => {
+        const originalIdx = l.charCodeAt(0) - 65;
+        const displayIdx = q.optOriginalIdx.indexOf(originalIdx);
+        return displayIdx === -1 ? l : "ABCD"[displayIdx];
+      });
+      return `選項 ${newLetters.join("/")}`;
+    });
+  }
+  return escapeHtml(fixed);
+}
+
 function escapeHtml(s) {
   return (s || "").replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[c]));
+}
+
+function getOriginalOptionIndex(q, displayIndex) {
+  // displayIndex 是目前畫面 A/B/C/D 的位置；qstats 則是用原始題庫 A/B/C/D 儲存。
+  if (Array.isArray(q.optOriginalIdx) && q.optOriginalIdx[displayIndex] !== undefined) {
+    return q.optOriginalIdx[displayIndex];
+  }
+  // 舊資料或未洗牌狀況的 fallback。
+  const originalQ = ORIGINAL_QUESTIONS.find(o => o.id === q.id);
+  if (!originalQ) return displayIndex;
+  const originalIdx = originalQ.opts.indexOf(q.opts[displayIndex]);
+  return originalIdx >= 0 ? originalIdx : displayIndex;
+}
+
+function getDisplayStats(q, qstat) {
+  // 將 API 回來的「原始選項統計」轉成「目前畫面選項順序」的統計。
+  if (!qstat) return null;
+  return q.opts.map((_, displayIndex) => {
+    const originalIdx = getOriginalOptionIndex(q, displayIndex);
+    return Number(qstat[originalIdx] || 0);
+  });
 }
 
 function selectAnswer(i) {
@@ -1865,6 +2277,12 @@ function zoomOut() {
 // 試題總覽
 // ============================================================
 function openOverview() {
+  renderOverviewGrid();
+  renderOverviewList();
+  document.getElementById("overviewModal").classList.add("show");
+}
+
+function renderOverviewGrid() {
   const grid = document.getElementById("overviewGrid");
   grid.innerHTML = QUESTIONS.map((q, i) => {
     const answered = state.answers[q.id] !== undefined;
@@ -1874,7 +2292,49 @@ function openOverview() {
     else if (answered) cls += " answered";
     return `<div class="${cls}" onclick="jumpTo(${i})">${i+1}</div>`;
   }).join("");
-  document.getElementById("overviewModal").classList.add("show");
+}
+
+function renderOverviewList() {
+  const list = document.getElementById("overviewList");
+  list.innerHTML = `
+    <table class="overview-list-table">
+      <thead>
+        <tr><th style="width:60px;">題號</th><th>題目</th></tr>
+      </thead>
+      <tbody>
+        ${QUESTIONS.map((q, i) => {
+          const answered = state.answers[q.id] !== undefined;
+          const marked = state.marked[q.id];
+          let cls = "list-row";
+          if (marked) cls += " marked";
+          else if (answered) cls += " answered";
+          else cls += " unanswered";
+          return `<tr class="${cls}" onclick="jumpTo(${i})">
+            <td class="list-num">${i+1}</td>
+            <td class="list-stem">${q.stem}</td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function setOverviewMode(mode) {
+  const grid = document.getElementById("overviewGrid");
+  const list = document.getElementById("overviewList");
+  const btnGrid = document.getElementById("viewModeGrid");
+  const btnList = document.getElementById("viewModeList");
+  if (mode === "grid") {
+    grid.style.display = "grid";
+    list.style.display = "none";
+    btnGrid.classList.add("active");
+    btnList.classList.remove("active");
+  } else {
+    grid.style.display = "none";
+    list.style.display = "block";
+    btnGrid.classList.remove("active");
+    btnList.classList.add("active");
+  }
 }
 
 function closeOverview() {
@@ -2011,6 +2471,18 @@ function renderResult() {
         </div>
       </div>
 
+      <div id="leaderboardSection" class="leaderboard-section">
+        <h3>
+          🏆 社群排行榜
+          <button class="leaderboard-refresh" onclick="refreshLeaderboard()">重新整理</button>
+        </h3>
+        <div id="leaderboardContent">
+          <div class="leaderboard-loading">載入中...</div>
+        </div>
+      </div>
+
+      <div id="teacherAdminSection"></div>
+
       <div class="review-section">
         <h2>
           <span>逐題檢視與解析</span>
@@ -2030,6 +2502,444 @@ function renderResult() {
       </div>
     </div>
   `;
+  // 成績頁渲染完畢後，觸發排行榜提交與載入
+  setTimeout(() => submitToLeaderboard(), 100);
+}
+
+
+// ============================================================
+// API 版排行榜功能
+// ============================================================
+const API_URL = "https://ipas-api.hiiii-lin.workers.dev/";
+const TEACHER_ADMIN_CODE = "#admin志祥";
+
+// 全域快取
+window._qstatsCache = null;
+window._leaderboardCache = null;
+
+// ============================================================
+// 呼叫 API 工具函數
+// ============================================================
+async function apiGet(action) {
+  const url = `${API_URL}?action=${action}&subject=${SUBJECT_CODE}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("API 回應失敗");
+  return await res.json();
+}
+
+async function apiPost(data) {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error("API 上傳失敗");
+  return await res.json();
+}
+
+// ============================================================
+// 登入畫面：載入榜首
+// ============================================================
+async function loadChampionPreview() {
+  const box = document.getElementById("loginChampion");
+  if (!box) return;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      box.innerHTML = `<div class="champion-empty">🎯 尚無上榜紀錄，成為第一位登榜者！</div>`;
+      return;
+    }
+
+    // 每人最高分
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+
+    const champion = sorted[0];
+    const mins = Math.floor(champion.time / 60);
+    const secs = champion.time % 60;
+    const timeStr = `${mins}:${secs.toString().padStart(2, "0")}`;
+
+    box.innerHTML = `
+      <div>
+        <div class="champion-row">
+          <span class="champion-title">🏆 目前榜首</span>
+          <span class="champion-name">${escapeHtml(champion.name)}</span>
+          <span class="champion-score">${champion.score} 分</span>
+          <span style="color: #888;">｜ 用時 ${timeStr}</span>
+        </div>
+        <div class="champion-count">共 ${sorted.length} 位上榜</div>
+      </div>
+    `;
+  } catch (e) {
+    box.innerHTML = `<div class="champion-empty">（榜首資訊暫無法載入）</div>`;
+  }
+}
+
+// ============================================================
+// 考前預覽排行榜 Modal
+// ============================================================
+async function showLeaderboardPreview() {
+  let mask = document.getElementById("lbPreviewMask");
+  if (!mask) {
+    mask = document.createElement("div");
+    mask.id = "lbPreviewMask";
+    mask.className = "lb-preview-mask";
+    mask.innerHTML = `
+      <div class="lb-preview-box">
+        <h3>
+          🏆 目前社群排行榜
+          <button class="lb-preview-close" onclick="closeLeaderboardPreview()">關閉</button>
+        </h3>
+        <div class="lb-preview-subtitle">Top 10 · 登錄後可挑戰上榜</div>
+        <div id="lbPreviewContent">
+          <div class="leaderboard-loading">載入中...</div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(mask);
+    mask.addEventListener("click", (e) => {
+      if (e.target === mask) closeLeaderboardPreview();
+    });
+  }
+  mask.classList.add("show");
+
+  const container = document.getElementById("lbPreviewContent");
+  container.innerHTML = `<div class="leaderboard-loading">載入中...</div>`;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      container.innerHTML = `
+        <div class="leaderboard-mode-notice">
+          <div class="big">🎯 尚無上榜紀錄</div>
+          成為第一位登榜者吧！完成測驗後成績將顯示於此。
+        </div>
+      `;
+      return;
+    }
+
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+    const top10 = sorted.slice(0, 10);
+
+    const medalFor = (r) => r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "🥉" : r;
+    const fmtTime = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,"0")}`;
+
+    let html = `<table class="leaderboard-table">
+      <thead><tr><th class="num">名次</th><th>姓名</th><th class="score">分數</th><th class="time">時間</th></tr></thead>
+      <tbody>`;
+    top10.forEach((r, i) => {
+      html += `<tr>
+        <td class="num medal">${medalFor(i+1)}</td>
+        <td>${escapeHtml(r.name)}</td>
+        <td class="score">${r.score}</td>
+        <td class="time">${fmtTime(r.time)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    const avg = Math.round(sorted.reduce((s, r) => s + r.score, 0) / sorted.length);
+    const passCount = sorted.filter(r => r.score >= 70).length;
+    const passRate = Math.round(passCount / sorted.length * 100);
+    html += `<div class="leaderboard-stats">📊 共 ${sorted.length} 位上榜 ｜ 平均 ${avg} 分 ｜ 通過率 ${passRate}%</div>`;
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `
+      <div class="leaderboard-mode-notice">
+        <div class="big">⚠️ 載入失敗</div>
+        ${escapeHtml(e.message || "未知錯誤")}
+      </div>
+    `;
+  }
+}
+
+function closeLeaderboardPreview() {
+  const mask = document.getElementById("lbPreviewMask");
+  if (mask) mask.classList.remove("show");
+}
+
+// ============================================================
+// 成績頁：提交成績
+// ============================================================
+async function submitToLeaderboard() {
+  const userId = state.userId || "練習者";
+  const r = calcResult();
+  const usedTime = TOTAL_TIME_SEC - state.remaining;
+
+  // 老師後台入口
+  if (userId === TEACHER_ADMIN_CODE) {
+    renderTeacherAdmin();
+    document.getElementById("leaderboardSection").style.display = "none";
+    return;
+  }
+
+  // 測試模式
+  if (userId === "練習者" || userId === "") {
+    renderTeacherMode();
+    await loadAndRenderQStats();
+    return;
+  }
+
+  // 防刷
+  const answered = Object.keys(state.answers).length;
+  if (usedTime < 60) {
+    renderLeaderboardBlocked("作答時間過短（未滿 1 分鐘），不列入排行榜");
+    await loadAndRenderQStats();
+    return;
+  }
+  if (answered < QUESTIONS.length) {
+    renderLeaderboardBlocked(`僅完整作答全部 ${QUESTIONS.length} 題者才列入排行榜（您答了 ${answered} 題）`);
+    await loadAndRenderQStats();
+    return;
+  }
+
+  if (state.leaderboardSubmitted) {
+    // 結果頁可能因切換「全部、錯題、未作答、答對」而重新渲染；避免同一份答案重複灌入排行榜與題目統計。
+    await renderLeaderboard();
+    await loadAndRenderQStats();
+    return;
+  }
+
+  // 準備上傳資料：把「洗牌後位置」還原成「原始題庫位置」
+  // 否則 qstats 統計會被洗牌污染（學員看到的 A 可能是原始的 B/C/D）
+  const answers = {};
+  QUESTIONS.forEach(q => {
+    const ans = state.answers[q.id];
+    if (ans === undefined) return;
+    answers[q.id] = getOriginalOptionIndex(q, ans);
+  });
+
+  const payload = {
+    action: "submit",
+    subject: SUBJECT_CODE,
+    name: userId,
+    score: r.score,
+    correct: r.correct,
+    time: usedTime,
+    date: new Date().toISOString().slice(0, 10),
+    timestamp: Date.now(),
+    answers: answers
+  };
+
+  try {
+    await apiPost(payload);
+    state.leaderboardSubmitted = true;
+    await renderLeaderboard();
+    await loadAndRenderQStats();
+  } catch (e) {
+    console.error("上傳失敗:", e);
+    renderLeaderboardBlocked("無法連線排行榜（請檢查網路或重試）");
+    await loadAndRenderQStats();
+  }
+}
+
+function renderTeacherMode() {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="leaderboard-mode-notice">
+      <div class="big">📝 個人練習模式</div>
+      本次成績未上傳至排行榜<br>
+      想加入社群競賽？下次於登入畫面填入姓名 🚀
+    </div>
+  `;
+}
+
+function renderLeaderboardBlocked(reason) {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="leaderboard-mode-notice">
+      <div class="big">ℹ️ 未加入排行榜</div>
+      ${reason}
+    </div>
+  `;
+}
+
+// ============================================================
+// 成績頁：渲染排行榜
+// ============================================================
+async function renderLeaderboard() {
+  const container = document.getElementById("leaderboardContent");
+  if (!container) return;
+  container.innerHTML = `<div class="leaderboard-loading">載入中...</div>`;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+
+    if (records.length === 0) {
+      container.innerHTML = `
+        <div class="leaderboard-mode-notice">
+          <div class="big">🎯 尚無上榜紀錄</div>
+          你是第一位作答者！成為榜首等候挑戰吧 🏆
+        </div>
+      `;
+      return;
+    }
+
+    const bestByName = {};
+    records.forEach(r => {
+      const cur = bestByName[r.name];
+      if (!cur || r.score > cur.score || (r.score === cur.score && r.time < cur.time)) {
+        bestByName[r.name] = r;
+      }
+    });
+    const sorted = Object.values(bestByName).sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.time - b.time;
+    });
+    const top10 = sorted.slice(0, 10);
+    const myName = state.userId;
+    const myIndex = sorted.findIndex(r => r.name === myName);
+
+    const medalFor = (r) => r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "🥉" : r;
+    const fmtTime = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,"0")}`;
+
+    let html = `<table class="leaderboard-table">
+      <thead><tr><th class="num">名次</th><th>姓名</th><th class="score">分數</th><th class="time">時間</th></tr></thead>
+      <tbody>`;
+    top10.forEach((r, i) => {
+      const isMe = r.name === myName;
+      html += `<tr class="${isMe ? "me" : ""}">
+        <td class="num medal">${medalFor(i+1)}</td>
+        <td>${escapeHtml(r.name)}</td>
+        <td class="score">${r.score}</td>
+        <td class="time">${fmtTime(r.time)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    if (myIndex >= 10) {
+      const me = sorted[myIndex];
+      html += `<div class="leaderboard-my-rank">
+        你目前排名第 <strong>${myIndex + 1}</strong> 名 ｜ ${me.score} 分 ｜ 用時 ${fmtTime(me.time)}
+      </div>`;
+    } else if (myIndex >= 0 && myIndex < 10) {
+      html += `<div class="leaderboard-my-rank">🎉 你在榜上第 <strong>${myIndex + 1}</strong> 名！</div>`;
+    }
+
+    const avg = Math.round(sorted.reduce((s, r) => s + r.score, 0) / sorted.length);
+    const passCount = sorted.filter(r => r.score >= 70).length;
+    const passRate = Math.round(passCount / sorted.length * 100);
+    html += `<div class="leaderboard-stats">📊 共 ${sorted.length} 位上榜 ｜ 平均 ${avg} 分 ｜ 通過率 ${passRate}%</div>`;
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `
+      <div class="leaderboard-mode-notice">
+        <div class="big">⚠️ 載入失敗</div>
+        ${escapeHtml(e.message || "未知錯誤")}
+      </div>
+    `;
+  }
+}
+
+async function refreshLeaderboard() {
+  await renderLeaderboard();
+}
+
+// ============================================================
+// 題目統計
+// ============================================================
+async function loadAndRenderQStats() {
+  try {
+    const result = await apiGet("qstats");
+    window._qstatsCache = result.stats || {};
+  } catch (e) {
+    window._qstatsCache = {};
+  }
+  const reviewList = document.getElementById("reviewList");
+  if (reviewList) {
+    reviewList.innerHTML = renderReviewList();
+  }
+}
+
+// ============================================================
+// 老師後台
+// ============================================================
+async function renderTeacherAdmin() {
+  const container = document.getElementById("teacherAdminSection");
+  if (!container) return;
+  container.innerHTML = `
+    <div class="teacher-admin-panel">
+      <h4>🔐 老師後台（管理模式）</h4>
+      <div id="adminContent">載入中...</div>
+    </div>
+  `;
+
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+    records.sort((a, b) => b.timestamp - a.timestamp);
+
+    let html = `<div>全部 ${records.length} 筆紀錄 ｜ <button onclick="exportCSV()">匯出 CSV</button></div>
+      <div style="margin-top:10px; max-height:400px; overflow-y:auto;">`;
+
+    records.forEach(r => {
+      const t = new Date(r.timestamp).toLocaleString("zh-TW");
+      const mins = Math.floor(r.time / 60);
+      const secs = r.time % 60;
+      html += `<div class="admin-row">
+        <div>
+          <strong>${escapeHtml(r.name)}</strong>
+          - ${r.score} 分 (${r.correct}/50) - ${mins}:${secs.toString().padStart(2,"0")}
+          <br><small style="color:#999;">${t}</small>
+        </div>
+      </div>`;
+    });
+
+    html += `</div>
+      <div style="margin-top:10px; font-size:11px; color:#95a5a6;">
+        💡 提示：刪除資料請直接到 Google Sheet 編輯；批量清空請清空 scores 分頁的第 2 列以下資料。
+      </div>`;
+    document.getElementById("adminContent").innerHTML = html;
+  } catch (e) {
+    document.getElementById("adminContent").innerHTML = `❌ 載入失敗: ${e.message}`;
+  }
+}
+
+async function exportCSV() {
+  try {
+    const result = await apiGet("leaderboard");
+    const records = result.records || [];
+    records.sort((a, b) => b.timestamp - a.timestamp);
+    let csv = "姓名,分數,答對題數,作答秒數,日期,時間戳記\n";
+    records.forEach(r => {
+      csv += `"${r.name}",${r.score},${r.correct},${r.time},${r.date},${r.timestamp}\n`;
+    });
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `leaderboard_${SUBJECT_CODE}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert("匯出失敗: " + e.message);
+  }
 }
 
 function setFilter(f) {
@@ -2055,6 +2965,12 @@ function renderReviewList() {
     else if (isBlank) { itemCls += " blank"; badgeCls = "blank"; badgeText = "— 未作答"; }
     else { itemCls += " wrong"; badgeCls = "wrong"; badgeText = "✗ 答錯"; }
 
+    // 取得本題社群統計。API 以「原始題庫 A/B/C/D」儲存；畫面選項已洗牌，所以要先轉成目前顯示順序。
+    const qstat = (window._qstatsCache && window._qstatsCache["q" + q.id]) || null;
+    const displayStats = getDisplayStats(q, qstat);
+    const qstatTotal = displayStats ? displayStats.reduce((sum, n) => sum + n, 0) : 0;
+    const maxWrongCount = displayStats ? Math.max(...displayStats.map((n, idx) => idx === q.ans ? -1 : n)) : 0;
+
     const opts = q.opts.map((opt, i) => {
       let optCls = "review-opt";
       let tag = "";
@@ -2068,14 +2984,29 @@ function renderReviewList() {
         optCls += " user-wrong";
         tag = "← 您的答案 ✗";
       }
+      let statBar = "";
+      if (displayStats && qstatTotal > 0) {
+        const cnt = displayStats[i];
+        const pct = Math.round(cnt / qstatTotal * 100);
+        const barCls = i === q.ans ? "stat-correct" : (cnt === maxWrongCount && cnt > 0 ? "stat-top-wrong" : "stat-normal");
+        statBar = `<span class="opt-stat ${barCls}">${cnt} 人 / ${pct}%</span>`;
+      }
       return `
         <div class="${optCls}">
           <span class="opt-marker">(${String.fromCharCode(65+i)})</span>
-          <span>${escapeHtml(opt)}</span>
+          <span class="opt-text">${escapeHtml(opt)}</span>
           ${tag ? `<span class="opt-tag">${tag}</span>` : ""}
+          ${statBar}
         </div>
       `;
     }).join("");
+
+    let qstatHeader = "";
+    if (displayStats && qstatTotal > 0) {
+      const correctCnt = displayStats[q.ans];
+      const correctPct = Math.round(correctCnt / qstatTotal * 100);
+      qstatHeader = `<div class="review-qstat">📊 社群作答：共 ${qstatTotal} 人 ｜ 答對率 ${correctPct}%</div>`;
+    }
 
     return `
       <div class="${itemCls}">
@@ -2086,9 +3017,10 @@ function renderReviewList() {
           ${state.marked[q.id] ? '<span class="rq-badge" style="background:#fff4d0;color:#a08020;">★ 曾標記</span>' : ''}
         </div>
         <div class="review-stem">${escapeHtml(q.stem)}</div>
+        ${qstatHeader}
         <div class="review-opts">${opts}</div>
         <div class="review-expl">
-          <span class="expl-label">解析：</span>${escapeHtml(q.expl)}
+          <span class="expl-label">解析：</span>${fixExplLetter(q)}
         </div>
       </div>
     `;
@@ -2103,6 +3035,7 @@ function retakeExam() {
   state.startTime = null;
   state.remaining = TOTAL_TIME_SEC;
   state.submitted = false;
+  state.leaderboardSubmitted = false;
   state.filter = "all";
   if (state.timerId) clearInterval(state.timerId);
   renderLogin();
