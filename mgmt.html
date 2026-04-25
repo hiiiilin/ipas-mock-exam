@@ -2667,11 +2667,17 @@ async function submitToLeaderboard() {
     return;
   }
 
-  // 準備上傳資料
+  // 準備上傳資料：把「洗牌後位置」還原成「原始題庫位置」
+  // 否則 qstats 統計會被洗牌污染（學員看到的 A 可能是原始的 B/C/D）
   const answers = {};
   QUESTIONS.forEach(q => {
     const ans = state.answers[q.id];
-    if (ans !== undefined) answers[q.id] = ans;
+    if (ans === undefined) return;
+    // 從原始題庫找回這個選項對應的原始位置
+    const originalQ = ORIGINAL_QUESTIONS.find(o => o.id === q.id);
+    const chosenText = q.opts[ans];
+    const originalIdx = originalQ.opts.indexOf(chosenText);
+    answers[q.id] = originalIdx;
   });
 
   const payload = {
