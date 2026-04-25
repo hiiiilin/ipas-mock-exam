@@ -781,30 +781,30 @@ const PassRateSection = ({ data, level, stats, subjects }) => {
           Fig.&nbsp;2 — Pass rate per subject vs. overall certification rate
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 md:gap-10 mt-12 rule-top pt-8">
+        <div className="grid grid-cols-3 gap-3 md:gap-10 mt-12 rule-top pt-8">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="inline-block w-3 h-3" style={{background: C.navy}}></span>
-              <span className="font-serif-tc text-sm" style={{color: 'var(--ink-soft)'}}>{subjects[0]}</span>
+              <span className="inline-block w-3 h-3 shrink-0" style={{background: C.navy}}></span>
+              <span className="font-serif-tc text-xs md:text-sm truncate" style={{color: 'var(--ink-soft)'}}>{subjects[0]}</span>
             </div>
-            <div className="font-display text-4xl font-light num-tnum" style={{color: 'var(--ink)'}}>{fmt1(stats.subj1)}<span className="text-2xl">%</span></div>
-            <div className="font-serif-tc text-xs mt-2" style={{color: 'var(--ink-mute)'}}>歷年平均通過率</div>
+            <div className="font-display text-3xl md:text-4xl font-light num-tnum" style={{color: 'var(--ink)'}}>{fmt1(stats.subj1)}<span className="text-xl md:text-2xl">%</span></div>
+            <div className="font-serif-tc text-[11px] md:text-xs mt-2" style={{color: 'var(--ink-mute)'}}>歷年平均通過率</div>
           </div>
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="inline-block w-3 h-3" style={{background: C.rust}}></span>
-              <span className="font-serif-tc text-sm" style={{color: 'var(--ink-soft)'}}>{subjects[1]}</span>
+              <span className="inline-block w-3 h-3 shrink-0" style={{background: C.rust}}></span>
+              <span className="font-serif-tc text-xs md:text-sm truncate" style={{color: 'var(--ink-soft)'}}>{subjects[1]}</span>
             </div>
-            <div className="font-display text-4xl font-light num-tnum" style={{color: 'var(--ink)'}}>{fmt1(stats.subj2)}<span className="text-2xl">%</span></div>
-            <div className="font-serif-tc text-xs mt-2" style={{color: 'var(--ink-mute)'}}>歷年平均通過率</div>
+            <div className="font-display text-3xl md:text-4xl font-light num-tnum" style={{color: 'var(--ink)'}}>{fmt1(stats.subj2)}<span className="text-xl md:text-2xl">%</span></div>
+            <div className="font-serif-tc text-[11px] md:text-xs mt-2" style={{color: 'var(--ink-mute)'}}>歷年平均通過率</div>
           </div>
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="inline-block w-4 h-0.5" style={{background: C.crimson}}></span>
-              <span className="font-serif-tc text-sm" style={{color: 'var(--ink-soft)'}}>整體獲證率</span>
+              <span className="inline-block w-4 h-0.5 shrink-0" style={{background: C.crimson}}></span>
+              <span className="font-serif-tc text-xs md:text-sm truncate" style={{color: 'var(--ink-soft)'}}>整體獲證率</span>
             </div>
-            <div className="font-display text-4xl font-light num-tnum" style={{color: 'var(--crimson-deep)'}}>{fmt1(stats.cert)}<span className="text-2xl">%</span></div>
-            <div className="font-serif-tc text-xs mt-2" style={{color: 'var(--ink-mute)'}}>兩科皆通過比例</div>
+            <div className="font-display text-3xl md:text-4xl font-light num-tnum" style={{color: 'var(--crimson-deep)'}}>{fmt1(stats.cert)}<span className="text-xl md:text-2xl">%</span></div>
+            <div className="font-serif-tc text-[11px] md:text-xs mt-2" style={{color: 'var(--ink-mute)'}}>兩科皆通過比例</div>
           </div>
         </div>
       </div>
